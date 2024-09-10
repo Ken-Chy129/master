@@ -6,11 +6,12 @@ import cn.ken.master.client.util.MasterUtil;
 import cn.ken.master.core.enums.RequestTypeEnum;
 import cn.ken.master.core.model.Request;
 import cn.ken.master.core.model.Result;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -18,7 +19,8 @@ import java.util.Map;
  * @author Ken-Chy129
  * @date 2024/8/11
  */
-public class MasterManager {
+@Slf4j
+public class MasterApp {
 
     // 服务端主机地址
     private String host;
@@ -26,13 +28,19 @@ public class MasterManager {
     // 服务端端口号
     private Integer port;
 
-    // 客户端应用名
+    // 应用名
     private String appName;
 
-    public MasterManager() {
+    // 应用描述
+    private String description;
+
+    // 心跳间隔时间
+    private Integer heartbeatInterval;
+
+    public MasterApp() {
     }
 
-    public MasterManager(String host, Integer port, String appName) {
+    public MasterApp(String host, Integer port, String appName) {
         this.host = host;
         this.port = port;
         this.appName = appName;
@@ -64,7 +72,7 @@ public class MasterManager {
 
     @Override
     public String toString() {
-        return "MasterManager{" +
+        return "MasterApp{" +
                 "host='" + host + '\'' +
                 ", port=" + port +
                 ", appName='" + appName + '\'' +
@@ -75,19 +83,20 @@ public class MasterManager {
      * 向服务端注册变量管控类
      * @param clazz 变量管控类
      */
-    public void register(Class<?> clazz) {
+    public void addMaster(Class<?> clazz) {
         // 1.校验clazz
         if (!MasterUtil.isMasterClazz(clazz)) {
             throw new MasterException(MasterErrorCode.REGISTERED_CLAZZ_INVALID);
         }
         // 3.保存变量控制类
+        // todo:先保存到类的成员变量，调用start时保存到Containner，加上appName区分
         MasterContainer.addVariableMaster(clazz);
     }
 
-    public void init() {
+    public void start() {
         // 1.连接服务端
         try (
-                Socket serverSocket = new Socket(host, port);
+                Socket serverSocket = new Socket(host, port)
         ) {
             // 1.发送应用名
             register(serverSocket);
@@ -106,18 +115,25 @@ public class MasterManager {
         }
     }
 
-    private void register(Socket socket) throws IOException {
+    private void register(Socket socket) {
         try (
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())
         ) {
+            // 向服务端上报应用启动
             Request request = new Request();
             request.setRequestCode(RequestTypeEnum.REGISTER.getCode());
-            request.setParameterMap(Map.of("appName", appName));
+            request.setParameterMap(Map.of("appName", appName, "description", description));
             out.writeObject(request);
             Result<String> result = (Result<String>) in.readObject();
+            if (!result.getSuccess()) {
+                // todo：重试
+                throw new MasterException("应用注册失败");
+            }
 
         } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 

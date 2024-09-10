@@ -1,6 +1,6 @@
 package cn.ken.master.client.demo;
 
-import cn.ken.master.client.core.MasterManager;
+import cn.ken.master.client.core.MasterApp;
 
 /**
  * @author Ken-Chy129
@@ -9,11 +9,11 @@ import cn.ken.master.client.core.MasterManager;
 public class Test {
 
     public static void main(String[] args) {
-        MasterManager manager = new MasterManager();
+        MasterApp manager = new MasterApp();
         manager.setHost("xxx");
         manager.setPort(12949);
         manager.setAppName("test");
-        manager.register(CommonBizVariables.class);
-        manager.init();
+        manager.addMaster(CommonBizVariables.class);
+        manager.start();
     }
 }
