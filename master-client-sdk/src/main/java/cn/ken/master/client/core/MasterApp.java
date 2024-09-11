@@ -9,9 +9,9 @@ import cn.ken.master.core.model.Result;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,28 +22,37 @@ import java.util.Map;
 @Slf4j
 public class MasterApp {
 
-    // 服务端主机地址
+    /**
+     * 服务端主机地址
+     */
     private String host;
 
-    // 服务端端口号
+    /**
+     * 服务端端口号
+     */
     private Integer port;
 
-    // 应用名
+    /**
+     * 应用名
+     */
     private String appName;
 
-    // 应用描述
+    /**
+     * 应用描述
+     */
     private String description;
 
-    // 心跳间隔时间
+    /**
+     * 心跳间隔时间
+     */
     private Integer heartbeatInterval;
 
-    public MasterApp() {
-    }
+    /**
+     * 应用的变量管控类列表
+     */
+    private List<Class<?>> masterClazzList;
 
-    public MasterApp(String host, Integer port, String appName) {
-        this.host = host;
-        this.port = port;
-        this.appName = appName;
+    public MasterApp() {
     }
 
     public String getHost() {
@@ -70,12 +79,39 @@ public class MasterApp {
         this.appName = appName;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getHeartbeatInterval() {
+        return heartbeatInterval;
+    }
+
+    public void setHeartbeatInterval(Integer heartbeatInterval) {
+        this.heartbeatInterval = heartbeatInterval;
+    }
+
+    public List<Class<?>> getMasterClazzList() {
+        return masterClazzList;
+    }
+
+    public void setMasterClazzList(List<Class<?>> masterClazzList) {
+        this.masterClazzList = masterClazzList;
+    }
+
     @Override
     public String toString() {
         return "MasterApp{" +
                 "host='" + host + '\'' +
                 ", port=" + port +
                 ", appName='" + appName + '\'' +
+                ", description='" + description + '\'' +
+                ", heartbeatInterval=" + heartbeatInterval +
+                ", masterClazzList=" + masterClazzList +
                 '}';
     }
 
@@ -84,24 +120,24 @@ public class MasterApp {
      * @param clazz 变量管控类
      */
     public void addMaster(Class<?> clazz) {
-        // 1.校验clazz
+        // 校验clazz
         if (!MasterUtil.isMasterClazz(clazz)) {
             throw new MasterException(MasterErrorCode.REGISTERED_CLAZZ_INVALID);
         }
-        // 3.保存变量控制类
-        // todo:先保存到类的成员变量，调用start时保存到Containner，加上appName区分
-        MasterContainer.addVariableMaster(clazz);
+        // 保存变量控制类
+        masterClazzList.add(clazz);
     }
 
     public void start() {
-        // 1.连接服务端
         try (
+                // 1.连接服务端
                 Socket serverSocket = new Socket(host, port)
         ) {
-            // 1.发送应用名
-            register(serverSocket);
-
-            // 2.启动线程监听服务端命令
+            // 2.向服务端上报
+            reportToServer(serverSocket);
+            // 3.注册到到Master容器进行管理
+            MasterContainer.registerApp(this);
+            // 4.启动线程监听服务端命令
             new CommandListener(serverSocket).start();
 
             // 4.启动线程定时发送心跳检测包
@@ -115,12 +151,15 @@ public class MasterApp {
         }
     }
 
-    private void register(Socket socket) {
+    /**
+     * 向服务端上报应用启动，会发送应用名和应用描述
+     * @param socket 与服务端的连接套接字
+     */
+    private void reportToServer(Socket socket) {
         try (
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())
         ) {
-            // 向服务端上报应用启动
             Request request = new Request();
             request.setRequestCode(RequestTypeEnum.REGISTER.getCode());
             request.setParameterMap(Map.of("appName", appName, "description", description));
@@ -128,11 +167,11 @@ public class MasterApp {
             Result<String> result = (Result<String>) in.readObject();
             if (!result.getSuccess()) {
                 // todo：重试
-                throw new MasterException("应用注册失败");
+                throw new MasterException("应用上报失败");
             }
 
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

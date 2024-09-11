@@ -33,6 +33,13 @@ public class MasterContainer {
     private static final Map<String, Map<String, Field>> NASTER_FIELD_MAP = new HashMap<>();
 
     /**
+     * 应用注册
+     */
+    public static void registerApp(MasterApp masterApp) {
+
+    }
+
+    /**
      * 添加变量管控类到上下文
      * @param masterClazz 变量管控类
      */
