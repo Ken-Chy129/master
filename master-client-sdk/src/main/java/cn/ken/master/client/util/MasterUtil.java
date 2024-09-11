@@ -41,4 +41,8 @@ public class MasterUtil {
         }
         return true;
     }
+
+    public static String generateAppNamespaceKey(String appName, String namespace) {
+        return appName + "_" + namespace;
+    }
 }

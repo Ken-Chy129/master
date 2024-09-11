@@ -6,10 +6,7 @@ import cn.ken.master.client.exception.MasterException;
 import cn.ken.master.client.util.MasterUtil;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Ken-Chy129
@@ -18,17 +15,22 @@ import java.util.Optional;
 public class MasterContainer {
 
     /**
-     * key: namespace, value: Master注解对象
+     * key: appName, value: MasterApp对象
      */
-    private static final Map<String, Master> NAMESPACE_MASTER_MAP = new HashMap<>();
+    private static final Map<String, MasterApp> MASTER_APP_MAP = new HashMap<>();
 
     /**
-     * key
+     * key: appName_namespace, value: Master注解对象
      */
-    private static final Map<String, Map<String, ControllableVariable>> CONTROLLABLE_VARIABLE_MAP = new HashMap<>();
+    private static final Map<String, Master> MASTER_ANNOTATION_MAP = new HashMap<>();
 
     /**
-     * key: namespace, value: {key: name, value:Field}，todo：缓存减少反射开销
+     * key: appName_namespace, value: {}
+     */
+    private static final Map<String, Map<String, ControllableVariable>> CONTROLLABLE_VARIABLE_ANNOTATION_MAP = new HashMap<>();
+
+    /**
+     * key: namespace, value: {key: name, value:Field}
      */
     private static final Map<String, Map<String, Field>> NASTER_FIELD_MAP = new HashMap<>();
 
@@ -36,44 +38,58 @@ public class MasterContainer {
      * 应用注册
      */
     public static void registerApp(MasterApp masterApp) {
+        // 1.参数校验
+        String appName = masterApp.getAppName();
+        if (MASTER_APP_MAP.containsKey(appName)) {
+            throw new MasterException(appName + " is already registered!");
+        }
+        // 2.添加MasterApp
+        MASTER_APP_MAP.put(masterApp.getAppName(), masterApp);
+        // 3.遍历app所有变量管控类，保存相关信息
+        List<Class<?>> masterClazzList = masterApp.getMasterClazzList();
+        for (Class<?> masterClazz : masterClazzList) {
+            // 3.1.保存Master注解信息
+            Master annotation = masterClazz.getDeclaredAnnotation(Master.class);
+            assert annotation != null;
+            String namespace = annotation.namespace();
+            if (Objects.isNull(namespace)) {
+                // 没有设置则使用全类名
+                namespace = masterClazz.getName();
+            }
+            MASTER_ANNOTATION_MAP.put(MasterUtil.generateAppNamespaceKey(appName, namespace), annotation);
 
+            // 3.2.保存ControllableVariable注解信息
+            Map<String, Field> fieldMap = new HashMap<>();
+            Map<String, ControllableVariable> variableMap = new HashMap<>();
+            Field[] declaredFields = masterClazz.getDeclaredFields();
+            for (Field declaredField : declaredFields) {
+                if (MasterUtil.isMasterVariable(declaredField)) {
+                    fieldMap.put(declaredField.getName(), declaredField);
+                    variableMap.put(declaredField.getName(), declaredField.getDeclaredAnnotation(ControllableVariable.class));
+                }
+            }
+            CONTROLLABLE_VARIABLE_ANNOTATION_MAP.put(MasterUtil.generateAppNamespaceKey(appName, namespace), variableMap);
+            NASTER_FIELD_MAP.put(MasterUtil.generateAppNamespaceKey(appName, namespace), fieldMap);
+        }
     }
 
     /**
-     * 添加变量管控类到上下文
-     * @param masterClazz 变量管控类
+     * 根据appName获取MasterApp对象
      */
-    public static void addVariableMaster(Class<?> masterClazz) {
-        Master annotation = masterClazz.getDeclaredAnnotation(Master.class);
-        assert annotation != null;
-        String namespace = annotation.namespace();
-        if (Objects.isNull(namespace)) {
-            namespace = masterClazz.getName();
-        }
-        NAMESPACE_MASTER_MAP.put(namespace, annotation);
-        Map<String, Field> fieldMap = new HashMap<>();
-        Map<String, ControllableVariable> variableMap = new HashMap<>();
-        Field[] declaredFields = masterClazz.getDeclaredFields();
-        for (Field declaredField : declaredFields) {
-            if (MasterUtil.isMasterVariable(declaredField)) {
-                fieldMap.put(declaredField.getName(), declaredField);
-                variableMap.put(declaredField.getName(), declaredField.getDeclaredAnnotation(ControllableVariable.class));
-            }
-        }
-        CONTROLLABLE_VARIABLE_MAP.put(namespace, variableMap);
-        NASTER_FIELD_MAP.put(namespace, fieldMap);
+    public static MasterApp getMasterApp(String appName) {
+        return MASTER_APP_MAP.get(appName);
     }
 
-    public static Map<String, Master> getNamespaceMasterMap() {
-        return NAMESPACE_MASTER_MAP;
+    public static Map<String, Master> getMasterAnnotationMap() {
+        return MASTER_ANNOTATION_MAP;
     }
 
     public static Map<String, Map<String, ControllableVariable>> getAllControllableVariableMap() {
-        return CONTROLLABLE_VARIABLE_MAP;
+        return CONTROLLABLE_VARIABLE_ANNOTATION_MAP;
     }
 
     public static Map<String, ControllableVariable> getControllableVariableMapByNamespace(String namespace) {
-        return CONTROLLABLE_VARIABLE_MAP.get(namespace);
+        return CONTROLLABLE_VARIABLE_ANNOTATION_MAP.get(namespace);
     }
 
     public static Map<String, Map<String, Field>> getNasterFieldMap() {

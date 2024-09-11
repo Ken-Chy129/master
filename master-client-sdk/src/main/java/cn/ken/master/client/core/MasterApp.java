@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Master管理类
@@ -129,6 +130,8 @@ public class MasterApp {
     }
 
     public void start() {
+        // 0.参数校验
+        checkStartKeyParameters();
         try (
                 // 1.连接服务端
                 Socket serverSocket = new Socket(host, port)
@@ -140,7 +143,7 @@ public class MasterApp {
             // 4.启动线程监听服务端命令
             new CommandListener(serverSocket).start();
 
-            // 4.启动线程定时发送心跳检测包
+            // 5.启动线程定时发送心跳检测包
             new HeatBeatHandler(serverSocket).start();
         } catch (UnknownHostException e) {
             throw new MasterException(MasterErrorCode.SERVER_HOST_INVALID);
@@ -176,6 +179,21 @@ public class MasterApp {
             throw new RuntimeException(e);
         }
 
+    }
+
+    /**
+     * 校验启动关键参数
+     */
+    private void checkStartKeyParameters() {
+        if (Objects.isNull(appName)) {
+            throw new MasterException("MasterApp缺少应用名，无法正常启动");
+        }
+        if (Objects.isNull(host) || Objects.isNull(port)) {
+            throw new MasterException("MasterApp缺少服务端信息，无法正常启动");
+        }
+        if (Objects.isNull(masterClazzList) || masterClazzList.isEmpty()) {
+            throw new MasterException("MasterApp缺少管控类配置，无法正常启动");
+        }
     }
 
 }
