@@ -36,10 +36,7 @@ public class MasterUtil {
         if (Objects.isNull(declaredAnnotation)) {
             return false;
         }
-        if (!field.canAccess(null)) {
-            throw new MasterException(String.format(MasterErrorCode.CONTROLLABLE_VARIABLE_INACCESSIBLE.getMsg(), field.getName()));
-        }
-        return true;
+        return field.canAccess(null);
     }
 
     public static String generateAppNamespaceKey(String appName, String namespace) {

@@ -18,20 +18,21 @@ import java.util.concurrent.ExecutorService;
  */
 public class CommandListener extends Thread {
 
-    private final Socket serverSocket;
+    private final MasterApp masterApp;
 
     private ExecutorService executorService;
 
-    public CommandListener(Socket serverSocket) {
-        this.serverSocket = serverSocket;
+    public CommandListener(MasterApp masterApp) {
+        this.masterApp = masterApp;
     }
 
 
     @Override
     public void run() {
+        Socket socket = masterApp.getSocket();
         try (
-                ObjectInputStream in = new ObjectInputStream(serverSocket.getInputStream());
-                ObjectOutputStream out = new ObjectOutputStream(serverSocket.getOutputStream());
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
         ) {
             while (true) {
                 Request commandRequest = (Request) in.readObject();

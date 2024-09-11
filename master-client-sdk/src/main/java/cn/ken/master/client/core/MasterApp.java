@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -46,7 +45,17 @@ public class MasterApp {
     /**
      * 心跳间隔时间
      */
-    private Integer heartbeatInterval;
+    private Integer heartbeatInterval = 5 * 1000;
+
+    /**
+     * Master应用运行状态
+     */
+    private Boolean running;
+
+    /**
+     * 与服务端连接的套接字
+     */
+    private Socket socket;
 
     /**
      * 应用的变量管控类列表
@@ -96,6 +105,22 @@ public class MasterApp {
         this.heartbeatInterval = heartbeatInterval;
     }
 
+    public Boolean getRunning() {
+        return running;
+    }
+
+    public void setRunning(Boolean running) {
+        this.running = running;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
+
     public List<Class<?>> getMasterClazzList() {
         return masterClazzList;
     }
@@ -112,6 +137,8 @@ public class MasterApp {
                 ", appName='" + appName + '\'' +
                 ", description='" + description + '\'' +
                 ", heartbeatInterval=" + heartbeatInterval +
+                ", running=" + running +
+                ", socket=" + socket +
                 ", masterClazzList=" + masterClazzList +
                 '}';
     }
@@ -130,28 +157,25 @@ public class MasterApp {
     }
 
     public void start() {
-        // 0.参数校验
+        // 1.参数校验
         checkStartKeyParameters();
-        try (
-                // 1.连接服务端
-                Socket serverSocket = new Socket(host, port)
-        ) {
-            // 2.向服务端上报
-            reportToServer(serverSocket);
-            // 3.注册到到Master容器进行管理
-            MasterContainer.registerApp(this);
-            // 4.启动线程监听服务端命令
-            new CommandListener(serverSocket).start();
-
-            // 5.启动线程定时发送心跳检测包
-            new HeatBeatHandler(serverSocket).start();
-        } catch (UnknownHostException e) {
-            throw new MasterException(MasterErrorCode.SERVER_HOST_INVALID);
-        } catch (IllegalArgumentException e) {
-            throw new MasterException(MasterErrorCode.SERVER_PORT_INVALID);
+        Socket socket;
+        try {
+            // 2.连接服务端
+            socket = new Socket(host, port);
         } catch (IOException e) {
-            throw new MasterException(MasterErrorCode.SERVER_CONNECT_ERROR);
+            throw new MasterException(e.getMessage());
         }
+        this.socket = socket;
+        this.running = true;
+        // 3.向服务端上报应用名
+        reportToServer(socket);
+        // 4.注册到到Master容器进行管理
+        MasterContainer.registerApp(this);
+        // 5.启动线程监听服务端命令
+        new CommandListener(this).start();
+        // 6.启动线程定时发送心跳检测包
+        new HeatBeatHandler(this).start();
     }
 
     /**
@@ -167,12 +191,12 @@ public class MasterApp {
             request.setRequestCode(RequestTypeEnum.REGISTER.getCode());
             request.setParameterMap(Map.of("appName", appName, "description", description));
             out.writeObject(request);
-            Result<String> result = (Result<String>) in.readObject();
-            if (!result.getSuccess()) {
+            Result<Integer> result = (Result<Integer>) in.readObject();
+            if (Objects.isNull(result) || !result.getSuccess() || Objects.isNull(result.getData())) {
                 // todo：重试
                 throw new MasterException("应用上报失败");
             }
-
+            this.heartbeatInterval = result.getData();
         } catch (ClassNotFoundException e) {
 
         } catch (IOException e) {

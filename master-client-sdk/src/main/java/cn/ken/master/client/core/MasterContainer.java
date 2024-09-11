@@ -25,12 +25,12 @@ public class MasterContainer {
     private static final Map<String, Master> MASTER_ANNOTATION_MAP = new HashMap<>();
 
     /**
-     * key: appName_namespace, value: {}
+     * key: appName_namespace, value: {key: fieldName, value:Field}
      */
     private static final Map<String, Map<String, ControllableVariable>> CONTROLLABLE_VARIABLE_ANNOTATION_MAP = new HashMap<>();
 
     /**
-     * key: namespace, value: {key: name, value:Field}
+     * key: appName_namespace, value: {key: fieldName, value:Field}
      */
     private static final Map<String, Map<String, Field>> NASTER_FIELD_MAP = new HashMap<>();
 
@@ -50,12 +50,7 @@ public class MasterContainer {
         for (Class<?> masterClazz : masterClazzList) {
             // 3.1.保存Master注解信息
             Master annotation = masterClazz.getDeclaredAnnotation(Master.class);
-            assert annotation != null;
-            String namespace = annotation.namespace();
-            if (Objects.isNull(namespace)) {
-                // 没有设置则使用全类名
-                namespace = masterClazz.getName();
-            }
+            String namespace = getNamespace(masterClazz, annotation);
             MASTER_ANNOTATION_MAP.put(MasterUtil.generateAppNamespaceKey(appName, namespace), annotation);
 
             // 3.2.保存ControllableVariable注解信息
@@ -70,6 +65,31 @@ public class MasterContainer {
             }
             CONTROLLABLE_VARIABLE_ANNOTATION_MAP.put(MasterUtil.generateAppNamespaceKey(appName, namespace), variableMap);
             NASTER_FIELD_MAP.put(MasterUtil.generateAppNamespaceKey(appName, namespace), fieldMap);
+        }
+    }
+
+    private static String getNamespace(Class<?> masterClazz, Master annotation) {
+        assert annotation != null;
+        String namespace = annotation.namespace();
+        if (Objects.isNull(namespace)) {
+            // 没有设置则使用全类名
+            namespace = masterClazz.getName();
+        }
+        return namespace;
+    }
+
+    /**
+     * 移除应用
+     */
+    public static void removeApp(String appName) {
+        MasterApp masterApp = MASTER_APP_MAP.remove(appName);
+        List<Class<?>> masterClazzList = masterApp.getMasterClazzList();
+        for (Class<?> masterClazz : masterClazzList) {
+            Master annotation = masterClazz.getDeclaredAnnotation(Master.class);
+            String namespace = getNamespace(masterClazz, annotation);
+            MASTER_ANNOTATION_MAP.remove(MasterUtil.generateAppNamespaceKey(appName, namespace));
+            CONTROLLABLE_VARIABLE_ANNOTATION_MAP.remove(MasterUtil.generateAppNamespaceKey(appName, namespace));
+            NASTER_FIELD_MAP.remove(MasterUtil.generateAppNamespaceKey(appName, namespace));
         }
     }
 

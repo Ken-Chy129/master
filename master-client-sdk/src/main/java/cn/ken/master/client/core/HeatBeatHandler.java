@@ -1,11 +1,10 @@
 package cn.ken.master.client.core;
 
+import cn.ken.master.core.enums.RequestTypeEnum;
 import cn.ken.master.core.model.Request;
-import cn.ken.master.core.model.Result;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Objects;
 
 /**
  * @author Ken-Chy129
@@ -13,28 +12,27 @@ import java.util.Objects;
  */
 public class HeatBeatHandler extends Thread {
 
-    private final Socket serverSocket;
+    private final MasterApp masterApp;
 
-    public HeatBeatHandler(Socket serverSocket) {
-        this.serverSocket = serverSocket;
+    public HeatBeatHandler(MasterApp masterApp) {
+        this.masterApp = masterApp;
     }
-
 
     @Override
     public void run() {
+        Socket socket = masterApp.getSocket();
+        Integer heartbeatInterval = masterApp.getHeartbeatInterval();
         try (
-                ObjectInputStream in = new ObjectInputStream(serverSocket.getInputStream());
-                ObjectOutputStream out = new ObjectOutputStream(serverSocket.getOutputStream())
+                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())
         ) {
-            while (true) {
+            while (masterApp.getRunning()) {
+                Request request = new Request();
+                request.setRequestCode(RequestTypeEnum.HEARTBEAT.getCode());
+                out.writeObject(request);
                 try {
-                    Request request = (Request) in.readObject();
-                    if (Objects.isNull(request)) {
-                        out.writeObject(Result.error("请输入正确的方法名"));
-                        continue;
-                    }
-                } catch (ClassNotFoundException e) {
-
+                    Thread.sleep(heartbeatInterval);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }
         } catch (IOException e) {
