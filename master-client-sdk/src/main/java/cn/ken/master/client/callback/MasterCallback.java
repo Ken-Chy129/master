@@ -15,5 +15,11 @@ public interface MasterCallback {
      */
     void handleValueChange(String namespace, String name, Object value);
 
+    private static void get() {
 
+    }
+
+    class AA {
+
+    }
 }

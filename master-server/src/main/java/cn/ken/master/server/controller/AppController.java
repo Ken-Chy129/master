@@ -22,6 +22,7 @@ public class AppController {
 
     @GetMapping("list")
     public Result<List<AppDO>> list() {
+        System.out.println("hello");
         return appService.selectAll();
     }
 
