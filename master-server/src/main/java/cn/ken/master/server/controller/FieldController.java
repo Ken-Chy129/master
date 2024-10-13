@@ -17,7 +17,7 @@ public class FieldController {
     private FieldService fieldService;
 
     @GetMapping("/{namespaceId}")
-    private Result<List<FieldDO>> queryByNamespaceId(@PathVariable Long namespaceId) {
+    private Result<List<FieldDO>> queryByNamespaceId(@PathVariable("namespaceId") Long namespaceId) {
         return fieldService.selectByNamespaceId(namespaceId);
     }
 

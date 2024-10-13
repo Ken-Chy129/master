@@ -17,7 +17,7 @@ public class NamespaceController {
     private NamespaceService namespaceService;
 
     @GetMapping("/{appId}")
-    private Result<List<NamespaceDO>> queryAppNamespace(@PathVariable Long appId) {
+    private Result<List<NamespaceDO>> queryAppNamespace(@PathVariable("appId") Long appId) {
         return namespaceService.selectByAppId(appId);
     }
 
