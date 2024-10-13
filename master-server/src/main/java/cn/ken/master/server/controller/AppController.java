@@ -1,6 +1,7 @@
 package cn.ken.master.server.controller;
 
 import cn.ken.master.core.model.Result;
+import cn.ken.master.server.common.RequestPathConstant;
 import cn.ken.master.server.entity.AppDO;
 import cn.ken.master.server.service.AppService;
 import jakarta.annotation.Resource;
@@ -22,12 +23,11 @@ public class AppController {
 
     @GetMapping("list")
     public Result<List<AppDO>> list() {
-        System.out.println("hello");
         return appService.selectAll();
     }
 
-    @PostMapping("insert")
-    public void insert(@RequestBody AppDO appDO) {
+    @PostMapping(RequestPathConstant.SAVE)
+    public void save(@RequestBody AppDO appDO) {
         appService.insert(appDO);
     }
 }

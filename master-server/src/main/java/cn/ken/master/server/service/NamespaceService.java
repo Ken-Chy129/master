@@ -9,5 +9,5 @@ public interface NamespaceService {
 
     void insert(NamespaceDO namespaceDO);
 
-    Result<List<NamespaceDO>> selectAll();
+    Result<List<NamespaceDO>> selectByAppId(Long appId);
 }

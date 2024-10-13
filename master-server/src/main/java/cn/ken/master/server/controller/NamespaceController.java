@@ -1,6 +1,7 @@
 package cn.ken.master.server.controller;
 
 import cn.ken.master.core.model.Result;
+import cn.ken.master.server.common.RequestPathConstant;
 import cn.ken.master.server.entity.NamespaceDO;
 import cn.ken.master.server.service.NamespaceService;
 import jakarta.annotation.Resource;
@@ -15,13 +16,13 @@ public class NamespaceController {
     @Resource
     private NamespaceService namespaceService;
 
-    @GetMapping
-    private Result<List<NamespaceDO>> list() {
-        return namespaceService.selectAll();
+    @GetMapping("/{appId}")
+    private Result<List<NamespaceDO>> queryAppNamespace(@PathVariable Long appId) {
+        return namespaceService.selectByAppId(appId);
     }
 
-    @PostMapping
-    private Result<NamespaceDO> create(@RequestBody NamespaceDO namespaceDO) {
+    @PostMapping(RequestPathConstant.SAVE)
+    private Result<NamespaceDO> save(@RequestBody NamespaceDO namespaceDO) {
         namespaceService.insert(namespaceDO);
         return Result.success(namespaceDO);
     }

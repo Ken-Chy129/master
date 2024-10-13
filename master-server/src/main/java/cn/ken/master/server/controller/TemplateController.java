@@ -1,5 +1,6 @@
 package cn.ken.master.server.controller;
 
+import cn.ken.master.server.common.RequestPathConstant;
 import cn.ken.master.server.entity.TemplateDO;
 import cn.ken.master.server.service.TemplateService;
 import jakarta.annotation.Resource;
@@ -15,8 +16,8 @@ public class TemplateController {
     @Resource
     private TemplateService templateService;
 
-    @PostMapping("insert")
-    public int insert(@RequestBody TemplateDO templateDO) {
+    @PostMapping(RequestPathConstant.SAVE)
+    public int save(@RequestBody TemplateDO templateDO) {
         return templateService.insert(templateDO);
     }
 }

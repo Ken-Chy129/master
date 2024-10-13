@@ -1,6 +1,7 @@
 package cn.ken.master.server.controller;
 
 import cn.ken.master.core.model.Result;
+import cn.ken.master.server.common.RequestPathConstant;
 import cn.ken.master.server.entity.FieldDO;
 import cn.ken.master.server.service.FieldService;
 import jakarta.annotation.Resource;
@@ -15,12 +16,17 @@ public class FieldController {
     @Resource
     private FieldService fieldService;
 
-    @GetMapping
-    private Result<List<FieldDO>> list() {
-        return fieldService.selectAll();
+    @GetMapping("/{namespaceId}")
+    private Result<List<FieldDO>> queryByNamespaceId(@PathVariable Long namespaceId) {
+        return fieldService.selectByNamespaceId(namespaceId);
     }
 
-    @PostMapping
+    @GetMapping("/list")
+    private Result<List<FieldDO>> queryAllByAppId(Long appId) {
+        return fieldService.selectByAppId(appId);
+    }
+
+    @PostMapping(RequestPathConstant.SAVE)
     private Result<FieldDO> save(@RequestBody FieldDO field) {
         fieldService.insert(field);
         return Result.success(field);

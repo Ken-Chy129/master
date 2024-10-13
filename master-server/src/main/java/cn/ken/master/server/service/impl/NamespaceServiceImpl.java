@@ -4,7 +4,7 @@ import cn.ken.master.core.model.Result;
 import cn.ken.master.server.entity.NamespaceDO;
 import cn.ken.master.server.mapper.NamespaceMapper;
 import cn.ken.master.server.service.NamespaceService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +22,9 @@ public class NamespaceServiceImpl implements NamespaceService {
     }
 
     @Override
-    public Result<List<NamespaceDO>> selectAll() {
-        QueryWrapper<NamespaceDO> nameSpaceQueryWrapper = new QueryWrapper<>();
+    public Result<List<NamespaceDO>> selectByAppId(Long appId) {
+        LambdaQueryWrapper<NamespaceDO> nameSpaceQueryWrapper = new LambdaQueryWrapper<>();
+        nameSpaceQueryWrapper.eq(NamespaceDO::getAppId, appId);
         List<NamespaceDO> namespaceDOS = namespaceMapper.selectList(nameSpaceQueryWrapper);
         return Result.success(namespaceDOS);
     }

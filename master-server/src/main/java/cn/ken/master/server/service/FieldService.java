@@ -9,5 +9,7 @@ public interface FieldService {
 
     void insert(FieldDO fieldDO);
 
-    Result<List<FieldDO>> selectAll();
+    Result<List<FieldDO>> selectByNamespaceId(Long namespaceId);
+
+    Result<List<FieldDO>> selectByAppId(Long appId);
 }
