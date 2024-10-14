@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("master_app")
+@TableName("master_category")
 public class Category extends BaseDO {
 
     /**

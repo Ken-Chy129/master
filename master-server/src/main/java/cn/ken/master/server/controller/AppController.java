@@ -19,7 +19,7 @@ import java.util.List;
  * @date 2024/8/28
  */
 @RestController
-@RequestMapping("app")
+@RequestMapping("master")
 public class AppController {
 
     @Resource
@@ -31,8 +31,8 @@ public class AppController {
     @Resource
     private CategoryService categoryService;
 
-    @GetMapping("list")
-    public Result<List<AppDO>> list() {
+    @GetMapping("apps")
+    public Result<List<AppDO>> queryAllApps() {
         return appService.selectAll();
     }
 
@@ -41,7 +41,7 @@ public class AppController {
         appService.insert(appDO);
     }
 
-    @GetMapping("queryMachines")
+    @GetMapping("machines")
     public Result<List<MachineDO>> queryMachines(@RequestParam("appId") Long appId) {
         return machineService.selectAll(appId);
     }
