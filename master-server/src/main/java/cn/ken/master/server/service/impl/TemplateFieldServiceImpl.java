@@ -1,6 +1,6 @@
 package cn.ken.master.server.service.impl;
 
-import cn.ken.master.server.entity.TemplateFieldDO;
+import cn.ken.master.server.model.entity.TemplateFieldDO;
 import cn.ken.master.server.mapper.TemplateFieldMapper;
 import cn.ken.master.server.service.TemplateFieldService;
 import jakarta.annotation.Resource;

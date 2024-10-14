@@ -1,7 +1,7 @@
 package cn.ken.master.server.service.impl;
 
 import cn.ken.master.core.model.Result;
-import cn.ken.master.server.entity.NamespaceDO;
+import cn.ken.master.server.model.entity.NamespaceDO;
 import cn.ken.master.server.mapper.NamespaceMapper;
 import cn.ken.master.server.service.NamespaceService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;

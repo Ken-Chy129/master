@@ -1,6 +1,6 @@
 package cn.ken.master.server.service;
 
-import cn.ken.master.server.entity.RecordDO;
+import cn.ken.master.server.model.entity.RecordDO;
 
 import java.util.List;
 

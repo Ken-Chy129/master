@@ -1,6 +1,6 @@
 package cn.ken.master.server.service.impl;
 
-import cn.ken.master.server.entity.RecordDO;
+import cn.ken.master.server.model.entity.RecordDO;
 import cn.ken.master.server.mapper.RecordMapper;
 import cn.ken.master.server.service.RecordService;
 import jakarta.annotation.Resource;

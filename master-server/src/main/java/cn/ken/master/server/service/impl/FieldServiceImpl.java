@@ -1,7 +1,7 @@
 package cn.ken.master.server.service.impl;
 
 import cn.ken.master.core.model.Result;
-import cn.ken.master.server.entity.FieldDO;
+import cn.ken.master.server.model.entity.FieldDO;
 import cn.ken.master.server.mapper.FieldMapper;
 import cn.ken.master.server.service.FieldService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;

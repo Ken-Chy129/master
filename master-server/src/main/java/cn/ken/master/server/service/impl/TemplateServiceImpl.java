@@ -1,6 +1,6 @@
 package cn.ken.master.server.service.impl;
 
-import cn.ken.master.server.entity.TemplateDO;
+import cn.ken.master.server.model.entity.TemplateDO;
 import cn.ken.master.server.mapper.TemplateMapper;
 import cn.ken.master.server.service.TemplateService;
 import jakarta.annotation.Resource;

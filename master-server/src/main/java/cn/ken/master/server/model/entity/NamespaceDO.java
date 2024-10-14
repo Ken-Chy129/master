@@ -1,4 +1,4 @@
-package cn.ken.master.server.entity;
+package cn.ken.master.server.model.entity;
 
 import cn.ken.master.server.common.BaseDO;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -7,26 +7,21 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("master_field")
-public class FieldDO extends BaseDO {
+@TableName("master_namespace")
+public class NamespaceDO extends BaseDO {
 
     /**
-     * 字段所属应用id
+     * 命名空间所属应用id
      */
     private Long appId;
 
     /**
-     * 字段所属命名空间id
-     */
-    private Long namespaceId;
-
-    /**
-     * 字段名称
+     * 命名空间名称
      */
     private String name;
 
     /**
-     * 字段描述
+     * 命名空间描述
      */
     private String description;
 }

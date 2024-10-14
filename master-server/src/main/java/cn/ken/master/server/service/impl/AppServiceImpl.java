@@ -1,7 +1,7 @@
 package cn.ken.master.server.service.impl;
 
 import cn.ken.master.core.model.Result;
-import cn.ken.master.server.entity.AppDO;
+import cn.ken.master.server.model.entity.AppDO;
 import cn.ken.master.server.mapper.AppMapper;
 import cn.ken.master.server.service.AppService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;

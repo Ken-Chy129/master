@@ -1,7 +1,7 @@
 package cn.ken.master.server.controller;
 
 import cn.ken.master.server.common.RequestPathConstant;
-import cn.ken.master.server.entity.TemplateDO;
+import cn.ken.master.server.model.entity.TemplateDO;
 import cn.ken.master.server.service.TemplateService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;

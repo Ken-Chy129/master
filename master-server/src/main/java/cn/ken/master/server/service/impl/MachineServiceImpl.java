@@ -1,7 +1,7 @@
 package cn.ken.master.server.service.impl;
 
 import cn.ken.master.core.model.Result;
-import cn.ken.master.server.entity.MachineDO;
+import cn.ken.master.server.model.entity.MachineDO;
 import cn.ken.master.server.mapper.MachineMapper;
 import cn.ken.master.server.service.MachineService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;

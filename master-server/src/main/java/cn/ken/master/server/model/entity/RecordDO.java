@@ -1,4 +1,4 @@
-package cn.ken.master.server.entity;
+package cn.ken.master.server.model.entity;
 
 import cn.ken.master.server.common.BaseDO;
 import com.baomidou.mybatisplus.annotation.TableName;
