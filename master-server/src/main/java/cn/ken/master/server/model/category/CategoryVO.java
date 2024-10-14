@@ -9,11 +9,15 @@ public class CategoryVO {
 
     private Long id;
 
-    private String name;
+    private String key;
+
+    private String label;
 
     private List<CategoryVO> children;
 
     private String linkUrl;
 
-    private Integer status;
+    private String icon;
+
+    private Boolean disabled;
 }

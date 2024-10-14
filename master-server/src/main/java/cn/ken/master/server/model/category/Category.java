@@ -11,9 +11,14 @@ import lombok.EqualsAndHashCode;
 public class Category extends BaseDO {
 
     /**
+     * 分类标识
+     */
+    private String key;
+
+    /**
      * 分类名称
      */
-    private String name;
+    private String label;
 
     /**
      * 跳转连接
@@ -24,6 +29,11 @@ public class Category extends BaseDO {
      * 父节点id
      */
     private Long parentId;
+
+    /**
+     * 分类icon
+     */
+    private String icon;
 
     /**
      * 分类状态
@@ -39,14 +49,24 @@ public class Category extends BaseDO {
     }
 
     /**
+     * 是否被禁用
+     * @return true: 是, false: 否
+     */
+    public boolean isDisabled() {
+        return status == -1;
+    }
+
+    /**
      * 模型转换
      */
     public CategoryVO toCategoryVO() {
         CategoryVO categoryVO = new CategoryVO();
         categoryVO.setId(getId());
-        categoryVO.setName(getName());
+        categoryVO.setKey(getKey());
+        categoryVO.setLabel(getLabel());
         categoryVO.setLinkUrl(getLinkUrl());
-        categoryVO.setStatus(getStatus());
+        categoryVO.setIcon(getIcon());
+        categoryVO.setDisabled(isDisabled());
         return categoryVO;
     }
 }
