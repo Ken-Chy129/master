@@ -2,9 +2,11 @@ package cn.ken.master.server.controller;
 
 import cn.ken.master.core.model.Result;
 import cn.ken.master.server.common.RequestPathConstant;
-import cn.ken.master.server.entity.AppDO;
-import cn.ken.master.server.entity.MachineDO;
+import cn.ken.master.server.model.category.CategoryVO;
+import cn.ken.master.server.model.entity.AppDO;
+import cn.ken.master.server.model.entity.MachineDO;
 import cn.ken.master.server.service.AppService;
+import cn.ken.master.server.service.CategoryService;
 import cn.ken.master.server.service.MachineService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,9 @@ public class AppController {
     @Resource
     private MachineService machineService;
 
+    @Resource
+    private CategoryService categoryService;
+
     @GetMapping("list")
     public Result<List<AppDO>> list() {
         return appService.selectAll();
@@ -44,5 +49,10 @@ public class AppController {
     @PostMapping("addMachine")
     public void addMachine(@RequestBody MachineDO machineDO) {
         machineService.insert(machineDO);
+    }
+
+    @GetMapping("categories")
+    public Result<List<CategoryVO>> queryCategories() {
+        return categoryService.selectAllCategory();
     }
 }
