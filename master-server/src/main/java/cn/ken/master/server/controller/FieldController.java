@@ -3,6 +3,7 @@ package cn.ken.master.server.controller;
 import cn.ken.master.core.model.Result;
 import cn.ken.master.server.common.RequestPathConstant;
 import cn.ken.master.server.model.entity.FieldDO;
+import cn.ken.master.server.model.field.FieldPushReq;
 import cn.ken.master.server.service.FieldService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,11 @@ public class FieldController {
     @GetMapping("/list")
     private Result<List<FieldDO>> queryAllByAppId(Long appId) {
         return fieldService.selectByAppId(appId);
+    }
+
+    @PostMapping("push")
+    private Result<Boolean> pushFieldValue(FieldPushReq fieldPushReq) {
+        return fieldService.pushFieldValue(fieldPushReq);
     }
 
     @PostMapping(RequestPathConstant.SAVE)
