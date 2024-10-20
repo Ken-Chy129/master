@@ -6,13 +6,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Master配置类
+ * Management配置类
  * @author Ken-Chy129
  * @date 2024/8/12
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Master {
+public @interface Management {
 
     /**
      * 指定用户命名空间，唯一标识一个业务类型，不可重复

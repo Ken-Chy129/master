@@ -9,13 +9,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 标识变量为可控制的变量，即受Master管控
+ * 标识可管理字段
  * @author Ken-Chy129
  * @date 2024/8/11
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ControllableVariable {
+public @interface ManageableField {
 
     /**
      * 变量描述

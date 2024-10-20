@@ -4,7 +4,7 @@ import cn.ken.master.client.annotations.ControllableVariable;
 import cn.ken.master.client.core.MasterContainer;
 import cn.ken.master.core.model.Request;
 import cn.ken.master.core.model.Result;
-import cn.ken.master.core.model.Variable;
+import cn.ken.master.core.model.ManageableField;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +17,9 @@ import java.util.Map;
 public class VariableGetAllRequestHandler implements RequestHandleStrategy {
 
     @Override
-    public Result<List<Variable>> handleRequest(Request request) {
+    public Result<List<ManageableField>> handleRequest(Request request) {
         Map<String, Map<String, ControllableVariable>> masterVariableMap = MasterContainer.getAllControllableVariableMap();
-        List<Variable> variableList = new ArrayList<>();
+        List<ManageableField> manageableFieldList = new ArrayList<>();
         for (var entry : masterVariableMap.entrySet()) {
             String namespace = entry.getKey();
             Map<String, ControllableVariable> variableMap = entry.getValue();
@@ -27,10 +27,10 @@ public class VariableGetAllRequestHandler implements RequestHandleStrategy {
                 String variableName = variableEntry.getKey();
                 ControllableVariable controllableVariable = variableEntry.getValue();
                 String description = controllableVariable.desc();
-                Variable variable = new Variable(namespace, variableName, description);
-                variableList.add(variable);
+                ManageableField manageableField = new ManageableField(namespace, variableName, description);
+                manageableFieldList.add(manageableField);
             }
         }
-        return Result.success(variableList);
+        return Result.success(manageableFieldList);
     }
 }
