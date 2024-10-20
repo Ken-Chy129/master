@@ -58,7 +58,7 @@ public class ManagementServer extends Thread {
                             List<NamespaceDO> namespaceDOList = namespaceList.stream()
                                     .map(namespace -> NamespaceDO.of(appId, namespace))
                                     .toList();
-                            namespaceService.
+//                            namespaceService.
 
                         } catch (AppStartException e) {
                             assert pw != null;
