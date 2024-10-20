@@ -25,6 +25,11 @@ public class AppDO extends BaseDO {
     private String description;
 
     /**
+     * 应用密钥
+     */
+    private String accessKey;
+
+    /**
      * 应用状态
      */
     private Integer status;
