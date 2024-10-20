@@ -26,4 +26,36 @@ public class Namespace {
      * 命名空间下可管理的字段
      */
     private List<Field> manageableFieldList;
+
+    public String getSimpleName() {
+        return simpleName;
+    }
+
+    public void setSimpleName(String simpleName) {
+        this.simpleName = simpleName;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public List<Field> getManageableFieldList() {
+        return manageableFieldList;
+    }
+
+    public void setManageableFieldList(List<Field> manageableFieldList) {
+        this.manageableFieldList = manageableFieldList;
+    }
 }
