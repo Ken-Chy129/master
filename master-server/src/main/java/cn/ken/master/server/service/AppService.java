@@ -12,4 +12,6 @@ public interface AppService {
     Result<List<AppDO>> selectAll();
 
     Result<Boolean> checkAuthority(Long appId, String accessKey);
+
+    Result<Boolean> startApp(Long appId, String accessKey);
 }

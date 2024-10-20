@@ -45,7 +45,7 @@ public class ManagementServer extends Thread {
                             RegisterRequest request = (RegisterRequest) ois.readObject();
                             Long appId = request.getAppId();
                             String accessKey = request.getAccessKey();
-                            Result<Boolean> authorityResult = appService.checkAuthority(appId, accessKey);
+                            Result<Boolean> authorityResult = appService.startApp(appId, accessKey);
                             if (!authorityResult.getSuccess()) {
                                 throw new AppStartException(authorityResult.getMessage());
                             }
@@ -58,7 +58,7 @@ public class ManagementServer extends Thread {
                             List<NamespaceDO> namespaceDOList = namespaceList.stream()
                                     .map(namespace -> NamespaceDO.of(appId, namespace))
                                     .toList();
-
+                            namespaceService.
 
                         } catch (AppStartException e) {
                             assert pw != null;
