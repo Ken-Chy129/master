@@ -1,5 +1,6 @@
 package cn.ken.master.server.model.entity;
 
+import cn.ken.master.core.model.Namespace;
 import cn.ken.master.server.common.BaseDO;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -24,4 +25,12 @@ public class NamespaceDO extends BaseDO {
      * 命名空间描述
      */
     private String description;
+
+    public static NamespaceDO of(Long appId, Namespace namespace) {
+        NamespaceDO namespaceDO = new NamespaceDO();
+        namespaceDO.setAppId(appId);
+        namespaceDO.setName(namespaceDO.getName());
+        namespaceDO.setDescription(namespaceDO.getDescription());
+        return namespaceDO;
+    }
 }

@@ -23,7 +23,7 @@ public class MachineDO extends BaseDO {
     /**
      * 机器端口号
      */
-    private String port;
+    private Integer port;
 
     /**
      * 机器状态

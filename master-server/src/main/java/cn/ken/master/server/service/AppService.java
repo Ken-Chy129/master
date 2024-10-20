@@ -10,4 +10,6 @@ public interface AppService {
     void insert(AppDO appDO);
 
     Result<List<AppDO>> selectAll();
+
+    Result<Boolean> checkAuthority(Long appId, String accessKey);
 }
