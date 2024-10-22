@@ -17,6 +17,11 @@ public class NamespaceDO extends BaseDO {
     private Long appId;
 
     /**
+     * 命名空间全类名
+     */
+    private String className;
+
+    /**
      * 命名空间名称
      */
     private String name;
