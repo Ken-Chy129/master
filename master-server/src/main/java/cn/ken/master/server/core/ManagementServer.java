@@ -29,8 +29,6 @@ public class ManagementServer extends Thread {
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(12949)) {
             AppService appService = ApplicationContextUtil.getBean(AppService.class);
-            MachineService machineService = ApplicationContextUtil.getBean(MachineService.class);
-            NamespaceService namespaceService = ApplicationContextUtil.getBean(NamespaceService.class);
             FieldService fieldService = ApplicationContextUtil.getBean(FieldService.class);
             Builder.OfVirtual appStartVTB = Thread.ofVirtual().name("AppStart-Thread");
             while (true) {
@@ -41,24 +39,18 @@ public class ManagementServer extends Thread {
                             //todo:新增事务处理
                             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
                             pw = new PrintWriter(socket.getOutputStream(), true);
-                            // 1.判断应用是否存在并鉴权
+                            // 1.应用启动
                             RegisterRequest request = (RegisterRequest) ois.readObject();
                             Long appId = request.getAppId();
                             String accessKey = request.getAccessKey();
-                            Result<Boolean> authorityResult = appService.startApp(appId, accessKey);
+                            String ipAddress = socket.getInetAddress().getHostAddress();
+                            Integer port = request.getPort();
+                            Result<Boolean> authorityResult = appService.startAppOnMachine(appId, accessKey, ipAddress, port);
                             if (!authorityResult.getSuccess()) {
                                 throw new AppStartException(authorityResult.getMessage());
                             }
-                            // 2.将当前机器绑定到应用上
-                            String ipAddress = socket.getInetAddress().getHostAddress();
-                            Integer port = request.getPort();
-                            machineService.bindMachine(appId, ipAddress, port);
-                            // 3.解析命名空间
-                            List<Namespace> namespaceList = request.getNamespaceList();
-                            List<NamespaceDO> namespaceDOList = namespaceList.stream()
-                                    .map(namespace -> NamespaceDO.of(appId, namespace))
-                                    .toList();
-//                            namespaceService.
+                            // 2.解析受管控字段
+                            Result<Boolean> booleanResult = fieldService.registerField(appId, request.getNamespaceList());
 
                         } catch (AppStartException e) {
                             assert pw != null;

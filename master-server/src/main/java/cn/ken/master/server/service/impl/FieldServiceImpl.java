@@ -1,10 +1,13 @@
 package cn.ken.master.server.service.impl;
 
+import cn.ken.master.core.model.Namespace;
 import cn.ken.master.core.model.Result;
 import cn.ken.master.server.core.AppContainer;
 import cn.ken.master.server.mapper.MachineMapper;
+import cn.ken.master.server.mapper.NamespaceMapper;
 import cn.ken.master.server.model.entity.FieldDO;
 import cn.ken.master.server.mapper.FieldMapper;
+import cn.ken.master.server.model.entity.NamespaceDO;
 import cn.ken.master.server.model.field.FieldPushReq;
 import cn.ken.master.server.service.FieldService;
 import cn.ken.master.server.utils.AppUtil;
@@ -22,6 +25,9 @@ public class FieldServiceImpl implements FieldService {
 
     @Resource
     private FieldMapper fieldMapper;
+
+    @Resource
+    private NamespaceMapper namespaceMapper;
 
     @Resource
     private MachineMapper machineMapper;
@@ -64,6 +70,21 @@ public class FieldServiceImpl implements FieldService {
 //                    socket.getOutputStream()
 //                }
 //        );
+        return null;
+    }
+
+    @Override
+    public Result<Boolean> registerField(Long appId, List<Namespace> namespaceList) {
+        // todo:写sql
+        List<NamespaceDO> namespaceDOList = namespaceList.stream()
+                .map(namespace -> NamespaceDO.of(appId, namespace))
+                .toList();
+        LambdaQueryWrapper<NamespaceDO> namespaceQueryWrapper = new LambdaQueryWrapper<>();
+        for (NamespaceDO namespace : namespaceDOList) {
+            namespaceQueryWrapper.or(wrapper -> wrapper.eq(NamespaceDO::getAppId, namespace.getAppId()).eq(NamespaceDO::getName, namespace.getName()));
+        }
+        List<NamespaceDO> namespaceResult = namespaceMapper.selectList(namespaceQueryWrapper);
+//        namespaceResult.
         return null;
     }
 }

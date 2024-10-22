@@ -30,20 +30,4 @@ public class MachineServiceImpl implements MachineService {
         machineMapper.insert(machineDO);
     }
 
-    @Override
-    public void bindMachine(Long appId, String ipAddress, Integer port) {
-        LambdaQueryWrapper<MachineDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(MachineDO::getAppId, appId)
-                    .eq(MachineDO::getIpAddress, ipAddress)
-                    .eq(MachineDO::getPort, port);
-        MachineDO machineDO = machineMapper.selectOne(queryWrapper);
-        if (machineDO == null) {
-            machineDO = new MachineDO();
-            machineDO.setAppId(appId);
-            machineDO.setIpAddress(ipAddress);
-            machineDO.setPort(port);
-        }
-        machineDO.setStatus(MachineStatus.RUNNING.getCode());
-        machineMapper.insertOrUpdate(machineDO);
-    }
 }

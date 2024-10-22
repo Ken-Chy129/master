@@ -1,11 +1,13 @@
 package cn.ken.master.server.service.impl;
 
 import cn.ken.master.core.model.Result;
+import cn.ken.master.server.common.enums.MachineStatus;
 import cn.ken.master.server.mapper.FieldMapper;
 import cn.ken.master.server.mapper.MachineMapper;
 import cn.ken.master.server.mapper.NamespaceMapper;
 import cn.ken.master.server.model.entity.AppDO;
 import cn.ken.master.server.mapper.AppMapper;
+import cn.ken.master.server.model.entity.MachineDO;
 import cn.ken.master.server.service.AppService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -43,27 +45,30 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
-    public Result<Boolean> checkAuthority(Long appId, String accessKey) {
-        AppDO appDOList = appMapper.selectById(appId);
-        if (appDOList == null) {
-            return Result.error("应用不存在");
-        }
-        if (!appDOList.getAccessKey().equals(accessKey)) {
-            return Result.error("应用密钥不正确");
-        }
-        return Result.success(true);
-    }
-
-    @Override
-    public Result<Boolean> startApp(Long appId, String accessKey) {
+    public Result<Boolean> startAppOnMachine(Long appId, String accessKey, String ipAddress, Integer port) {
         // todo：分为通用的绑定机器和Management
+        // 1.查询应用
         AppDO appDOList = appMapper.selectById(appId);
         if (appDOList == null) {
             return Result.error("应用不存在");
         }
+        // todo：加密
         if (!appDOList.getAccessKey().equals(accessKey)) {
             return Result.error("应用密钥不正确");
         }
-        return null;
+        // 2.绑定机器
+        LambdaQueryWrapper<MachineDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(MachineDO::getAppId, appId)
+                .eq(MachineDO::getIpAddress, ipAddress)
+                .eq(MachineDO::getPort, port);
+        MachineDO machineDO = machineMapper.selectOne(queryWrapper);
+        if (machineDO == null) {
+            machineDO = new MachineDO();
+            machineDO.setAppId(appId);
+            machineDO.setIpAddress(ipAddress);
+            machineDO.setPort(port);
+        }
+        machineDO.setStatus(MachineStatus.RUNNING.getCode());
+        return Result.success(machineMapper.insertOrUpdate(machineDO));
     }
 }

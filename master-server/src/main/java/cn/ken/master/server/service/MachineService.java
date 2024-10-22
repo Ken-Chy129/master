@@ -10,6 +10,4 @@ public interface MachineService {
     Result<List<MachineDO>> selectAll(Long appId);
 
     void insert(MachineDO machineDO);
-
-    void bindMachine(Long appId, String ipAddress, Integer port);
 }
