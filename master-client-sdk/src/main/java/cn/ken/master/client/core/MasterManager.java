@@ -105,28 +105,32 @@ public class MasterManager {
             // 2.保存变量控制类
             MasterContainer.addVariableMaster(aClass);
         }
-        if (check()) {
+        if (!check()) {
             log.error("");
             return;
         }
         // 1.连接服务端
-        try (
-                Socket serverSocket = new Socket(host, port);
-        ) {
+        try {
+            Socket serverSocket = new Socket(host, port);
+            log.info(String.valueOf(serverSocket.getPort()));
             // 1.发送应用名
             register(serverSocket);
+            Thread.sleep(1213213213213L);
 
             // 2.启动线程监听服务端命令
-            new CommandListener(serverSocket).start();
-
-            // 4.启动线程定时发送心跳检测包
-            new HeatBeatHandler(serverSocket).start();
+//            new CommandListener(serverSocket).start();
+//
+//            // 4.启动线程定时发送心跳检测包
+//            new HeatBeatHandler(serverSocket).start();
         } catch (UnknownHostException e) {
             throw new MasterException(MasterErrorCode.SERVER_HOST_INVALID);
         } catch (IllegalArgumentException e) {
             throw new MasterException(MasterErrorCode.SERVER_PORT_INVALID);
         } catch (IOException e) {
-            throw new MasterException(MasterErrorCode.SERVER_CONNECT_ERROR);
+//            throw new MasterException(MasterErrorCode.SERVER_CONNECT_ERROR);
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -139,9 +143,10 @@ public class MasterManager {
 
     private void register(Socket socket) throws IOException {
         try (
-                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                PrintWriter pw = new PrintWriter(socket.getOutputStream())
         ) {
+            log.info("!@#@#");
             RegisterRequest registerRequest = new RegisterRequest();
             registerRequest.setAppId(appId);
             registerRequest.setPort(8888);
@@ -158,10 +163,11 @@ public class MasterManager {
             field.setValue("hello");
             namespace.setManageableFieldList(List.of(field));
             registerRequest.setNamespaceList(List.of(namespace));
-            out.writeObject(registerRequest);
-            Result<String> result = (Result<String>) in.readObject();
-            System.out.println(result);
-        } catch (ClassNotFoundException e) {
+            log.info(registerRequest.toString());
+            pw.println(registerRequest);
+//            Result<String> result = (Result<String>) in.readObject();
+//            System.out.println(result);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
