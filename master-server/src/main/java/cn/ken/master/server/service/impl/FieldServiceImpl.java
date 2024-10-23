@@ -1,5 +1,6 @@
 package cn.ken.master.server.service.impl;
 
+import cn.ken.master.core.model.Field;
 import cn.ken.master.core.model.Namespace;
 import cn.ken.master.core.model.Result;
 import cn.ken.master.server.core.AppContainer;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,16 +77,48 @@ public class FieldServiceImpl implements FieldService {
 
     @Override
     public Result<Boolean> registerField(Long appId, List<Namespace> namespaceList) {
-        // todo:写sql
-        List<NamespaceDO> namespaceDOList = namespaceList.stream()
-                .map(namespace -> NamespaceDO.of(appId, namespace))
-                .toList();
         LambdaQueryWrapper<NamespaceDO> namespaceQueryWrapper = new LambdaQueryWrapper<>();
-        for (NamespaceDO namespace : namespaceDOList) {
-            namespaceQueryWrapper.or(wrapper -> wrapper.eq(NamespaceDO::getAppId, namespace.getAppId()).eq(NamespaceDO::getName, namespace.getName()));
+        LambdaQueryWrapper<FieldDO> fieldQueryWrapper = new LambdaQueryWrapper<>();
+        for (Namespace namespace : namespaceList) {
+            // 1. 找到对应的namespaceId，如果不存在则新增
+            namespaceQueryWrapper.eq(NamespaceDO::getAppId, appId)
+                            .eq(NamespaceDO::getClassName, namespace.getClassName());
+            NamespaceDO namespaceDO = namespaceMapper.selectOne(namespaceQueryWrapper);
+            if (namespaceDO == null) {
+                namespaceDO = new NamespaceDO();
+                namespaceDO.setAppId(appId);
+                namespaceDO.setClassName(namespace.getClassName());
+            }
+            namespaceDO.setName(namespace.getSimpleName());
+            namespaceDO.setDescription(namespace.getDesc());
+            namespaceMapper.insertOrUpdate(namespaceDO);
+            Long namespaceId = namespaceDO.getId();
+            if (namespaceId == null) {
+                NamespaceDO newNamespaceDO = namespaceMapper.selectOne(namespaceQueryWrapper);
+                if (newNamespaceDO == null) {
+                    continue;
+                }
+                namespaceId = newNamespaceDO.getId();
+            }
+            namespaceQueryWrapper.clear();
+            // 2. 插入或更新命名空间下的变量
+            List<Field> manageableFieldList = namespace.getManageableFieldList();
+            for (Field field : manageableFieldList) {
+                fieldQueryWrapper.eq(FieldDO::getAppId, appId)
+                        .eq(FieldDO::getNamespaceId, namespaceId)
+                        .eq(FieldDO::getName, field.getName());
+                FieldDO fieldDO = fieldMapper.selectOne(fieldQueryWrapper);
+                if (fieldDO == null) {
+                    fieldDO = new FieldDO();
+                    fieldDO.setAppId(appId);
+                    fieldDO.setNamespaceId(namespaceId);
+                    fieldDO.setName(field.getName());
+                }
+                fieldDO.setDescription(field.getDesc());
+                fieldMapper.insertOrUpdate(fieldDO);
+                fieldQueryWrapper.clear();
+            }
         }
-        List<NamespaceDO> namespaceResult = namespaceMapper.selectList(namespaceQueryWrapper);
-//        namespaceResult.
-        return null;
+        return Result.success(true);
     }
 }

@@ -1,15 +1,11 @@
 package cn.ken.master.server.core;
 
-import cn.ken.master.core.model.Namespace;
 import cn.ken.master.core.model.RegisterRequest;
 import cn.ken.master.core.model.Result;
 import cn.ken.master.server.common.AppStartException;
 import cn.ken.master.server.model.entity.AppDO;
-import cn.ken.master.server.model.entity.NamespaceDO;
 import cn.ken.master.server.service.AppService;
 import cn.ken.master.server.service.FieldService;
-import cn.ken.master.server.service.MachineService;
-import cn.ken.master.server.service.NamespaceService;
 import cn.ken.master.server.utils.ApplicationContextUtil;
 
 import java.io.IOException;
@@ -17,7 +13,6 @@ import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
 
 public class ManagementServer extends Thread {
 
@@ -45,18 +40,17 @@ public class ManagementServer extends Thread {
                             String accessKey = request.getAccessKey();
                             String ipAddress = socket.getInetAddress().getHostAddress();
                             Integer port = request.getPort();
-                            Result<Boolean> authorityResult = appService.startAppOnMachine(appId, accessKey, ipAddress, port);
-                            if (!authorityResult.getSuccess()) {
-                                throw new AppStartException(authorityResult.getMessage());
+                            Result<Boolean> result1 = appService.startAppOnMachine(appId, accessKey, ipAddress, port);
+                            if (!result1.getSuccess()) {
+                                pw.print(result1);
                             }
                             // 2.解析受管控字段
-                            Result<Boolean> booleanResult = fieldService.registerField(appId, request.getNamespaceList());
-
-                        } catch (AppStartException e) {
-                            assert pw != null;
-                            pw.print(Result.error(e.getMessage()));
+                            Result<Boolean> result2 = fieldService.registerField(appId, request.getNamespaceList());
+                            pw.println(result2);
                         } catch (Exception e) {
-                            throw new RuntimeException(e);
+                            if (pw != null) {
+                                pw.println(Result.error(e.getMessage()));
+                            }
                         }
                     });
                 }

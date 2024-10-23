@@ -3,4 +3,5 @@
 <mapper namespace="cn.ken.master.server.mapper.NamespaceMapper">
 
 
+
 </mapper>
