@@ -55,4 +55,14 @@ public class RegisterRequest {
     public void setNamespaceList(List<Namespace> namespaceList) {
         this.namespaceList = namespaceList;
     }
+
+    @Override
+    public String toString() {
+        return "RegisterRequest{" +
+                "appId=" + appId +
+                ", accessKey='" + accessKey + '\'' +
+                ", port=" + port +
+                ", namespaceList=" + namespaceList +
+                '}';
+    }
 }
