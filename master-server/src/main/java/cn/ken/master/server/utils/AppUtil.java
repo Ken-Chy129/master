@@ -10,7 +10,7 @@ public class AppUtil {
 
     public static String generateMachineKey(MachineDO machineDO) {
         String ipAddress = machineDO.getIpAddress();
-        String port = machineDO.getPort();
+        String port = String.valueOf(machineDO.getPort());
         return generateMachineKey(ipAddress, port);
     }
 }

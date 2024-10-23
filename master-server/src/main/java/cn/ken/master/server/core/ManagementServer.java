@@ -7,6 +7,7 @@ import cn.ken.master.server.model.entity.AppDO;
 import cn.ken.master.server.service.AppService;
 import cn.ken.master.server.service.FieldService;
 import cn.ken.master.server.utils.ApplicationContextUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,6 +15,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+@Slf4j
 public class ManagementServer extends Thread {
 
     public ManagementServer() {
@@ -23,9 +25,11 @@ public class ManagementServer extends Thread {
     @Override
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(12949)) {
+
             AppService appService = ApplicationContextUtil.getBean(AppService.class);
             FieldService fieldService = ApplicationContextUtil.getBean(FieldService.class);
             Builder.OfVirtual appStartVTB = Thread.ofVirtual().name("AppStart-Thread");
+            log.info("ManagementServer启动成功");
             while (true) {
                 try (Socket socket = serverSocket.accept()) {
                     appStartVTB.start(() -> {

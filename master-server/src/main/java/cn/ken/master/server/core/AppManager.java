@@ -14,11 +14,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Slf4j
-@Component
+//@Component
 public class AppManager {
 
-    public void init() {
-
+    public static void init() {
+        ManagementServer managementServer = new ManagementServer();
+        managementServer.start();
     }
 
 
