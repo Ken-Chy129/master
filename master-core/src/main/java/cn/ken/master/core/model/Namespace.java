@@ -1,11 +1,16 @@
 package cn.ken.master.core.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 命名空间
  */
-public class Namespace {
+public class Namespace implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 6261016102135107042L;
 
     /**
      * 别名
@@ -57,5 +62,15 @@ public class Namespace {
 
     public void setManageableFieldList(List<Field> manageableFieldList) {
         this.manageableFieldList = manageableFieldList;
+    }
+
+    @Override
+    public String toString() {
+        return "Namespace{" +
+                "simpleName='" + simpleName + '\'' +
+                ", className='" + className + '\'' +
+                ", desc='" + desc + '\'' +
+                ", manageableFieldList=" + manageableFieldList +
+                '}';
     }
 }

@@ -1,6 +1,12 @@
 package cn.ken.master.core.model;
 
-public class Field {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Field implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -3556293581160862661L;
 
     /**
      * 字段所属命名空间
@@ -52,5 +58,15 @@ public class Field {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return "Field{" +
+                "namespace='" + namespace + '\'' +
+                ", name='" + name + '\'' +
+                ", desc='" + desc + '\'' +
+                ", value='" + value + '\'' +
+                '}';
     }
 }

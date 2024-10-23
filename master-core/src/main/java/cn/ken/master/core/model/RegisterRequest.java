@@ -1,8 +1,13 @@
 package cn.ken.master.core.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
-public class RegisterRequest {
+public class RegisterRequest implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -6589392299304059964L;
 
     /**
      * 应用id
