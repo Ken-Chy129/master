@@ -1,7 +1,7 @@
 package cn.ken.master.client.util;
 
-import cn.ken.master.client.annotations.ControllableVariable;
-import cn.ken.master.client.annotations.Master;
+import cn.ken.master.client.annotations.ManageableField;
+import cn.ken.master.client.annotations.Management;
 import cn.ken.master.client.exception.MasterErrorCode;
 import cn.ken.master.client.exception.MasterException;
 
@@ -21,7 +21,7 @@ public class MasterUtil {
         if (Objects.isNull(clazz)) {
             return false;
         }
-        Master declaredAnnotation = clazz.getDeclaredAnnotation(Master.class);
+        Management declaredAnnotation = clazz.getDeclaredAnnotation(Management.class);
         return declaredAnnotation != null;
     }
 
@@ -32,7 +32,7 @@ public class MasterUtil {
         if (Objects.isNull(field)) {
             return false;
         }
-        ControllableVariable declaredAnnotation = field.getDeclaredAnnotation(ControllableVariable.class);
+        ManageableField declaredAnnotation = field.getDeclaredAnnotation(ManageableField.class);
         if (Objects.isNull(declaredAnnotation)) {
             return false;
         }
