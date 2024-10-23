@@ -18,10 +18,10 @@ public @interface Management {
      * 指定用户命名空间，唯一标识一个业务类型，不可重复
      * 如果没有设置默认使用全类名
      */
-    String namespace();
+    String namespace() default "";
 
     /**
      * 业务定义描述
      */
-    String desc();
+    String desc() default "";
 }

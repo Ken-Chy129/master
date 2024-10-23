@@ -1,7 +1,7 @@
 package cn.ken.master.client.core;
 
-import cn.ken.master.client.annotations.ControllableVariable;
-import cn.ken.master.client.annotations.Master;
+import cn.ken.master.client.annotations.ManageableField;
+import cn.ken.master.client.annotations.Management;
 import cn.ken.master.client.exception.MasterException;
 import cn.ken.master.client.util.MasterUtil;
 
@@ -20,12 +20,12 @@ public class MasterContainer {
     /**
      * key: namespace, value: Master注解对象
      */
-    private static final Map<String, Master> NAMESPACE_MASTER_MAP = new HashMap<>();
+    private static final Map<String, Management> NAMESPACE_MASTER_MAP = new HashMap<>();
 
     /**
      * key
      */
-    private static final Map<String, Map<String, ControllableVariable>> CONTROLLABLE_VARIABLE_MAP = new HashMap<>();
+    private static final Map<String, Map<String, ManageableField>> CONTROLLABLE_VARIABLE_MAP = new HashMap<>();
 
     /**
      * key: namespace, value: {key: name, value:Field}，todo：缓存减少反射开销
@@ -37,7 +37,7 @@ public class MasterContainer {
      * @param masterClazz 变量管控类
      */
     public static void addVariableMaster(Class<?> masterClazz) {
-        Master annotation = masterClazz.getDeclaredAnnotation(Master.class);
+        Management annotation = masterClazz.getDeclaredAnnotation(Management.class);
         assert annotation != null;
         String namespace = annotation.namespace();
         if (Objects.isNull(namespace)) {
@@ -45,27 +45,27 @@ public class MasterContainer {
         }
         NAMESPACE_MASTER_MAP.put(namespace, annotation);
         Map<String, Field> fieldMap = new HashMap<>();
-        Map<String, ControllableVariable> variableMap = new HashMap<>();
+        Map<String, ManageableField> variableMap = new HashMap<>();
         Field[] declaredFields = masterClazz.getDeclaredFields();
         for (Field declaredField : declaredFields) {
             if (MasterUtil.isMasterVariable(declaredField)) {
                 fieldMap.put(declaredField.getName(), declaredField);
-                variableMap.put(declaredField.getName(), declaredField.getDeclaredAnnotation(ControllableVariable.class));
+                variableMap.put(declaredField.getName(), declaredField.getDeclaredAnnotation(ManageableField.class));
             }
         }
         CONTROLLABLE_VARIABLE_MAP.put(namespace, variableMap);
         NASTER_FIELD_MAP.put(namespace, fieldMap);
     }
 
-    public static Map<String, Master> getNamespaceMasterMap() {
+    public static Map<String, Management> getNamespaceMasterMap() {
         return NAMESPACE_MASTER_MAP;
     }
 
-    public static Map<String, Map<String, ControllableVariable>> getAllControllableVariableMap() {
+    public static Map<String, Map<String, ManageableField>> getAllControllableVariableMap() {
         return CONTROLLABLE_VARIABLE_MAP;
     }
 
-    public static Map<String, ControllableVariable> getControllableVariableMapByNamespace(String namespace) {
+    public static Map<String, ManageableField> getControllableVariableMapByNamespace(String namespace) {
         return CONTROLLABLE_VARIABLE_MAP.get(namespace);
     }
 

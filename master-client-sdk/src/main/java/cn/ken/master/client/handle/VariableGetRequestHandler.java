@@ -1,9 +1,9 @@
 package cn.ken.master.client.handle;
 
-import cn.ken.master.client.annotations.ControllableVariable;
+import cn.ken.master.client.annotations.ManageableField;
+import cn.ken.master.core.model.Field;
 import cn.ken.master.core.model.Request;
 import cn.ken.master.core.model.Result;
-import cn.ken.master.core.model.ManageableField;
 import cn.ken.master.core.constant.RequestParameterKeyConstants;
 import cn.ken.master.client.core.MasterContainer;
 
@@ -27,17 +27,19 @@ public class VariableGetRequestHandler implements RequestHandleStrategy {
         if (Objects.isNull(namespace)) {
             return Result.error("请输入namespace");
         }
-        Map<String, ControllableVariable> controllableVariableMap = MasterContainer.getControllableVariableMapByNamespace(namespace);
+        Map<String, ManageableField> controllableVariableMap = MasterContainer.getControllableVariableMapByNamespace(namespace);
         if (Objects.isNull(controllableVariableMap)) {
             return Result.error("namespace不存在");
         }
-        List<ManageableField> manageableFieldList = new ArrayList<>();
+        List<Field> manageableFieldList = new ArrayList<>();
         for (var variableEntry : controllableVariableMap.entrySet()) {
             String variableName = variableEntry.getKey();
-            ControllableVariable controllableVariable = variableEntry.getValue();
+            ManageableField controllableVariable = variableEntry.getValue();
             String description = controllableVariable.desc();
-            ManageableField manageableField = new ManageableField(namespace, variableName, description);
-            manageableFieldList.add(manageableField);
+            Field field = new Field();
+            field.setName(variableName);
+            field.setDesc(description);
+            manageableFieldList.add(field);
         }
         return Result.success(manageableFieldList);
     }
