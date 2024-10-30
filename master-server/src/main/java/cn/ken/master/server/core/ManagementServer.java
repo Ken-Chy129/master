@@ -29,17 +29,22 @@ public class ManagementServer extends Thread {
             Builder.OfVirtual appStartVTB = Thread.ofVirtual().name("AppStart-Thread");
             log.info("ManagementServer启动成功，端口号:{}, ip地址:{}", serverSocket.getLocalPort(), serverSocket.getLocalSocketAddress());
             while (true) {
+                System.out.println("开始");
                 Socket socket = serverSocket.accept();
-                appStartVTB.start(() -> {
-                    try (
-                        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                        PrintWriter out = new PrintWriter(socket.getOutputStream(), true)
-                    ) {
-                        log.info("应用连接|host:{},port:{}", socket.getInetAddress().getHostAddress(), socket.getPort());
-                        //todo:新增事务处理
-                        // 1.应用启动
-                        String request = in.readLine();
-                        log.info(request.toString());
+                System.out.println(socket.getRemoteSocketAddress());
+                try (
+                        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())
+                ) {
+                    out.writeObject("123");
+                    log.info("应用连接|host:{},port:{}", socket.getInetAddress().getHostAddress(), socket.getPort());
+                    //todo:新增事务处理
+                    // 1.应用启动
+                    RegisterRequest request = (RegisterRequest) in.readObject();
+                    System.out.println("okRead");
+                    System.out.println(request);
+                    out.writeObject("success!");
+                    System.out.println("okSend");
 //
 //                            Long appId = request.getAppId();
 //                            String accessKey = request.getAccessKey();
@@ -52,10 +57,13 @@ public class ManagementServer extends Thread {
 //                            // 2.解析受管控字段
 //                            Result<Boolean> result2 = fieldService.registerField(appId, request.getNamespaceList());
 //                            pw.println(result2);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
+                    socket.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+//                appStartVTB.start(() -> {
+//
+//                });
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

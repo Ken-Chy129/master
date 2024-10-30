@@ -3,18 +3,13 @@ package cn.ken.master.client.core;
 import cn.ken.master.client.exception.MasterErrorCode;
 import cn.ken.master.client.exception.MasterException;
 import cn.ken.master.client.util.MasterUtil;
-import cn.ken.master.core.enums.RequestTypeEnum;
 import cn.ken.master.core.model.*;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Master管理类
@@ -106,22 +101,21 @@ public class MasterManager {
             MasterContainer.addVariableMaster(aClass);
         }
         if (!check()) {
-            log.error("");
             return;
         }
         // 1.连接服务端
         try {
-            Socket serverSocket = new Socket(host, port);
-            log.info(String.valueOf(serverSocket.getPort()));
+            Socket socket = new Socket(host, port);
+            log.info(String.valueOf(socket.getPort()));
             // 1.发送应用名
-            register(serverSocket);
-            Thread.sleep(1213213213213L);
-
+            register(socket);
+//            Thread.sleep(1213213213213L);
             // 2.启动线程监听服务端命令
-//            new CommandListener(serverSocket).start();
+//            new CommandListener(socket).start();
 //
 //            // 4.启动线程定时发送心跳检测包
-//            new HeatBeatHandler(serverSocket).start();
+//            new HeatBeatHandler(socket).start();
+            socket.close();
         } catch (UnknownHostException e) {
             throw new MasterException(MasterErrorCode.SERVER_HOST_INVALID);
         } catch (IllegalArgumentException e) {
@@ -129,9 +123,8 @@ public class MasterManager {
         } catch (IOException e) {
 //            throw new MasterException(MasterErrorCode.SERVER_CONNECT_ERROR);
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
+        System.out.println("12312321213213123123213");
     }
 
     private boolean check() {
@@ -142,11 +135,12 @@ public class MasterManager {
     }
 
     private void register(Socket socket) throws IOException {
+        System.out.println(socket.getLocalPort());
         try (
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                PrintWriter pw = new PrintWriter(socket.getOutputStream())
+//                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())
         ) {
-            log.info("!@#@#");
+            log.info("test");
             RegisterRequest registerRequest = new RegisterRequest();
             registerRequest.setAppId(appId);
             registerRequest.setPort(8888);
@@ -164,7 +158,13 @@ public class MasterManager {
             namespace.setManageableFieldList(List.of(field));
             registerRequest.setNamespaceList(List.of(namespace));
             log.info(registerRequest.toString());
-            pw.println(registerRequest);
+            out.writeObject(registerRequest);
+            System.out.println("finishSend");
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            System.out.println(in.readObject());
+//            String s = in.readLine();
+//            System.out.println("123213213");
+//            System.out.println(s);
 //            Result<String> result = (Result<String>) in.readObject();
 //            System.out.println(result);
         } catch (Exception e) {
