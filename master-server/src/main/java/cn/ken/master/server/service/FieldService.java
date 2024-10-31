@@ -17,5 +17,5 @@ public interface FieldService {
 
     Result<Boolean> pushFieldValue(FieldPushReq fieldPushReq);
 
-    Result<Boolean> registerField(Long appId, List<Namespace> namespaceList);
+   void registerField(Long appId, List<Namespace> namespaceList);
 }

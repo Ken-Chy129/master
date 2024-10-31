@@ -135,12 +135,10 @@ public class MasterManager {
     }
 
     private void register(Socket socket) throws IOException {
-        System.out.println(socket.getLocalPort());
         try (
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())
+                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream())
         ) {
-            log.info("test");
             RegisterRequest registerRequest = new RegisterRequest();
             registerRequest.setAppId(appId);
             registerRequest.setPort(8888);
@@ -159,14 +157,9 @@ public class MasterManager {
             registerRequest.setNamespaceList(List.of(namespace));
             log.info(registerRequest.toString());
             out.writeObject(registerRequest);
-            System.out.println("finishSend");
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             System.out.println(in.readObject());
-//            String s = in.readLine();
-//            System.out.println("123213213");
-//            System.out.println(s);
-//            Result<String> result = (Result<String>) in.readObject();
-//            System.out.println(result);
+            Result<String> result = (Result<String>) in.readObject();
+            System.out.println(result);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

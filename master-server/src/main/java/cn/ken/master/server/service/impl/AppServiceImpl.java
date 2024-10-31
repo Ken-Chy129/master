@@ -1,6 +1,7 @@
 package cn.ken.master.server.service.impl;
 
 import cn.ken.master.core.model.Result;
+import cn.ken.master.server.common.AppStartException;
 import cn.ken.master.server.common.enums.MachineStatus;
 import cn.ken.master.server.mapper.FieldMapper;
 import cn.ken.master.server.mapper.MachineMapper;
@@ -27,12 +28,6 @@ public class AppServiceImpl implements AppService {
     @Resource
     private MachineMapper machineMapper;
 
-    @Resource
-    private NamespaceMapper namespaceMapper;
-
-    @Resource
-    private FieldMapper fieldMapper;
-
     @Override
     public void insert(AppDO appDO) {
         appMapper.insert(appDO);
@@ -45,16 +40,16 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
-    public Result<Boolean> startAppOnMachine(Long appId, String accessKey, String ipAddress, Integer port) {
+    public void startAppOnMachine(Long appId, String accessKey, String ipAddress, Integer port) {
         // todo：分为通用的绑定机器和Management
         // 1.查询应用
         AppDO appDOList = appMapper.selectById(appId);
         if (appDOList == null) {
-            return Result.error("应用不存在");
+            throw new AppStartException("应用不存在");
         }
         // todo：加密
         if (!appDOList.getAccessKey().equals(accessKey)) {
-            return Result.error("应用密钥不正确");
+            throw new AppStartException("应用密钥不正确");
         }
         // 2.绑定机器
         LambdaQueryWrapper<MachineDO> queryWrapper = new LambdaQueryWrapper<>();
@@ -69,6 +64,6 @@ public class AppServiceImpl implements AppService {
             machineDO.setPort(port);
         }
         machineDO.setStatus(MachineStatus.RUNNING.getCode());
-        return Result.success(machineMapper.insertOrUpdate(machineDO));
+        machineMapper.insertOrUpdate(machineDO);
     }
 }

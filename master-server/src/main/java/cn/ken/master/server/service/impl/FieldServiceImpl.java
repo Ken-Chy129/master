@@ -76,7 +76,7 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public Result<Boolean> registerField(Long appId, List<Namespace> namespaceList) {
+    public void registerField(Long appId, List<Namespace> namespaceList) {
         LambdaQueryWrapper<NamespaceDO> namespaceQueryWrapper = new LambdaQueryWrapper<>();
         LambdaQueryWrapper<FieldDO> fieldQueryWrapper = new LambdaQueryWrapper<>();
         for (Namespace namespace : namespaceList) {
@@ -119,6 +119,5 @@ public class FieldServiceImpl implements FieldService {
                 fieldQueryWrapper.clear();
             }
         }
-        return Result.success(true);
     }
 }

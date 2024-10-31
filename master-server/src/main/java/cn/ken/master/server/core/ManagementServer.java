@@ -8,6 +8,8 @@ import cn.ken.master.server.service.AppService;
 import cn.ken.master.server.service.FieldService;
 import cn.ken.master.server.utils.ApplicationContextUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -23,47 +25,49 @@ public class ManagementServer extends Thread {
     @Override
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(12949)) {
-
             AppService appService = ApplicationContextUtil.getBean(AppService.class);
             FieldService fieldService = ApplicationContextUtil.getBean(FieldService.class);
             Builder.OfVirtual appStartVTB = Thread.ofVirtual().name("AppStart-Thread");
             log.info("ManagementServer启动成功，端口号:{}, ip地址:{}", serverSocket.getLocalPort(), serverSocket.getLocalSocketAddress());
             while (true) {
-                System.out.println("开始");
                 Socket socket = serverSocket.accept();
-                System.out.println(socket.getRemoteSocketAddress());
-                try (
-                        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())
-                ) {
-                    out.writeObject("123");
-                    log.info("应用连接|host:{},port:{}", socket.getInetAddress().getHostAddress(), socket.getPort());
-                    //todo:新增事务处理
-                    // 1.应用启动
-                    RegisterRequest request = (RegisterRequest) in.readObject();
-                    System.out.println("okRead");
-                    System.out.println(request);
-                    out.writeObject("success!");
-                    System.out.println("okSend");
-//
-//                            Long appId = request.getAppId();
-//                            String accessKey = request.getAccessKey();
-//                            String ipAddress = socket.getInetAddress().getHostAddress();
-//                            Integer port = request.getPort();
-//                            Result<Boolean> result1 = appService.startAppOnMachine(appId, accessKey, ipAddress, port);
-//                            if (!result1.getSuccess()) {
-//                                pw.print(result1);
-//                            }
-//                            // 2.解析受管控字段
-//                            Result<Boolean> result2 = fieldService.registerField(appId, request.getNamespaceList());
-//                            pw.println(result2);
-                    socket.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-//                appStartVTB.start(() -> {
-//
-//                });
+                appStartVTB.start(() -> {
+                    ObjectOutputStream out = null;
+                    ObjectInputStream in;
+                    try {
+                        out = new ObjectOutputStream(socket.getOutputStream());
+                        in = new ObjectInputStream(socket.getInputStream());
+                        log.info("应用连接|host:{},port:{}", socket.getInetAddress().getHostAddress(), socket.getPort());
+                        //todo:新增事务处理
+                        // 1.应用启动
+                        RegisterRequest request = (RegisterRequest) in.readObject();
+                        Long appId = request.getAppId();
+                        String accessKey = request.getAccessKey();
+                        String ipAddress = socket.getInetAddress().getHostAddress();
+                        Integer port = request.getPort();
+                        appService.startAppOnMachine(appId, accessKey, ipAddress, port);
+                        // 2.解析受管控字段
+                        fieldService.registerField(appId, request.getNamespaceList());
+
+                    } catch (Exception e) {
+                        log.error(e.getMessage(), e);
+                        if (out != null) {
+                            try {
+                                out.writeObject(Result.error(e.getMessage()));
+                            } catch (IOException ignored) {
+
+                            }
+                        }
+                    } finally {
+                        if (socket != null) {
+                            try {
+                                socket.close();
+                            } catch (IOException ignored) {
+
+                            }
+                        }
+                    }
+                });
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

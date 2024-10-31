@@ -11,5 +11,5 @@ public interface AppService {
 
     Result<List<AppDO>> selectAll();
 
-    Result<Boolean> startAppOnMachine(Long appId, String accessKey, String ipAddress, Integer port);
+    void startAppOnMachine(Long appId, String accessKey, String ipAddress, Integer port);
 }
