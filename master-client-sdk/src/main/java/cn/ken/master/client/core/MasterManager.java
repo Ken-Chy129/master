@@ -119,7 +119,6 @@ public class MasterManager {
 //            throw new MasterException(MasterErrorCode.SERVER_CONNECT_ERROR);
             e.printStackTrace();
         }
-        System.out.println("12312321213213123123213");
     }
 
     private boolean check() {
@@ -139,7 +138,7 @@ public class MasterManager {
             RegisterRequest registerRequest = new RegisterRequest();
             registerRequest.setAppId(appId);
             registerRequest.setPort(8888);
-            registerRequest.setAccessKey("test");
+            registerRequest.setAccessKey(accessKey);
 //            MasterContainer.
             Namespace namespace = new Namespace();
             namespace.setClassName("cn.ken.test.TestSwitch");

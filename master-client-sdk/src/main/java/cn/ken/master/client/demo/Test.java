@@ -15,8 +15,8 @@ public class Test {
         MasterManager manager = new MasterManager();
         manager.setHost("127.0.0.1");
         manager.setPort(12949);
-        manager.setAppId(10086L);
-        manager.setAccessKey("123213asasdsa123rv3216tht");
+        manager.setAppId(1L);
+        manager.setAccessKey("123");
         List<Class<?>> classList = new ArrayList<>();
         classList.add(CommonBizVariables.class);
         manager.init(classList);

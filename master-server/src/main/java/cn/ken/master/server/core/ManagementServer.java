@@ -2,14 +2,11 @@ package cn.ken.master.server.core;
 
 import cn.ken.master.core.model.RegisterRequest;
 import cn.ken.master.core.model.Result;
-import cn.ken.master.server.common.AppStartException;
 import cn.ken.master.server.model.entity.AppDO;
 import cn.ken.master.server.service.AppService;
 import cn.ken.master.server.service.FieldService;
 import cn.ken.master.server.utils.ApplicationContextUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -48,7 +45,7 @@ public class ManagementServer extends Thread {
                         appService.startAppOnMachine(appId, accessKey, ipAddress, port);
                         // 2.解析受管控字段
                         fieldService.registerField(appId, request.getNamespaceList());
-
+                        out.writeObject(Result.success("success"));
                     } catch (Exception e) {
                         log.error(e.getMessage(), e);
                         if (out != null) {
