@@ -54,17 +54,13 @@ public class ManagementServer extends Thread {
                         if (out != null) {
                             try {
                                 out.writeObject(Result.error(e.getMessage()));
-                            } catch (IOException ignored) {
-
-                            }
+                            } catch (IOException ignored) {}
                         }
                     } finally {
                         if (socket != null) {
                             try {
                                 socket.close();
-                            } catch (IOException ignored) {
-
-                            }
+                            } catch (IOException ignored) {}
                         }
                     }
                 });

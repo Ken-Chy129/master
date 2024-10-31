@@ -105,17 +105,12 @@ public class MasterManager {
         }
         // 1.连接服务端
         try {
-            Socket socket = new Socket(host, port);
-            log.info(String.valueOf(socket.getPort()));
             // 1.发送应用名
-            register(socket);
-//            Thread.sleep(1213213213213L);
+            register();
             // 2.启动线程监听服务端命令
 //            new CommandListener(socket).start();
-//
 //            // 4.启动线程定时发送心跳检测包
 //            new HeatBeatHandler(socket).start();
-            socket.close();
         } catch (UnknownHostException e) {
             throw new MasterException(MasterErrorCode.SERVER_HOST_INVALID);
         } catch (IllegalArgumentException e) {
@@ -134,11 +129,13 @@ public class MasterManager {
         return true;
     }
 
-    private void register(Socket socket) throws IOException {
+    private void register() throws IOException {
         try (
+                Socket socket = new Socket(host, port);
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream())
         ) {
+            log.info("成功连接服务端,服务端ip地址为:{},端口号为:{},本地端口号为:{},", host, port, socket.getLocalPort());
             RegisterRequest registerRequest = new RegisterRequest();
             registerRequest.setAppId(appId);
             registerRequest.setPort(8888);
@@ -155,11 +152,14 @@ public class MasterManager {
             field.setValue("hello");
             namespace.setManageableFieldList(List.of(field));
             registerRequest.setNamespaceList(List.of(namespace));
-            log.info(registerRequest.toString());
             out.writeObject(registerRequest);
-            System.out.println(in.readObject());
-            Result<String> result = (Result<String>) in.readObject();
-            System.out.println(result);
+            Result<?> result = (Result<?>) in.readObject();
+            if (result.isSuccess()) {
+                Object data = result.getData();
+                log.info("应用注册成功");
+            } else {
+                log.error("应用注册失败:{}", result.getMessage());
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
