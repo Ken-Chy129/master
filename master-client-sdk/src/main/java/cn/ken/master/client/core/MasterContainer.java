@@ -64,6 +64,10 @@ public class MasterContainer {
         return MANAGEMENTS;
     }
 
+    public static Map<String, Map<String, ManageableField>> getManageableFieldMap() {
+        return MANAGEABLE_FIELD_MAP;
+    }
+
     private static ManageableFieldDTO convert(String clazzName, ManageableField manageableField) {
         ManageableFieldDTO manageableFieldDTO = new ManageableFieldDTO();
         manageableFieldDTO.setClazzName(clazzName);

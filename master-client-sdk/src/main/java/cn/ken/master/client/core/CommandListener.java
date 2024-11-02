@@ -57,7 +57,8 @@ public class CommandListener extends Thread {
                         out.writeObject(Result.error("请求的方法不存在"));
                         continue;
                     }
-                    out.writeObject(requestHandler.handleRequest(commandRequest));
+                    Result<?> result = requestHandler.handleRequest(commandRequest);
+                    out.writeObject(result);
                 } catch (Exception e) {
                     log.error("指令处理异常:{}", e.getMessage());
                 }

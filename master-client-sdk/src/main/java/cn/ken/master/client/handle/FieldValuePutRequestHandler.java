@@ -2,13 +2,7 @@ package cn.ken.master.client.handle;
 
 import cn.ken.master.core.model.Request;
 import cn.ken.master.core.model.Result;
-import cn.ken.master.core.constant.RequestParameterKeyConstants;
 import cn.ken.master.core.model.VariableChange;
-import cn.ken.master.client.core.MasterContainer;
-
-import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * 变量修改请求处理器
@@ -16,7 +10,7 @@ import java.util.Objects;
  * @author Ken-Chy129
  * @date 2024/8/11
  */
-public class VariablePutRequestHandler implements RequestHandleStrategy {
+public class FieldValuePutRequestHandler implements RequestHandleStrategy {
 
     @Override
     public Result<VariableChange> handleRequest(Request commandRequest) {

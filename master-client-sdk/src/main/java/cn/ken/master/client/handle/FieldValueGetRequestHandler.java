@@ -3,13 +3,6 @@ package cn.ken.master.client.handle;
 
 import cn.ken.master.core.model.Request;
 import cn.ken.master.core.model.Result;
-import cn.ken.master.core.constant.RequestParameterKeyConstants;
-import cn.ken.master.client.core.MasterContainer;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * 变量查询请求处理器
@@ -17,7 +10,7 @@ import java.util.Objects;
  * @author Ken-Chy129
  * @date 2024/8/11
  */
-public class VariableGetRequestHandler implements RequestHandleStrategy {
+public class FieldValueGetRequestHandler implements RequestHandleStrategy {
 
     @Override
     public Result<?> handleRequest(Request commandRequest) {
