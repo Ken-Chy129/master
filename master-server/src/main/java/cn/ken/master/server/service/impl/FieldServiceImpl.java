@@ -86,6 +86,10 @@ public class FieldServiceImpl implements FieldService {
                 namespaceDO = new NamespaceDO();
                 namespaceDO.setAppId(appId);
                 namespaceDO.setClassName(managementDTO.getClassName());
+            } else {
+                Long id = namespaceDO.getId();
+                namespaceDO = new NamespaceDO();
+                namespaceDO.setId(id);
             }
             namespaceDO.setName(managementDTO.getNamespace());
             namespaceDO.setDescription(managementDTO.getDesc());
@@ -111,6 +115,10 @@ public class FieldServiceImpl implements FieldService {
                     fieldDO.setAppId(appId);
                     fieldDO.setNamespaceId(namespaceId);
                     fieldDO.setName(field.getName());
+                } else {
+                    Long id = fieldDO.getId();
+                    fieldDO = new FieldDO();
+                    fieldDO.setId(id);
                 }
                 fieldDO.setDescription(field.getDesc());
                 fieldMapper.insertOrUpdate(fieldDO);

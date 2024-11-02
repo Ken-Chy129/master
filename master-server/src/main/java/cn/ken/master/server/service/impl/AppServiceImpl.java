@@ -16,6 +16,8 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -62,6 +64,10 @@ public class AppServiceImpl implements AppService {
             machineDO.setAppId(appId);
             machineDO.setIpAddress(ipAddress);
             machineDO.setPort(port);
+        } else {
+            Long id = machineDO.getId();
+            machineDO = new MachineDO();
+            machineDO.setId(id);
         }
         machineDO.setStatus(MachineStatus.RUNNING.getCode());
         machineMapper.insertOrUpdate(machineDO);

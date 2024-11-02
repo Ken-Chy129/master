@@ -2,7 +2,6 @@ package cn.ken.master.server.core;
 
 import cn.ken.master.core.model.RegisterRequest;
 import cn.ken.master.core.model.Result;
-import cn.ken.master.server.model.entity.AppDO;
 import cn.ken.master.server.service.AppService;
 import cn.ken.master.server.service.FieldService;
 import cn.ken.master.server.utils.ApplicationContextUtil;
@@ -36,7 +35,6 @@ public class ManagementServer extends Thread {
                         in = new ObjectInputStream(socket.getInputStream());
                         log.info("应用连接|host:{},port:{}", socket.getInetAddress().getHostAddress(), socket.getPort());
                         //todo:新增事务处理
-                        // 1.应用启动
                         RegisterRequest request = (RegisterRequest) in.readObject();
                         Long appId = request.getAppId();
                         String accessKey = request.getAccessKey();
@@ -45,7 +43,7 @@ public class ManagementServer extends Thread {
                         appService.startAppOnMachine(appId, accessKey, ipAddress, port);
                         // 2.解析受管控字段
                         fieldService.registerField(appId, request.getNamespaceList());
-                        out.writeObject(Result.success("success"));
+                        out.writeObject(Result.success(getAppHeatBeatInterval()));
                     } catch (Exception e) {
                         log.error(e.getMessage(), e);
                         if (out != null) {
@@ -67,9 +65,8 @@ public class ManagementServer extends Thread {
         }
     }
 
-    private void registerApp() {
-        AppService appService = ApplicationContextUtil.getBean(AppService.class);
-        AppDO appDO = new AppDO();
-        appService.insert(appDO);
+    private Integer getAppHeatBeatInterval() {
+        // todo:查库，提供接口修改
+        return 1000;
     }
 }

@@ -4,9 +4,11 @@ import cn.ken.master.client.handle.RequestHandleStrategy;
 import cn.ken.master.client.handle.RequestHandlerFactory;
 import cn.ken.master.core.model.Request;
 import cn.ken.master.core.model.Result;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collections;
 import java.util.Objects;
@@ -19,40 +21,54 @@ import java.util.concurrent.ExecutorService;
  * @author Ken-Chy129
  * @date 2024/8/11
  */
+@Slf4j
 public class CommandListener extends Thread {
 
-    private final Socket serverSocket;
+    private final Integer serverProviderPort;
 
     private ExecutorService executorService;
 
-    public CommandListener(Socket serverSocket) {
-        this.serverSocket = serverSocket;
-    }
+    private int state;
 
+    // todo:状态枚举
+
+    public CommandListener(Integer serverProviderPort) {
+        this.state = 0;
+        this.serverProviderPort = serverProviderPort;
+    }
 
     @Override
     public void run() {
         try (
-                ObjectInputStream in = new ObjectInputStream(serverSocket.getInputStream());
-                ObjectOutputStream out = new ObjectOutputStream(serverSocket.getOutputStream());
+                ServerSocket serverSocket = new ServerSocket(serverProviderPort);
         ) {
-            while (true) {
-                Request commandRequest = (Request) in.readObject();
-                if (Objects.isNull(commandRequest)) {
-                    continue;
+            while (state == 0) {
+                try (
+                    Socket socket = serverSocket.accept();
+                    ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                    ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())
+                ) {
+                    Request commandRequest = (Request) in.readObject();
+                    if (Objects.isNull(commandRequest)) {
+                        continue;
+                    }
+                    RequestHandleStrategy requestHandler = RequestHandlerFactory.getRequestHandler(commandRequest.getRequestCode());
+                    if (Objects.isNull(requestHandler)) {
+                        out.writeObject(Result.error("请求的方法不存在"));
+                        continue;
+                    }
+                    out.writeObject(requestHandler.handleRequest(commandRequest));
+                } catch (Exception e) {
+                    log.error("指令处理异常:{}", e.getMessage());
                 }
-                RequestHandleStrategy requestHandler = RequestHandlerFactory.getRequestHandler(commandRequest.getRequestCode());
-                if (Objects.isNull(requestHandler)) {
-                    out.writeObject(Result.error("请求的方法不存在"));
-                    continue;
-                }
-                out.writeObject(requestHandler.handleRequest(commandRequest));
             }
         } catch (IOException e) {
-
-        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void stopListen() {
+        state = -1;
     }
 
 //    /**

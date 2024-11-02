@@ -10,6 +10,6 @@ import cn.ken.master.client.annotations.Management;
 @Management
 public class CommonBizVariables {
 
-    @Manageable(desc = "是否开启xxxx缓存")
+    @Manageable(desc = "是否开启xxxx缓存啊")
     public static Boolean OPEN_XXX_CACHE = Boolean.TRUE;
 }

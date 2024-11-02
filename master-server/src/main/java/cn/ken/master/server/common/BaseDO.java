@@ -1,10 +1,10 @@
 package cn.ken.master.server.common;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
-
-import java.util.Date;
 
 @Data
 public class BaseDO {
@@ -12,7 +12,9 @@ public class BaseDO {
     @TableId(type = IdType.AUTO)
     private Long id;
 
-    private Date gmtCreate;
+    @TableField(fill = FieldFill.INSERT)
+    private String gmtCreate;
 
-    private Date gmtModified;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private String gmtModified;
 }
