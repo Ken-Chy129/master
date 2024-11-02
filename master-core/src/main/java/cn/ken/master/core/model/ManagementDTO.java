@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 命名空间
  */
-public class Namespace implements Serializable {
+public class ManagementDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 6261016102135107042L;
@@ -15,7 +15,7 @@ public class Namespace implements Serializable {
     /**
      * 别名
      */
-    private String simpleName;
+    private String namespace;
 
     /**
      * 全类名
@@ -30,14 +30,14 @@ public class Namespace implements Serializable {
     /**
      * 命名空间下可管理的字段
      */
-    private List<Field> manageableFieldList;
+    private List<ManageableFieldDTO> manageableFieldList;
 
-    public String getSimpleName() {
-        return simpleName;
+    public String getNamespace() {
+        return namespace;
     }
 
-    public void setSimpleName(String simpleName) {
-        this.simpleName = simpleName;
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 
     public String getClassName() {
@@ -56,18 +56,18 @@ public class Namespace implements Serializable {
         this.desc = desc;
     }
 
-    public List<Field> getManageableFieldList() {
+    public List<ManageableFieldDTO> getManageableFieldList() {
         return manageableFieldList;
     }
 
-    public void setManageableFieldList(List<Field> manageableFieldList) {
+    public void setManageableFieldList(List<ManageableFieldDTO> manageableFieldList) {
         this.manageableFieldList = manageableFieldList;
     }
 
     @Override
     public String toString() {
-        return "Namespace{" +
-                "simpleName='" + simpleName + '\'' +
+        return "ManagementDTO{" +
+                "namespace='" + namespace + '\'' +
                 ", className='" + className + '\'' +
                 ", desc='" + desc + '\'' +
                 ", manageableFieldList=" + manageableFieldList +

@@ -92,40 +92,39 @@ public class MasterManager {
     }
 
     public void init(List<Class<?>> clazzList) {
+        if (host == null || port == null || appId == null || accessKey == null) {
+            log.error("缺少核心参数，Master初始化失败");
+            throw new MasterException(MasterErrorCode.MASTER_INIT_ERROR);
+        }
+
         for (Class<?> aClass : clazzList) {
             // 1.校验clazz
             if (!MasterUtil.isMasterClazz(aClass)) {
-                throw new MasterException(MasterErrorCode.REGISTERED_CLAZZ_INVALID);
+                log.error("{} 未被@MasterConfig注解标识, 无法注册为变量管理类", aClass.getName());
+                continue;
             }
             // 2.保存变量控制类
-            MasterContainer.addVariableMaster(aClass);
+            MasterContainer.addManagement(aClass);
         }
-        if (!check()) {
-            return;
-        }
-        // 1.连接服务端
-        try {
-            // 1.发送应用名
-            register();
-            // 2.启动线程监听服务端命令
-//            new CommandListener(socket).start();
-//            // 4.启动线程定时发送心跳检测包
-//            new HeatBeatHandler(socket).start();
-        } catch (UnknownHostException e) {
-            throw new MasterException(MasterErrorCode.SERVER_HOST_INVALID);
-        } catch (IllegalArgumentException e) {
-            throw new MasterException(MasterErrorCode.SERVER_PORT_INVALID);
-        } catch (IOException e) {
-//            throw new MasterException(MasterErrorCode.SERVER_CONNECT_ERROR);
-            e.printStackTrace();
-        }
-    }
+        System.out.println(MasterContainer.getAllManageableFields());
+        return;
 
-    private boolean check() {
-        if (host == null || port == null || appId == null || accessKey == null) {
-            return false;
-        }
-        return true;
+        // 1.连接服务端
+//        try {
+//            // 1.发送应用名
+//            register();
+//            // 2.启动线程监听服务端命令
+////            new CommandListener(socket).start();
+////            // 4.启动线程定时发送心跳检测包
+////            new HeatBeatHandler(socket).start();
+//        } catch (UnknownHostException e) {
+//            throw new MasterException(MasterErrorCode.SERVER_HOST_INVALID);
+//        } catch (IllegalArgumentException e) {
+//            throw new MasterException(MasterErrorCode.SERVER_PORT_INVALID);
+//        } catch (IOException e) {
+////            throw new MasterException(MasterErrorCode.SERVER_CONNECT_ERROR);
+//            e.printStackTrace();
+//        }
     }
 
     private void register() throws IOException {
@@ -139,18 +138,7 @@ public class MasterManager {
             registerRequest.setAppId(appId);
             registerRequest.setPort(8888);
             registerRequest.setAccessKey(accessKey);
-//            MasterContainer.
-            Namespace namespace = new Namespace();
-            namespace.setClassName("cn.ken.test.TestSwitch");
-            namespace.setDesc("this is a demo switch");
-            namespace.setSimpleName("TestSwitch");
-            Field field = new Field();
-            field.setNamespace("cn.ken.test.TestSwitch");
-            field.setName("Test");
-            field.setDesc("this is a demo field");
-            field.setValue("hello");
-            namespace.setManageableFieldList(List.of(field));
-            registerRequest.setNamespaceList(List.of(namespace));
+            registerRequest.setNamespaceList(MasterContainer.getAllManageableFields());
             out.writeObject(registerRequest);
             Result<?> result = (Result<?>) in.readObject();
             if (result.isSuccess()) {

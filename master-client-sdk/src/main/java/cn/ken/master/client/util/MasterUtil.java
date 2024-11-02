@@ -1,6 +1,6 @@
 package cn.ken.master.client.util;
 
-import cn.ken.master.client.annotations.ManageableField;
+import cn.ken.master.client.annotations.Manageable;
 import cn.ken.master.client.annotations.Management;
 import cn.ken.master.client.exception.MasterErrorCode;
 import cn.ken.master.client.exception.MasterException;
@@ -28,17 +28,14 @@ public class MasterUtil {
     /**
      * 校验变量是否可被管控
      */
-    public static boolean isMasterVariable(Field field) {
+    public static boolean isManageable(Field field) {
         if (Objects.isNull(field)) {
             return false;
         }
-        ManageableField declaredAnnotation = field.getDeclaredAnnotation(ManageableField.class);
+        Manageable declaredAnnotation = field.getDeclaredAnnotation(Manageable.class);
         if (Objects.isNull(declaredAnnotation)) {
             return false;
         }
-        if (!field.canAccess(null)) {
-            throw new MasterException(String.format(MasterErrorCode.CONTROLLABLE_VARIABLE_INACCESSIBLE.getMsg(), field.getName()));
-        }
-        return true;
+        return field.canAccess(null);
     }
 }

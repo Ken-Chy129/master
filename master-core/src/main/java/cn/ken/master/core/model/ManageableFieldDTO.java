@@ -3,7 +3,7 @@ package cn.ken.master.core.model;
 import java.io.Serial;
 import java.io.Serializable;
 
-public class Field implements Serializable {
+public class ManageableFieldDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -3556293581160862661L;
@@ -11,7 +11,7 @@ public class Field implements Serializable {
     /**
      * 字段所属命名空间
      */
-    private String namespace;
+    private String clazzName;
 
     /**
      * 字段名
@@ -23,17 +23,12 @@ public class Field implements Serializable {
      */
     private String desc;
 
-    /**
-     * 字段值
-     */
-    private String value;
-
-    public String getNamespace() {
-        return namespace;
+    public String getClazzName() {
+        return clazzName;
     }
 
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
+    public void setClazzName(String clazzName) {
+        this.clazzName = clazzName;
     }
 
     public String getName() {
@@ -52,21 +47,12 @@ public class Field implements Serializable {
         this.desc = desc;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     @Override
     public String toString() {
         return "Field{" +
-                "namespace='" + namespace + '\'' +
+                "clazzName='" + clazzName + '\'' +
                 ", name='" + name + '\'' +
                 ", desc='" + desc + '\'' +
-                ", value='" + value + '\'' +
                 '}';
     }
 }

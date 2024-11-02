@@ -27,7 +27,7 @@ public class RegisterRequest implements Serializable {
     /**
      * 命名空间
      */
-    private List<Namespace> namespaceList;
+    private List<ManagementDTO> managementDTOList;
 
     public Long getAppId() {
         return appId;
@@ -53,12 +53,12 @@ public class RegisterRequest implements Serializable {
         this.port = port;
     }
 
-    public List<Namespace> getNamespaceList() {
-        return namespaceList;
+    public List<ManagementDTO> getNamespaceList() {
+        return managementDTOList;
     }
 
-    public void setNamespaceList(List<Namespace> namespaceList) {
-        this.namespaceList = namespaceList;
+    public void setNamespaceList(List<ManagementDTO> managementDTOList) {
+        this.managementDTOList = managementDTOList;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class RegisterRequest implements Serializable {
                 "appId=" + appId +
                 ", accessKey='" + accessKey + '\'' +
                 ", port=" + port +
-                ", namespaceList=" + namespaceList +
+                ", managementDTOList=" + managementDTOList +
                 '}';
     }
 }

@@ -1,7 +1,7 @@
 package cn.ken.master.server.service.impl;
 
-import cn.ken.master.core.model.Field;
-import cn.ken.master.core.model.Namespace;
+import cn.ken.master.core.model.ManageableFieldDTO;
+import cn.ken.master.core.model.ManagementDTO;
 import cn.ken.master.core.model.Result;
 import cn.ken.master.server.core.AppContainer;
 import cn.ken.master.server.mapper.MachineMapper;
@@ -19,8 +19,6 @@ import org.springframework.stereotype.Service;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class FieldServiceImpl implements FieldService {
@@ -76,21 +74,21 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public void registerField(Long appId, List<Namespace> namespaceList) {
+    public void registerField(Long appId, List<ManagementDTO> managementDTOList) {
         LambdaQueryWrapper<NamespaceDO> namespaceQueryWrapper = new LambdaQueryWrapper<>();
         LambdaQueryWrapper<FieldDO> fieldQueryWrapper = new LambdaQueryWrapper<>();
-        for (Namespace namespace : namespaceList) {
+        for (ManagementDTO managementDTO : managementDTOList) {
             // 1. 找到对应的namespaceId，如果不存在则新增
             namespaceQueryWrapper.eq(NamespaceDO::getAppId, appId)
-                            .eq(NamespaceDO::getClassName, namespace.getClassName());
+                            .eq(NamespaceDO::getClassName, managementDTO.getClassName());
             NamespaceDO namespaceDO = namespaceMapper.selectOne(namespaceQueryWrapper);
             if (namespaceDO == null) {
                 namespaceDO = new NamespaceDO();
                 namespaceDO.setAppId(appId);
-                namespaceDO.setClassName(namespace.getClassName());
+                namespaceDO.setClassName(managementDTO.getClassName());
             }
-            namespaceDO.setName(namespace.getSimpleName());
-            namespaceDO.setDescription(namespace.getDesc());
+            namespaceDO.setName(managementDTO.getNamespace());
+            namespaceDO.setDescription(managementDTO.getDesc());
             namespaceMapper.insertOrUpdate(namespaceDO);
             Long namespaceId = namespaceDO.getId();
             if (namespaceId == null) {
@@ -102,8 +100,8 @@ public class FieldServiceImpl implements FieldService {
             }
             namespaceQueryWrapper.clear();
             // 2. 插入或更新命名空间下的变量
-            List<Field> manageableFieldList = namespace.getManageableFieldList();
-            for (Field field : manageableFieldList) {
+            List<ManageableFieldDTO> manageableFieldList = managementDTO.getManageableFieldList();
+            for (ManageableFieldDTO field : manageableFieldList) {
                 fieldQueryWrapper.eq(FieldDO::getAppId, appId)
                         .eq(FieldDO::getNamespaceId, namespaceId)
                         .eq(FieldDO::getName, field.getName());

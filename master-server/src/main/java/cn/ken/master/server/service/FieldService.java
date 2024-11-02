@@ -1,6 +1,6 @@
 package cn.ken.master.server.service;
 
-import cn.ken.master.core.model.Namespace;
+import cn.ken.master.core.model.ManagementDTO;
 import cn.ken.master.core.model.Result;
 import cn.ken.master.server.model.entity.FieldDO;
 import cn.ken.master.server.model.field.FieldPushReq;
@@ -17,5 +17,5 @@ public interface FieldService {
 
     Result<Boolean> pushFieldValue(FieldPushReq fieldPushReq);
 
-   void registerField(Long appId, List<Namespace> namespaceList);
+   void registerField(Long appId, List<ManagementDTO> managementDTOList);
 }

@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ManageableField {
+public @interface Manageable {
 
     /**
      * 变量描述
