@@ -1,6 +1,6 @@
 package cn.ken.master.client.task;
 
-import cn.ken.master.core.model.Request;
+import cn.ken.master.core.model.CommandRequest;
 
 import java.net.Socket;
 
@@ -14,7 +14,7 @@ public class CommandTask implements Runnable {
 
     private Socket socket;
 
-    private Request commandRequest;
+    private CommandRequest commandRequest;
 
     @Override
     public void run() {

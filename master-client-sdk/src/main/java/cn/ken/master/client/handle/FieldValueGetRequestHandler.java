@@ -1,8 +1,12 @@
 package cn.ken.master.client.handle;
 
-
-import cn.ken.master.core.model.Request;
+import cn.ken.master.client.core.ManageableField;
+import cn.ken.master.client.core.MasterContainer;
+import cn.ken.master.core.model.CommandRequest;
 import cn.ken.master.core.model.Result;
+import cn.ken.master.core.util.StringUtil;
+
+import java.lang.reflect.Field;
 
 /**
  * 变量查询请求处理器
@@ -13,27 +17,22 @@ import cn.ken.master.core.model.Result;
 public class FieldValueGetRequestHandler implements RequestHandleStrategy {
 
     @Override
-    public Result<?> handleRequest(Request commandRequest) {
-//        Map<String, String> parameterMap = commandRequest.getParameterMap();
-//        String namespace = parameterMap.get(RequestParameterKeyConstants.NAMESPACE);
-//        if (Objects.isNull(namespace)) {
-//            return Result.error("请输入namespace");
-//        }
-//        Map<String, ManageableField> controllableVariableMap = MasterContainer.getControllableVariableMapByNamespace(namespace);
-//        if (Objects.isNull(controllableVariableMap)) {
-//            return Result.error("namespace不存在");
-//        }
-//        List<Field> manageableFieldList = new ArrayList<>();
-//        for (var variableEntry : controllableVariableMap.entrySet()) {
-//            String variableName = variableEntry.getKey();
-//            ManageableField controllableVariable = variableEntry.getValue();
-//            String description = controllableVariable.desc();
-//            Field field = new Field();
-//            field.setName(variableName);
-//            field.setDesc(description);
-//            manageableFieldList.add(field);
-//        }
-//        return Result.success(manageableFieldList);
-        return null;
+    public Result<String> handleRequest(CommandRequest commandRequest) {
+        String namespace = commandRequest.getNamespace();
+        String name = commandRequest.getName();
+        if (StringUtil.isBlank(namespace) || StringUtil.isBlank(name)) {
+            return Result.error("缺少参数");
+        }
+        ManageableField manageableField = MasterContainer.getManageableField(namespace, name);
+        if (manageableField == null) {
+            return Result.error(String.format("%s-%s不存在", namespace, name));
+        }
+        Field field = manageableField.getField();
+        try {
+            String result = (String) field.get(null);
+            return Result.success(result);
+        } catch (IllegalAccessException e) {
+            return Result.error(e.getMessage());
+        }
     }
 }

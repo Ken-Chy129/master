@@ -27,11 +27,6 @@ public class ManageableField {
     private Class<? extends MasterCallback> callbackClazz;
 
     /**
-     * 字段值
-     */
-    private Object value;
-
-    /**
      * 保存的Field类，用于修改字段值
      */
     private Field field;

@@ -64,8 +64,12 @@ public class MasterContainer {
         return MANAGEMENTS;
     }
 
-    public static Map<String, Map<String, ManageableField>> getManageableFieldMap() {
-        return MANAGEABLE_FIELD_MAP;
+    public static ManageableField getManageableField(String namespace, String fieldName) {
+        Map<String, ManageableField> fieldMap = MANAGEABLE_FIELD_MAP.get(namespace);
+        if (fieldMap == null) {
+            return null;
+        }
+        return fieldMap.get(fieldName);
     }
 
     private static ManageableFieldDTO convert(String clazzName, ManageableField manageableField) {
@@ -81,11 +85,6 @@ public class MasterContainer {
         manageableField.setDesc(manageableAnnotation.desc());
         manageableField.setCallbackClazz(manageableAnnotation.callback());
         manageableField.setName(field.getName());
-        try {
-            manageableField.setValue(field.get(null));
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
         manageableField.setField(field);
         return manageableField;
     }

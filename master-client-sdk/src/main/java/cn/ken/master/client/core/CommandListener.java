@@ -2,17 +2,14 @@ package cn.ken.master.client.core;
 
 import cn.ken.master.client.handle.RequestHandleStrategy;
 import cn.ken.master.client.handle.RequestHandlerFactory;
-import cn.ken.master.core.model.Request;
+import cn.ken.master.core.model.CommandRequest;
 import cn.ken.master.core.model.Result;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
-import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Collections;
 import java.util.Objects;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -48,11 +45,11 @@ public class CommandListener extends Thread {
                     ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                     ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())
                 ) {
-                    Request commandRequest = (Request) in.readObject();
+                    CommandRequest commandRequest = (CommandRequest) in.readObject();
                     if (Objects.isNull(commandRequest)) {
                         continue;
                     }
-                    RequestHandleStrategy requestHandler = RequestHandlerFactory.getRequestHandler(commandRequest.getRequestCode());
+                    RequestHandleStrategy requestHandler = RequestHandlerFactory.getRequestHandler(commandRequest.getType());
                     if (Objects.isNull(requestHandler)) {
                         out.writeObject(Result.error("请求的方法不存在"));
                         continue;
