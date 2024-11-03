@@ -4,6 +4,7 @@ import cn.ken.master.core.model.Result;
 import cn.ken.master.server.common.RequestPathConstant;
 import cn.ken.master.server.model.entity.FieldDO;
 import cn.ken.master.server.model.field.FieldPushReq;
+import cn.ken.master.server.model.field.FieldVO;
 import cn.ken.master.server.service.FieldService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,11 @@ public class FieldController {
     @PostMapping("push")
     private Result<Boolean> pushFieldValue(FieldPushReq fieldPushReq) {
         return fieldService.pushFieldValue(fieldPushReq);
+    }
+
+    @GetMapping("getValue")
+    private Result<FieldVO> getFieldValue(@RequestParam("fieldId") Long fieldId) {
+        return fieldService.getFieldValue(fieldId);
     }
 
     @PostMapping(RequestPathConstant.SAVE)

@@ -4,12 +4,15 @@ import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.ManagementDTO;
 import cn.ken.master.core.model.Result;
 import cn.ken.master.server.core.AppContainer;
+import cn.ken.master.server.core.ManagementClient;
 import cn.ken.master.server.mapper.MachineMapper;
 import cn.ken.master.server.mapper.NamespaceMapper;
 import cn.ken.master.server.model.entity.FieldDO;
 import cn.ken.master.server.mapper.FieldMapper;
+import cn.ken.master.server.model.entity.MachineDO;
 import cn.ken.master.server.model.entity.NamespaceDO;
 import cn.ken.master.server.model.field.FieldPushReq;
+import cn.ken.master.server.model.field.FieldVO;
 import cn.ken.master.server.service.FieldService;
 import cn.ken.master.server.utils.AppUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -18,7 +21,9 @@ import org.springframework.stereotype.Service;
 
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FieldServiceImpl implements FieldService {
@@ -31,6 +36,9 @@ public class FieldServiceImpl implements FieldService {
 
     @Resource
     private MachineMapper machineMapper;
+
+    @Resource
+    private ManagementClient managementClient;
 
     @Override
     public void insert(FieldDO fieldDO) {
@@ -125,5 +133,31 @@ public class FieldServiceImpl implements FieldService {
                 fieldQueryWrapper.clear();
             }
         }
+    }
+
+    @Override
+    public Result<FieldVO> getFieldValue(Long fieldId) {
+        FieldDO fieldDO = fieldMapper.selectById(fieldId);
+        Long namespaceId = fieldDO.getNamespaceId();
+        NamespaceDO namespaceDO = namespaceMapper.selectById(namespaceId);
+        Long appId = fieldDO.getAppId();
+        LambdaQueryWrapper<MachineDO> machineDOLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        machineDOLambdaQueryWrapper.eq(MachineDO::getAppId, appId)
+                        .eq(MachineDO::getStatus, 1);
+        List<MachineDO> machineDOS = machineMapper.selectList(machineDOLambdaQueryWrapper);
+        FieldVO fieldVO = new FieldVO();
+        fieldVO.setNamespace(namespaceDO.getName());
+        fieldVO.setClassName(namespaceDO.getClassName());
+        fieldVO.setDesc(fieldDO.getDescription());
+        fieldVO.setFieldName(fieldDO.getName());
+        Map<String, String> machineValueMap = new HashMap<>();
+        for (MachineDO machineDO : machineDOS) {
+            String ipAddress = machineDO.getIpAddress();
+            Integer port = machineDO.getPort();
+            String value = managementClient.queryFieldValue(ipAddress, port, fieldVO.getNamespace(), fieldVO.getFieldName());
+            machineValueMap.put(ipAddress + ":" + port, value);
+        }
+        fieldVO.setMachineValueMap(machineValueMap);
+        return Result.success(fieldVO);
     }
 }
