@@ -32,7 +32,7 @@ public class FieldValuePutRequestHandler implements RequestHandleStrategy {
         try {
             String oldValue = JSON.toJSONString(field.get(null));
             String newValue = commandRequest.getNewValue();
-            field.set(null, JSON.parseObject(newValue, String.class));
+            field.set(null, JSON.parseObject(newValue, field.getType()));
             return Result.success(oldValue);
         } catch (IllegalAccessException e) {
             return Result.error(e.getMessage());
