@@ -5,6 +5,7 @@ import cn.ken.master.client.core.MasterContainer;
 import cn.ken.master.core.model.CommandRequest;
 import cn.ken.master.core.model.Result;
 import cn.ken.master.core.util.StringUtil;
+import com.alibaba.fastjson2.JSON;
 
 import java.lang.reflect.Field;
 
@@ -29,8 +30,9 @@ public class FieldValuePutRequestHandler implements RequestHandleStrategy {
         }
         Field field = manageableField.getField();
         try {
-            String oldValue = (String) field.get(null);
-            field.set(null, commandRequest.getNewValue());
+            String oldValue = JSON.toJSONString(field.get(null));
+            String newValue = commandRequest.getNewValue();
+            field.set(null, JSON.parseObject(newValue, String.class));
             return Result.success(oldValue);
         } catch (IllegalAccessException e) {
             return Result.error(e.getMessage());

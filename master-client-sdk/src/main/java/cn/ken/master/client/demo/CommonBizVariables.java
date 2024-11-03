@@ -12,4 +12,7 @@ public class CommonBizVariables {
 
     @Manageable(desc = "是否开启xxxx缓存啊")
     public static Boolean OPEN_XXX_CACHE = Boolean.TRUE;
+
+    @Manageable(desc = "白名单ip地址")
+    public static String WHITE_IP_ADDRESS = "127.0.0.1";
 }
