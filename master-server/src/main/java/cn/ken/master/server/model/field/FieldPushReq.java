@@ -7,7 +7,7 @@ public class FieldPushReq {
 
     private Long fieldId;
 
-    private String value;
+    private String newValue;
 
     private String machineIds;
 }
