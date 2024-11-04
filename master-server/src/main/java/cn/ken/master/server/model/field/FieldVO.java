@@ -11,9 +11,9 @@ public class FieldVO {
 
     private String className;
 
-    private String desc;
+    private String description;
 
-    private String fieldName;
+    private String name;
 
     private Map<String, String> machineValueMap;
 }

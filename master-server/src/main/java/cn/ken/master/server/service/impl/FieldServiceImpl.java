@@ -77,12 +77,6 @@ public class FieldServiceImpl implements FieldService {
             String oldValue = managementClient.putFieldValue(ipAddress, port, namespaceDO.getName(), fieldDO.getName(), fieldPushReq.getNewValue());
             // todo:日志记录
         }
-
-//        socketList.stream().forEach(
-//                socket -> {
-//                    socket.getOutputStream()
-//                }
-//        );
         return null;
     }
 
@@ -153,13 +147,13 @@ public class FieldServiceImpl implements FieldService {
         FieldVO fieldVO = new FieldVO();
         fieldVO.setNamespace(namespaceDO.getName());
         fieldVO.setClassName(namespaceDO.getClassName());
-        fieldVO.setDesc(fieldDO.getDescription());
-        fieldVO.setFieldName(fieldDO.getName());
+        fieldVO.setDescription(fieldDO.getDescription());
+        fieldVO.setName(fieldDO.getName());
         Map<String, String> machineValueMap = new HashMap<>();
         for (MachineDO machineDO : machineDOS) {
             String ipAddress = machineDO.getIpAddress();
             Integer port = machineDO.getPort();
-            String value = managementClient.queryFieldValue(ipAddress, port, fieldVO.getNamespace(), fieldVO.getFieldName());
+            String value = managementClient.queryFieldValue(ipAddress, port, fieldVO.getNamespace(), fieldVO.getName());
             machineValueMap.put(ipAddress + ":" + port, value);
         }
         fieldVO.setMachineValueMap(machineValueMap);

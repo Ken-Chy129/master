@@ -18,8 +18,8 @@ public class FieldController {
     @Resource
     private FieldService fieldService;
 
-    @GetMapping("/{namespaceId}")
-    private Result<List<FieldDO>> queryByNamespaceId(@PathVariable("namespaceId") Long namespaceId) {
+    @GetMapping("/queryByNamespace")
+    private Result<List<FieldDO>> queryByNamespaceId(@RequestParam("namespaceId") Long namespaceId) {
         return fieldService.selectByNamespaceId(namespaceId);
     }
 
@@ -29,12 +29,12 @@ public class FieldController {
     }
 
     @PostMapping("push")
-    private Result<Boolean> pushFieldValue(FieldPushReq fieldPushReq) {
+    private Result<Boolean> pushFieldValue(@RequestBody FieldPushReq fieldPushReq) {
         return fieldService.pushFieldValue(fieldPushReq);
     }
 
-    @GetMapping("getValue")
-    private Result<FieldVO> getFieldValue(@RequestParam("fieldId") Long fieldId) {
+    @GetMapping("/{fieldId}")
+    private Result<FieldVO> getFieldValue(@PathVariable("fieldId") Long fieldId) {
         return fieldService.getFieldValue(fieldId);
     }
 
