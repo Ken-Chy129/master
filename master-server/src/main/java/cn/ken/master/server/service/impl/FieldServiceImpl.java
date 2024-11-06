@@ -18,11 +18,13 @@ import cn.ken.master.server.model.field.FieldVO;
 import cn.ken.master.server.service.FieldService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class FieldServiceImpl implements FieldService {
 
@@ -68,9 +70,13 @@ public class FieldServiceImpl implements FieldService {
         Long appId = fieldDO.getAppId();
         List<MachineDO> machineDOList = machineMapper.selectByAppId(appId);
         String pushType = fieldPushReq.getPushType();
-        if (PushTypeEnum.SPECIFIED.name().equalsIgnoreCase(pushType)) {
+        log.info(fieldPushReq.getMachineIds());
+        log.info(fieldPushReq.getPushType());
+        if (PushTypeEnum.SPECIFIC.name().equalsIgnoreCase(pushType)) {
             Set<Long> requestMachineIdSet = Arrays.stream(fieldPushReq.getMachineIds().split(",")).map(Long::valueOf).collect(Collectors.toSet());
+            log.info(requestMachineIdSet.toString());
             machineDOList.removeIf(machineDO -> !requestMachineIdSet.contains(machineDO.getId()));
+            log.info(machineDOList.toString());
         }
         // todo: 此处socket不应该是保存在map中，即服务端不能一直维持socket连接，而是每次需要发送请求的时候再去建立连接，否则会导致当注册的应用和机器过多时长时间维持着非常多的socket
         // 应用启动时首先向服务端注册应用，并上报变量初始值以及提供的接口的端口号，之后双方建立长连接定期发送心跳包以维持机器状态
@@ -82,6 +88,7 @@ public class FieldServiceImpl implements FieldService {
             String oldValue = managementClient.putFieldValue(ipAddress, port, fieldPushReq.getNamespace(), fieldDO.getName(), fieldPushReq.getValue());
             RecordDO recordDO = new RecordDO();
             recordDO.setAppId(appId);
+            recordDO.setNamespace(fieldPushReq.getNamespace());
             recordDO.setFieldId(fieldDO.getId());
             recordDO.setFieldName(fieldDO.getName());
             recordDO.setIpAddress(ipAddress);

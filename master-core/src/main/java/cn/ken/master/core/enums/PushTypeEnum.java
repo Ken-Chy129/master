@@ -13,6 +13,6 @@ public enum PushTypeEnum {
     /**
      * 指定机器
      */
-    SPECIFIED,
+    SPECIFIC,
 
 }
