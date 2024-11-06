@@ -61,8 +61,11 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public Result<Boolean> pushFieldValue(FieldPushReq fieldPushReq) {
         FieldDO fieldDO = fieldMapper.selectById(fieldPushReq.getFieldId());
+        Long appId = fieldDO.getAppId();
         Long namespaceId = fieldDO.getNamespaceId();
+        String pushType = fieldPushReq.getPushType();
         NamespaceDO namespaceDO = namespaceMapper.selectById(namespaceId);
+        List<MachineDO> machineDOS1 = machineMapper.selectByAppId(appId);
         List<String> machineIdList = Arrays.stream(fieldPushReq.getMachineIds().split(",")).toList();
         // todo: 此处socket不应该是保存在map中，即服务端不能一直维持socket连接，而是每次需要发送请求的时候再去建立连接，否则会导致当注册的应用和机器过多时长时间维持着非常多的socket
         // 应用启动时首先向服务端注册应用，并上报变量初始值以及提供的接口的端口号，之后双方建立长连接定期发送心跳包以维持机器状态
@@ -74,7 +77,7 @@ public class FieldServiceImpl implements FieldService {
         for (MachineDO machineDO : machineDOS) {
             String ipAddress = machineDO.getIpAddress();
             Integer port = machineDO.getPort();
-            String oldValue = managementClient.putFieldValue(ipAddress, port, namespaceDO.getName(), fieldDO.getName(), fieldPushReq.getNewValue());
+            String oldValue = managementClient.putFieldValue(ipAddress, port, namespaceDO.getName(), fieldDO.getName(), fieldPushReq.getValue());
             // todo:日志记录
         }
         return null;

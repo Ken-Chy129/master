@@ -3,4 +3,8 @@
 <mapper namespace="cn.ken.master.server.mapper.MachineMapper">
 
 
+    <select id="selectByAppId" resultType="cn.ken.master.server.model.entity.MachineDO">
+        select * from master_machine
+        where app_id = #{appId}
+    </select>
 </mapper>
