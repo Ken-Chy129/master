@@ -77,7 +77,7 @@ public class FieldServiceImpl implements FieldService {
             String oldValue = managementClient.putFieldValue(ipAddress, port, fieldPushReq.getNamespace(), fieldDO.getName(), fieldPushReq.getValue());
             // todo:日志记录
         }
-        return null;
+        return Result.success();
     }
 
     @Override

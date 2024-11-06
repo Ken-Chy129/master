@@ -28,7 +28,7 @@ public class FieldController {
         return fieldService.selectByAppId(appId);
     }
 
-    @PostMapping("push")
+    @PostMapping("/push")
     private Result<Boolean> pushFieldValue(@RequestBody FieldPushReq fieldPushReq) {
         return fieldService.pushFieldValue(fieldPushReq);
     }

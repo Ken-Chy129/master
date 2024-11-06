@@ -4,6 +4,7 @@ import cn.ken.master.client.handle.RequestHandleStrategy;
 import cn.ken.master.client.handle.RequestHandlerFactory;
 import cn.ken.master.core.model.CommandRequest;
 import cn.ken.master.core.model.Result;
+import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -54,6 +55,7 @@ public class CommandListener extends Thread {
                         out.writeObject(Result.error("请求的方法不存在"));
                         continue;
                     }
+                    log.info(String.format("来自机器%s的请求, 入参为%s", socket.getRemoteSocketAddress(), JSON.toJSONString(commandRequest)));
                     Result<?> result = requestHandler.handleRequest(commandRequest);
                     out.writeObject(result);
                 } catch (Exception e) {
