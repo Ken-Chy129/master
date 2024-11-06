@@ -7,6 +7,8 @@ public class FieldPushReq {
 
     private Long fieldId;
 
+    private String namespace;
+
     private String value;
 
     private String pushType;
