@@ -7,10 +7,12 @@ import cn.ken.master.core.model.Result;
 import cn.ken.master.server.core.ManagementClient;
 import cn.ken.master.server.mapper.MachineMapper;
 import cn.ken.master.server.mapper.NamespaceMapper;
+import cn.ken.master.server.mapper.RecordMapper;
 import cn.ken.master.server.model.entity.FieldDO;
 import cn.ken.master.server.mapper.FieldMapper;
 import cn.ken.master.server.model.entity.MachineDO;
 import cn.ken.master.server.model.entity.NamespaceDO;
+import cn.ken.master.server.model.entity.RecordDO;
 import cn.ken.master.server.model.field.FieldPushReq;
 import cn.ken.master.server.model.field.FieldVO;
 import cn.ken.master.server.service.FieldService;
@@ -32,6 +34,9 @@ public class FieldServiceImpl implements FieldService {
 
     @Resource
     private MachineMapper machineMapper;
+
+    @Resource
+    private RecordMapper recordMapper;
 
     @Resource
     private ManagementClient managementClient;
@@ -75,7 +80,18 @@ public class FieldServiceImpl implements FieldService {
             String ipAddress = machineDO.getIpAddress();
             Integer port = machineDO.getPort();
             String oldValue = managementClient.putFieldValue(ipAddress, port, fieldPushReq.getNamespace(), fieldDO.getName(), fieldPushReq.getValue());
-            // todo:日志记录
+            RecordDO recordDO = new RecordDO();
+            recordDO.setAppId(appId);
+            recordDO.setFieldId(fieldDO.getId());
+            recordDO.setFieldName(fieldDO.getName());
+            recordDO.setIpAddress(ipAddress);
+            recordDO.setPort(port);
+            recordDO.setBeforeValue(oldValue);
+            recordDO.setAfterValue(fieldPushReq.getValue());
+            recordDO.setStatus(1);
+            recordDO.setPushType(1);
+            recordDO.setModifier("颜洵");
+            recordMapper.insert(recordDO);
         }
         return Result.success();
     }

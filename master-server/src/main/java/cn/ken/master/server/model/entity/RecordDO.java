@@ -16,11 +16,6 @@ public class RecordDO extends BaseDO {
     private Long appId;
 
     /**
-     * 应用名
-     */
-    private String appName;
-
-    /**
      * 变更机器的IP地址
      */
     private String ipAddress;
@@ -34,6 +29,11 @@ public class RecordDO extends BaseDO {
      * 变更的命名空间
      */
     private String namespace;
+
+    /**
+     * 变更的字段id
+     */
+    private Long fieldId;
 
     /**
      * 变更的字段名
@@ -69,4 +69,9 @@ public class RecordDO extends BaseDO {
      * 归属父变更id（用于场景模板）
      */
     private Long parentId;
+
+    /**
+     * 变更人,todo:定义到baseDo，添加和修改时拦截并获取当前操作的用户填入用户名
+     */
+    private String modifier;
 }

@@ -18,9 +18,9 @@ public class RecordController {
     /**
      *
      */
-    @GetMapping("")
-    public Result<List<RecordDO>> findAll() {
-        return Result.success(null);
+    @GetMapping("/findByFieldId")
+    public Result<List<RecordDO>> findByFieldId(@RequestParam("fieldId") Long fieldId) {
+        return recordService.selectByFieldId(fieldId);
     }
 
 }

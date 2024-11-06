@@ -3,4 +3,8 @@
 <mapper namespace="cn.ken.master.server.mapper.RecordMapper">
 
 
+    <select id="selectByFieldId" resultType="cn.ken.master.server.model.entity.RecordDO">
+        select * from master_record
+        where field_id = #{fieldId}
+    </select>
 </mapper>
