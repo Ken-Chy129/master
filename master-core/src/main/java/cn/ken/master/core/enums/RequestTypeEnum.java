@@ -15,17 +15,13 @@ public enum RequestTypeEnum {
      */
     REGISTER(1),
     /**
-     * 获取应用所有变量
+     * 获取指定变量的值
      */
-    VARIABLE_ALL_GET(10),
-    /**
-     * 获取应用指定namespace下的变量
-     */
-    VARIABLE_GET(11),
+    FIELD_VALUE_GET(11),
     /**
      * 修改变量
      */
-    VARIABLE_PUT(12),
+    FIELD_VALUE_PUT(12),
     ;
 
     private final int code;

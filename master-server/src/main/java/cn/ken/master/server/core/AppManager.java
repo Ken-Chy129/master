@@ -14,26 +14,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Slf4j
-@Component
+//@Component
 public class AppManager {
 
-    @PostConstruct
-    public void init() {
-        try (
-                ServerSocket serverSocket = new ServerSocket(8888);
-                ExecutorService registerHandlerExecutor = Executors.newVirtualThreadPerTaskExecutor()
-        ){
-            while (true) {
-                Socket appSocket = serverSocket.accept();
-                registerHandlerExecutor.submit(new AppRegisterHandler(appSocket));
-
-
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public static void init() {
+        ManagementServer managementServer = new ManagementServer();
+        managementServer.start();
     }
+
 
 
 }

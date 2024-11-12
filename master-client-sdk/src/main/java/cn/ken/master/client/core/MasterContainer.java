@@ -1,9 +1,12 @@
 package cn.ken.master.client.core;
 
-import cn.ken.master.client.annotations.ControllableVariable;
-import cn.ken.master.client.annotations.Master;
-import cn.ken.master.client.exception.MasterException;
+import cn.ken.master.client.annotations.Manageable;
+import cn.ken.master.client.annotations.Management;
 import cn.ken.master.client.util.MasterUtil;
+import cn.ken.master.core.model.ManageableFieldDTO;
+import cn.ken.master.core.model.ManagementDTO;
+import cn.ken.master.core.util.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -12,140 +15,78 @@ import java.util.*;
  * @author Ken-Chy129
  * @date 2024/8/11
  */
+@Slf4j
 public class MasterContainer {
 
     /**
-     * key: appName, value: MasterApp对象
+     * key: namespace, value: {key: name, value:Field}
      */
-    private static final Map<String, MasterApp> MASTER_APP_MAP = new HashMap<>();
+    private static final Map<String, Map<String, ManageableField>> MANAGEABLE_FIELD_MAP = new HashMap<>();
+
+    private static final List<ManagementDTO> MANAGEMENTS = new ArrayList<>();
 
     /**
-     * key: appName_namespace, value: Master注解对象
+     * 添加变量管控类到上下文
+     * @param managementClazz 变量管控类
      */
-    private static final Map<String, Master> MASTER_ANNOTATION_MAP = new HashMap<>();
+    public static void addManagement(Class<?> managementClazz) {
+        Management managementAnnotation = managementClazz.getDeclaredAnnotation(Management.class);
+        assert managementAnnotation != null;
+        String clazzName = managementClazz.getName();
+        String namespace = StringUtil.isBlank(managementAnnotation.namespace()) ? clazzName : managementAnnotation.namespace();
+        String desc = managementAnnotation.desc();
 
-    /**
-     * key: appName_namespace, value: {key: fieldName, value:Field}
-     */
-    private static final Map<String, Map<String, ControllableVariable>> CONTROLLABLE_VARIABLE_ANNOTATION_MAP = new HashMap<>();
-
-    /**
-     * key: appName_namespace, value: {key: fieldName, value:Field}
-     */
-    private static final Map<String, Map<String, Field>> NASTER_FIELD_MAP = new HashMap<>();
-
-    /**
-     * 应用注册
-     */
-    public static void registerApp(MasterApp masterApp) {
-        // 1.参数校验
-        String appName = masterApp.getAppName();
-        if (MASTER_APP_MAP.containsKey(appName)) {
-            throw new MasterException(appName + " is already registered!");
+        if (MANAGEABLE_FIELD_MAP.containsKey(namespace)) {
+            log.error("namespace already exists");
+            return;
         }
-        // 2.添加MasterApp
-        MASTER_APP_MAP.put(masterApp.getAppName(), masterApp);
-        // 3.遍历app所有变量管控类，保存相关信息
-        List<Class<?>> masterClazzList = masterApp.getMasterClazzList();
-        for (Class<?> masterClazz : masterClazzList) {
-            // 3.1.保存Master注解信息
-            Master annotation = masterClazz.getDeclaredAnnotation(Master.class);
-            String namespace = getNamespace(masterClazz, annotation);
-            MASTER_ANNOTATION_MAP.put(MasterUtil.generateAppNamespaceKey(appName, namespace), annotation);
 
-            // 3.2.保存ControllableVariable注解信息
-            Map<String, Field> fieldMap = new HashMap<>();
-            Map<String, ControllableVariable> variableMap = new HashMap<>();
-            Field[] declaredFields = masterClazz.getDeclaredFields();
-            for (Field declaredField : declaredFields) {
-                if (MasterUtil.isMasterVariable(declaredField)) {
-                    fieldMap.put(declaredField.getName(), declaredField);
-                    variableMap.put(declaredField.getName(), declaredField.getDeclaredAnnotation(ControllableVariable.class));
-                }
+        Map<String, ManageableField> fieldMap = new HashMap<>();
+        Field[] declaredFields = managementClazz.getDeclaredFields();
+        for (Field declaredField : declaredFields) {
+            if (MasterUtil.isManageable(declaredField)) {
+                Manageable manageableAnnotation = declaredField.getDeclaredAnnotation(Manageable.class);
+                ManageableField manageableField = buildManageableField(manageableAnnotation, declaredField);
+                fieldMap.put(declaredField.getName(), manageableField);
             }
-            CONTROLLABLE_VARIABLE_ANNOTATION_MAP.put(MasterUtil.generateAppNamespaceKey(appName, namespace), variableMap);
-            NASTER_FIELD_MAP.put(MasterUtil.generateAppNamespaceKey(appName, namespace), fieldMap);
         }
+        MANAGEABLE_FIELD_MAP.put(namespace, fieldMap);
+
+        ManagementDTO managementDTO = new ManagementDTO();
+        managementDTO.setNamespace(namespace);
+        managementDTO.setClassName(clazzName);
+        managementDTO.setDesc(desc);
+        managementDTO.setManageableFieldList(fieldMap.values().stream().map(manageableField -> convert(clazzName, manageableField)).toList());
+        MANAGEMENTS.add(managementDTO);
     }
 
-    private static String getNamespace(Class<?> masterClazz, Master annotation) {
-        assert annotation != null;
-        String namespace = annotation.namespace();
-        if (Objects.isNull(namespace)) {
-            // 没有设置则使用全类名
-            namespace = masterClazz.getName();
+    public static List<ManagementDTO> getAllManageableFields() {
+        return MANAGEMENTS;
+    }
+
+    public static ManageableField getManageableField(String namespace, String fieldName) {
+        Map<String, ManageableField> fieldMap = MANAGEABLE_FIELD_MAP.get(namespace);
+        if (fieldMap == null) {
+            return null;
         }
-        return namespace;
+        return fieldMap.get(fieldName);
     }
 
-    /**
-     * 移除应用
-     */
-    public static void removeApp(String appName) {
-        MasterApp masterApp = MASTER_APP_MAP.remove(appName);
-        List<Class<?>> masterClazzList = masterApp.getMasterClazzList();
-        for (Class<?> masterClazz : masterClazzList) {
-            Master annotation = masterClazz.getDeclaredAnnotation(Master.class);
-            String namespace = getNamespace(masterClazz, annotation);
-            MASTER_ANNOTATION_MAP.remove(MasterUtil.generateAppNamespaceKey(appName, namespace));
-            CONTROLLABLE_VARIABLE_ANNOTATION_MAP.remove(MasterUtil.generateAppNamespaceKey(appName, namespace));
-            NASTER_FIELD_MAP.remove(MasterUtil.generateAppNamespaceKey(appName, namespace));
-        }
+    private static ManageableFieldDTO convert(String clazzName, ManageableField manageableField) {
+        ManageableFieldDTO manageableFieldDTO = new ManageableFieldDTO();
+        manageableFieldDTO.setClazzName(clazzName);
+        manageableFieldDTO.setDesc(manageableField.getDesc());
+        manageableFieldDTO.setName(manageableField.getName());
+        return manageableFieldDTO;
     }
 
-    /**
-     * 根据appName获取MasterApp对象
-     */
-    public static MasterApp getMasterApp(String appName) {
-        return MASTER_APP_MAP.get(appName);
-    }
-
-    public static Map<String, Master> getMasterAnnotationMap() {
-        return MASTER_ANNOTATION_MAP;
-    }
-
-    public static Map<String, Map<String, ControllableVariable>> getAllControllableVariableMap() {
-        return CONTROLLABLE_VARIABLE_ANNOTATION_MAP;
-    }
-
-    public static Map<String, ControllableVariable> getControllableVariableMapByNamespace(String namespace) {
-        return CONTROLLABLE_VARIABLE_ANNOTATION_MAP.get(namespace);
-    }
-
-    public static Map<String, Map<String, Field>> getNasterFieldMap() {
-        return NASTER_FIELD_MAP;
-    }
-
-    /**
-     * 查询指定变量管控类所有可管控字段
-     */
-    public static Map<String, Field> getMasterField(String namespace) {
-        return NASTER_FIELD_MAP.get(namespace);
-    }
-
-    /**
-     * 查询指定变量管控类指定字段
-     */
-    public static Field getMasterField(String namespace, String name) {
-        return Optional.ofNullable(NASTER_FIELD_MAP.get(namespace))
-                .map(fieldMap -> fieldMap.get(name))
-                .orElse(null);
-    }
-
-    /**
-     * 查询指定变量管控类指定字段的值
-     */
-    public static Object getMasterFieldValue(String namespace, String name) {
-        return Optional.ofNullable(NASTER_FIELD_MAP.get(namespace))
-                .map(fieldMap -> fieldMap.get(name))
-                .map(filed -> {
-                    try {
-                        return filed.get(null);
-                    } catch (IllegalAccessException e) {
-                        throw new MasterException(e.getMessage());
-                    }
-                })
-                .orElseThrow(null);
+    private static ManageableField buildManageableField(Manageable manageableAnnotation, Field field) {
+        ManageableField manageableField = new ManageableField();
+        manageableField.setDesc(manageableAnnotation.desc());
+        manageableField.setCallbackClazz(manageableAnnotation.callback());
+        manageableField.setName(field.getName());
+        manageableField.setField(field);
+        return manageableField;
     }
 
 }
