@@ -16,9 +16,8 @@ public class RequestHandlerFactory {
     private final static Map<Integer, RequestHandleStrategy> HANDLERS = new HashMap<>();
 
     static {
-        HANDLERS.put(RequestTypeEnum.VARIABLE_GET.getCode(), new VariableGetRequestHandler());
-        HANDLERS.put(RequestTypeEnum.VARIABLE_PUT.getCode(), new VariablePutRequestHandler());
-        HANDLERS.put(RequestTypeEnum.VARIABLE_ALL_GET.getCode(), new VariableGetRequestHandler());
+        HANDLERS.put(RequestTypeEnum.FIELD_VALUE_GET.getCode(), new FieldValueGetRequestHandler());
+        HANDLERS.put(RequestTypeEnum.FIELD_VALUE_PUT.getCode(), new FieldValuePutRequestHandler());
     }
 
     /**

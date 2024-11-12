@@ -12,7 +12,7 @@ public class Result<T> implements Serializable {
     @Serial
     private static final long serialVersionUID = 2074303239886411976L;
 
-    private Boolean success;
+    private boolean success;
 
     private String message;
 
@@ -52,7 +52,7 @@ public class Result<T> implements Serializable {
         return result;
     }
 
-    public Boolean getSuccess() {
+    public boolean isSuccess() {
         return success;
     }
 

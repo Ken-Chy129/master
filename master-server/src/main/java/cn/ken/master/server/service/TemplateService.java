@@ -1,7 +1,7 @@
 package cn.ken.master.server.service;
 
 
-import cn.ken.master.server.entity.TemplateDO;
+import cn.ken.master.server.model.entity.TemplateDO;
 
 import java.util.List;
 

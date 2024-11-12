@@ -1,7 +1,7 @@
 package cn.ken.master.server.controller;
 
-import cn.ken.master.server.entity.TemplateFieldDO;
-import cn.ken.master.server.service.RecordService;
+import cn.ken.master.server.common.RequestPathConstant;
+import cn.ken.master.server.model.entity.TemplateFieldDO;
 import cn.ken.master.server.service.TemplateFieldService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +16,8 @@ public class TemplateFieldController {
     @Resource
     private TemplateFieldService templateFieldService;
 
-    @PostMapping("insert")
-    public int insert(@RequestBody TemplateFieldDO templateFieldDO) {
+    @PostMapping(RequestPathConstant.SAVE)
+    public int save(@RequestBody TemplateFieldDO templateFieldDO) {
         return templateFieldService.insert(templateFieldDO);
     }
 }

@@ -22,6 +22,11 @@ public enum MasterErrorCode {
     SERVER_PORT_INVALID(1002, "请输入正确的服务端端口号"),
 
     /**
+     * 缺少核心参数，MASTER初始化失败
+     */
+    MASTER_INIT_ERROR(1, "缺少核心参数，MASTER初始化失败"),
+
+    /**
      * 应用名称不能为空
      */
     APP_NAME_INVALID(2, "应用名称不能为空"),
