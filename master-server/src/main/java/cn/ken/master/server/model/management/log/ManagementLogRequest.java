@@ -1,9 +1,10 @@
 package cn.ken.master.server.model.management.log;
 
+import cn.ken.master.core.model.common.PageRequest;
 import lombok.Data;
 
 @Data
-public class ManagementLogRequest {
+public class ManagementLogRequest extends PageRequest {
 
     private String appId;
 

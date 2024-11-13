@@ -36,7 +36,7 @@ public class ManagementLogServiceImpl implements ManagementLogService {
         ManagementLogDTO managementLogDTO = ManagementLogDTO.of(request);
         Set<String> machineSet = StringUtil.split(request.getMachines(), Delimiter.COMMA, Function.identity());
         managementLogDTO.setMachineSet(machineSet);
-        List<ManagementLogDO> managementLogDOS = managementLogMapper.selectByCondition(managementLogDTO);
+        List<ManagementLogDO> managementLogDOS = managementLogMapper.selectByCondition(managementLogDTO, request.getPageIndex(), request.getPageSize());
         return Result.success(managementLogDOS);
     }
 

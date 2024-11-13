@@ -12,22 +12,23 @@
     <select id="selectByCondition" resultType="cn.ken.master.server.model.entity.ManagementLogDO">
         select * from master_management_log
         <where>
-            app_id = #{appId}
-            <if test="namespace != null">
-                and namespace = #{namespace}
+            app_id = #{managementLog.appId}
+            <if test="managementLog.namespace != null">
+                and namespace = #{managementLog.namespace}
             </if>
-            <if test="name != null">
-                and field_name = #{name}
+            <if test="managementLog.name != null">
+                and field_name = #{managementLog.name}
             </if>
-            <if test="machineSet != null and !machineSet.isEmpty()">
+            <if test="managementLog.machineSet != null and !managementLog.machineSet.isEmpty()">
                 and machine in
-                 <foreach collection="machineSet" item="machine" open="(" close=")" separator=",">
+                 <foreach collection="managementLog.machineSet" item="machine" open="(" close=")" separator=",">
                      #{machine}
                  </foreach>
             </if>
-            <if test="modifier != null">
-                and modifier = #{modifier}
+            <if test="managementLog.modifier != null">
+                and managementLog.modifier = #{modifier}
             </if>
         </where>
+        limit #{pageIndex}, #{pageSize}
     </select>
 </mapper>
