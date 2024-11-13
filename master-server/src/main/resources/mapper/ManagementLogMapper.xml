@@ -17,9 +17,9 @@
                 and namespace = #{namespace}
             </if>
             <if test="name != null">
-                and name = #{name}
+                and field_name = #{name}
             </if>
-            <if test="machineSet != null">
+            <if test="machineSet != null and !machineSet.isEmpty()">
                 and machine in
                  <foreach collection="machineSet" item="machine" open="(" close=")" separator=",">
                      #{machine}
