@@ -1,11 +1,11 @@
 package cn.ken.master.server.service.impl;
 
 import cn.ken.master.core.constant.Delimiter;
-import cn.ken.master.core.model.common.Result;
+import cn.ken.master.core.model.common.PageResult;
 import cn.ken.master.core.util.StringUtil;
 import cn.ken.master.server.model.entity.ManagementLogDO;
 import cn.ken.master.server.mapper.ManagementLogMapper;
-import cn.ken.master.server.model.management.log.ManagementLogDTO;
+import cn.ken.master.server.model.management.log.ManagementLogQuery;
 import cn.ken.master.server.model.management.log.ManagementLogRequest;
 import cn.ken.master.server.service.ManagementLogService;
 import jakarta.annotation.Resource;
@@ -29,15 +29,26 @@ public class ManagementLogServiceImpl implements ManagementLogService {
     }
 
     @Override
-    public Result<List<ManagementLogDO>> selectByCondition(ManagementLogRequest request) {
+    public PageResult<List<ManagementLogDO>> selectByCondition(ManagementLogRequest request) {
+        PageResult<List<ManagementLogDO>> result = new PageResult<>();
         if (request.getAppId() == null) {
-            return Result.error("appId不能为空");
+            result.setSuccess(false);
+            result.setMessage("appId不能为空");
+            return result;
         }
-        ManagementLogDTO managementLogDTO = ManagementLogDTO.of(request);
+        ManagementLogQuery managementLogQuery = ManagementLogQuery.of(request);
         Set<String> machineSet = StringUtil.split(request.getMachines(), Delimiter.COMMA, Function.identity());
-        managementLogDTO.setMachineSet(machineSet);
-        List<ManagementLogDO> managementLogDOS = managementLogMapper.selectByCondition(managementLogDTO, request.getPageIndex(), request.getPageSize());
-        return Result.success(managementLogDOS);
+        managementLogQuery.setMachineSet(machineSet);
+        Long count = managementLogMapper.count(managementLogQuery);
+        if (count == 0) {
+            result.setSuccess(true);
+            return result;
+        }
+        List<ManagementLogDO> managementLogDOS = managementLogMapper.selectByCondition(managementLogQuery);
+        result.setSuccess(true);
+        result.setData(managementLogDOS);
+        result.setTotal(count);
+        return result;
     }
 
 

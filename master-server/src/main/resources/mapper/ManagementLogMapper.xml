@@ -8,25 +8,46 @@
         where field_id = #{fieldId}
     </select>
 
+    <select id="count" resultType="long">
+        select count(*) from master_management_log
+        <where>
+            app_id = #{appId}
+            <if test="namespace != null">
+                and namespace = #{namespace}
+            </if>
+            <if test="name != null">
+                and field_name = #{name}
+            </if>
+            <if test="machineSet != null and !machineSet.isEmpty()">
+                and machine in
+                <foreach collection="machineSet" item="machine" open="(" close=")" separator=",">
+                    #{machine}
+                </foreach>
+            </if>
+            <if test="modifier != null">
+                and modifier = #{modifier}
+            </if>
+        </where>
+    </select>
 
     <select id="selectByCondition" resultType="cn.ken.master.server.model.entity.ManagementLogDO">
         select * from master_management_log
         <where>
-            app_id = #{managementLog.appId}
-            <if test="managementLog.namespace != null">
-                and namespace = #{managementLog.namespace}
+            app_id = #{appId}
+            <if test="namespace != null">
+                and namespace = #{namespace}
             </if>
-            <if test="managementLog.name != null">
-                and field_name = #{managementLog.name}
+            <if test="name != null">
+                and field_name = #{name}
             </if>
-            <if test="managementLog.machineSet != null and !managementLog.machineSet.isEmpty()">
+            <if test="machineSet != null and !machineSet.isEmpty()">
                 and machine in
-                 <foreach collection="managementLog.machineSet" item="machine" open="(" close=")" separator=",">
+                 <foreach collection="machineSet" item="machine" open="(" close=")" separator=",">
                      #{machine}
                  </foreach>
             </if>
-            <if test="managementLog.modifier != null">
-                and managementLog.modifier = #{modifier}
+            <if test="modifier != null">
+                and modifier = #{modifier}
             </if>
         </where>
         limit #{pageIndex}, #{pageSize}
