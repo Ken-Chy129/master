@@ -7,8 +7,8 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("master_record")
-public class RecordDO extends BaseDO {
+@TableName("master_management_log")
+public class ManagementLogDO extends BaseDO {
 
     /**
      * 应用id

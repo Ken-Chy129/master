@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.ken.master.server.mapper.RecordMapper">
+<mapper namespace="cn.ken.master.server.mapper.ManagementLogMapper">
 
 
-    <select id="selectByFieldId" resultType="cn.ken.master.server.model.entity.RecordDO">
+    <select id="selectByFieldId" resultType="cn.ken.master.server.model.entity.ManagementLogDO">
         select * from master_record
         where field_id = #{fieldId}
     </select>

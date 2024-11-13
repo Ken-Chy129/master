@@ -7,12 +7,12 @@ import cn.ken.master.core.model.Result;
 import cn.ken.master.server.core.ManagementClient;
 import cn.ken.master.server.mapper.MachineMapper;
 import cn.ken.master.server.mapper.NamespaceMapper;
-import cn.ken.master.server.mapper.RecordMapper;
+import cn.ken.master.server.mapper.ManagementLogMapper;
 import cn.ken.master.server.model.entity.FieldDO;
 import cn.ken.master.server.mapper.FieldMapper;
 import cn.ken.master.server.model.entity.MachineDO;
 import cn.ken.master.server.model.entity.NamespaceDO;
-import cn.ken.master.server.model.entity.RecordDO;
+import cn.ken.master.server.model.entity.ManagementLogDO;
 import cn.ken.master.server.model.field.FieldPushReq;
 import cn.ken.master.server.model.field.FieldVO;
 import cn.ken.master.server.service.FieldService;
@@ -38,7 +38,7 @@ public class FieldServiceImpl implements FieldService {
     private MachineMapper machineMapper;
 
     @Resource
-    private RecordMapper recordMapper;
+    private ManagementLogMapper managementLogMapper;
 
     @Resource
     private ManagementClient managementClient;
@@ -86,19 +86,19 @@ public class FieldServiceImpl implements FieldService {
             String ipAddress = machineDO.getIpAddress();
             Integer port = machineDO.getPort();
             String oldValue = managementClient.putFieldValue(ipAddress, port, fieldPushReq.getNamespace(), fieldDO.getName(), fieldPushReq.getValue());
-            RecordDO recordDO = new RecordDO();
-            recordDO.setAppId(appId);
-            recordDO.setNamespace(fieldPushReq.getNamespace());
-            recordDO.setFieldId(fieldDO.getId());
-            recordDO.setFieldName(fieldDO.getName());
-            recordDO.setIpAddress(ipAddress);
-            recordDO.setPort(port);
-            recordDO.setBeforeValue(oldValue);
-            recordDO.setAfterValue(fieldPushReq.getValue());
-            recordDO.setStatus(1);
-            recordDO.setPushType(1);
-            recordDO.setModifier("颜洵");
-            recordMapper.insert(recordDO);
+            ManagementLogDO managementLogDO = new ManagementLogDO();
+            managementLogDO.setAppId(appId);
+            managementLogDO.setNamespace(fieldPushReq.getNamespace());
+            managementLogDO.setFieldId(fieldDO.getId());
+            managementLogDO.setFieldName(fieldDO.getName());
+            managementLogDO.setIpAddress(ipAddress);
+            managementLogDO.setPort(port);
+            managementLogDO.setBeforeValue(oldValue);
+            managementLogDO.setAfterValue(fieldPushReq.getValue());
+            managementLogDO.setStatus(1);
+            managementLogDO.setPushType(1);
+            managementLogDO.setModifier("颜洵");
+            managementLogMapper.insert(managementLogDO);
         }
         return Result.success();
     }
