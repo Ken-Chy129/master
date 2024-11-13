@@ -1,6 +1,6 @@
 package cn.ken.master.server.controller;
 
-import cn.ken.master.core.model.Result;
+import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.model.entity.ManagementLogDO;
 import cn.ken.master.server.model.management.log.ManagementLogRequest;
 import cn.ken.master.server.service.ManagementLogService;

@@ -3,7 +3,7 @@ package cn.ken.master.client.handle;
 import cn.ken.master.client.core.ManageableField;
 import cn.ken.master.client.core.MasterContainer;
 import cn.ken.master.core.model.CommandRequest;
-import cn.ken.master.core.model.Result;
+import cn.ken.master.core.model.common.Result;
 import cn.ken.master.core.util.StringUtil;
 import com.alibaba.fastjson2.JSON;
 

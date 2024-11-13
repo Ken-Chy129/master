@@ -1,6 +1,6 @@
 package cn.ken.master.server.controller;
 
-import cn.ken.master.core.model.Result;
+import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.common.RequestPathConstant;
 import cn.ken.master.server.model.entity.FieldDO;
 import cn.ken.master.server.model.field.FieldPushReq;

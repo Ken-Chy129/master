@@ -1,11 +1,9 @@
 package cn.ken.master.server.service.impl;
 
-import cn.ken.master.core.model.Result;
+import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.common.AppStartException;
 import cn.ken.master.server.common.enums.MachineStatus;
-import cn.ken.master.server.mapper.FieldMapper;
 import cn.ken.master.server.mapper.MachineMapper;
-import cn.ken.master.server.mapper.NamespaceMapper;
 import cn.ken.master.server.model.entity.AppDO;
 import cn.ken.master.server.mapper.AppMapper;
 import cn.ken.master.server.model.entity.MachineDO;
@@ -16,8 +14,6 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j

@@ -1,7 +1,6 @@
 package cn.ken.master.server.service.impl;
 
-import cn.ken.master.core.model.Result;
-import cn.ken.master.server.common.enums.MachineStatus;
+import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.model.entity.MachineDO;
 import cn.ken.master.server.mapper.MachineMapper;
 import cn.ken.master.server.service.MachineService;

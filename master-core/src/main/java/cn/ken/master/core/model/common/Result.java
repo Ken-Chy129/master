@@ -1,4 +1,4 @@
-package cn.ken.master.core.model;
+package cn.ken.master.core.model.common;
 
 import java.io.Serial;
 import java.io.Serializable;

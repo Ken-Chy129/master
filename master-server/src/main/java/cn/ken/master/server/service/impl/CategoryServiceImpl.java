@@ -1,6 +1,6 @@
 package cn.ken.master.server.service.impl;
 
-import cn.ken.master.core.model.Result;
+import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.mapper.CategoryMapper;
 import cn.ken.master.server.model.category.Category;
 import cn.ken.master.server.model.category.CategoryVO;

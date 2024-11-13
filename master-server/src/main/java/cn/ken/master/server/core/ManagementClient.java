@@ -2,7 +2,7 @@ package cn.ken.master.server.core;
 
 import cn.ken.master.core.enums.RequestTypeEnum;
 import cn.ken.master.core.model.CommandRequest;
-import cn.ken.master.core.model.Result;
+import cn.ken.master.core.model.common.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

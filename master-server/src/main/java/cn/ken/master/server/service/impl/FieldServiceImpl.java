@@ -3,7 +3,7 @@ package cn.ken.master.server.service.impl;
 import cn.ken.master.core.enums.PushTypeEnum;
 import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.ManagementDTO;
-import cn.ken.master.core.model.Result;
+import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.core.ManagementClient;
 import cn.ken.master.server.mapper.MachineMapper;
 import cn.ken.master.server.mapper.NamespaceMapper;

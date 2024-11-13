@@ -1,7 +1,7 @@
 package cn.ken.master.client.handle;
 
 import cn.ken.master.core.model.CommandRequest;
-import cn.ken.master.core.model.Result;
+import cn.ken.master.core.model.common.Result;
 
 /**
  * 请求处理策略类

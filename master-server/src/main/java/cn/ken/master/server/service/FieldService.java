@@ -1,7 +1,7 @@
 package cn.ken.master.server.service;
 
 import cn.ken.master.core.model.ManagementDTO;
-import cn.ken.master.core.model.Result;
+import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.model.entity.FieldDO;
 import cn.ken.master.server.model.field.FieldPushReq;
 import cn.ken.master.server.model.field.FieldVO;

@@ -1,7 +1,7 @@
 package cn.ken.master.server.core;
 
 import cn.ken.master.core.model.RegisterRequest;
-import cn.ken.master.core.model.Result;
+import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.service.AppService;
 import cn.ken.master.server.service.FieldService;
 import cn.ken.master.server.utils.ApplicationContextUtil;

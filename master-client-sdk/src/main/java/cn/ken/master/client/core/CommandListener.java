@@ -3,7 +3,7 @@ package cn.ken.master.client.core;
 import cn.ken.master.client.handle.RequestHandleStrategy;
 import cn.ken.master.client.handle.RequestHandlerFactory;
 import cn.ken.master.core.model.CommandRequest;
-import cn.ken.master.core.model.Result;
+import cn.ken.master.core.model.common.Result;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 
