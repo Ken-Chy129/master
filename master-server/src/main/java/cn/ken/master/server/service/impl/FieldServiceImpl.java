@@ -21,6 +21,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -91,8 +92,7 @@ public class FieldServiceImpl implements FieldService {
             managementLogDO.setNamespace(fieldPushReq.getNamespace());
             managementLogDO.setFieldId(fieldDO.getId());
             managementLogDO.setFieldName(fieldDO.getName());
-            managementLogDO.setIpAddress(ipAddress);
-            managementLogDO.setPort(port);
+            managementLogDO.setMachine(MessageFormat.format("{0}:{1}", ipAddress, port));
             managementLogDO.setBeforeValue(oldValue);
             managementLogDO.setAfterValue(fieldPushReq.getValue());
             managementLogDO.setStatus(1);

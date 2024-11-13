@@ -16,14 +16,9 @@ public class ManagementLogDO extends BaseDO {
     private Long appId;
 
     /**
-     * 变更机器的IP地址
+     * 变更的机器，ip:port
      */
-    private String ipAddress;
-
-    /**
-     * 变更机器的端口号
-     */
-    private Integer port;
+    private String machine;
 
     /**
      * 变更的命名空间

@@ -1,6 +1,8 @@
 package cn.ken.master.core.util;
 
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author Ken-Chy129
@@ -33,4 +35,14 @@ public class StringUtil {
         return str == null || str.isEmpty();
     }
 
+    public static <T> Set<T> split(String str, String delimiter, Function<String, T> converter) {
+        if (isEmpty(str)) {
+            return Collections.emptySet();
+        }
+        return Arrays.stream(str.split(delimiter))
+                .filter(StringUtil::isNotBlank)
+                .map(String::trim)
+                .map(converter)
+                .collect(Collectors.toSet());
+    }
 }

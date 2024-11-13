@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class ManagementLogRequest {
 
+    private String appId;
+
     private String namespace;
 
     private String name;
