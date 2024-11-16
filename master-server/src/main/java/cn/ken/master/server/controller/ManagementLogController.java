@@ -1,5 +1,6 @@
 package cn.ken.master.server.controller;
 
+import cn.ken.master.core.model.common.PageResult;
 import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.model.entity.ManagementLogDO;
 import cn.ken.master.server.model.management.log.ManagementLogRequest;
@@ -17,7 +18,7 @@ public class ManagementLogController {
     private ManagementLogService managementLogService;
 
     @GetMapping("/selectByCondition")
-    public Result<List<ManagementLogDO>> findByFieldId(ManagementLogRequest request) {
+    public PageResult<List<ManagementLogDO>> findByFieldId(ManagementLogRequest request) {
         return managementLogService.selectByCondition(request);
     }
 

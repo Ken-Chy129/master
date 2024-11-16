@@ -1,5 +1,6 @@
 package cn.ken.master.server.service;
 
+import cn.ken.master.core.model.common.PageResult;
 import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.model.entity.ManagementLogDO;
 import cn.ken.master.server.model.management.log.ManagementLogRequest;
@@ -10,6 +11,6 @@ public interface ManagementLogService {
 
     int insert(ManagementLogDO managementLogDO);
 
-    Result<List<ManagementLogDO>> selectByCondition(ManagementLogRequest request);
+    PageResult<List<ManagementLogDO>> selectByCondition(ManagementLogRequest request);
 
 }

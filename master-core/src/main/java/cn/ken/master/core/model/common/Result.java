@@ -123,4 +123,17 @@ public class Result<T> implements Serializable {
     public void setDebugInfo(Collection<String> debugInfo) {
         this.debugInfo = debugInfo;
     }
+
+    @Override
+    public String toString() {
+        return "Result{" +
+                "success=" + success +
+                ", errorCode='" + errorCode + '\'' +
+                ", errorMsg='" + errorMsg + '\'' +
+                ", data=" + data +
+                ", traceId='" + traceId + '\'' +
+                ", ip='" + ip + '\'' +
+                ", debugInfo=" + debugInfo +
+                '}';
+    }
 }

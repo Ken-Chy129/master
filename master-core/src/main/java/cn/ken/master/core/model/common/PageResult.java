@@ -102,4 +102,22 @@ public class PageResult<T> extends Result<T> {
         result.setDebugInfo(Collections.singleton(exception.getMessage()));
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "PageResult{" +
+                "success=" + getSuccess() +
+                ", errorCode='" + getErrorCode() + '\'' +
+                ", errorMsg='" + getErrorMsg() + '\'' +
+                ", data=" + getData() +
+                ", traceId='" + getTraceId() + '\'' +
+                ", ip='" + getIp() + '\'' +
+                ", debugInfo=" + getDebugInfo() +
+                ", pageIndex=" + pageIndex +
+                ", pageSize=" + pageSize +
+                ", total=" + total +
+                ", pageCount=" + pageCount +
+                ", hasMore=" + hasMore +
+                '}';
+    }
 }
