@@ -6,7 +6,7 @@ public enum SystemErrorCodeEnum implements ErrorCode {
     PARAM_ERROR("PARAM_ERROR", "参数异常"),
     EXCEPTION_ERROR("EXCEPTION_ERROR", "系统内部异常"),
     PERMISSION_ERROR("PERMISSION_ERROR", "没有权限"),
-
+    BIZ_ERROR("BIZ_ERROR", "业务异常"),
     ;
 
     SystemErrorCodeEnum(String errorCode, String errorMessage) {

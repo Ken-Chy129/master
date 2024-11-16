@@ -50,6 +50,7 @@ public class Result<T> implements Serializable {
 
     public static <T> Result<T> buildError(String errMsg) {
         Result<T> result = new Result<>(false);
+        result.setErrorCode(SystemErrorCodeEnum.BIZ_ERROR.getErrorCode());
         result.setErrorMsg(errMsg);
         return result;
     }

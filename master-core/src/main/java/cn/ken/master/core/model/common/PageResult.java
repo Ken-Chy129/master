@@ -85,6 +85,7 @@ public class PageResult<T> extends Result<T> {
 
     public static <T> PageResult<T> buildError(String errMsg) {
         PageResult<T> result = new PageResult<>(false);
+        result.setErrorCode(SystemErrorCodeEnum.BIZ_ERROR.getErrorCode());
         result.setErrorMsg(errMsg);
         return result;
     }
