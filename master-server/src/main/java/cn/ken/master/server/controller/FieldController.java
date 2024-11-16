@@ -19,27 +19,27 @@ public class FieldController {
     private FieldService fieldService;
 
     @GetMapping("/queryByNamespace")
-    private Result<List<FieldDO>> queryByNamespaceId(@RequestParam("namespaceId") Long namespaceId) {
+    public Result<List<FieldDO>> queryByNamespaceId(@RequestParam("namespaceId") Long namespaceId) {
         return fieldService.selectByNamespaceId(namespaceId);
     }
 
     @GetMapping("/list")
-    private Result<List<FieldDO>> queryAllByAppId(Long appId) {
+    public Result<List<FieldDO>> queryAllByAppId(Long appId) {
         return fieldService.selectByAppId(appId);
     }
 
     @PostMapping("/push")
-    private Result<Boolean> pushFieldValue(@RequestBody FieldPushReq fieldPushReq) {
+    public Result<Boolean> pushFieldValue(@RequestBody FieldPushReq fieldPushReq) {
         return fieldService.pushFieldValue(fieldPushReq);
     }
 
     @GetMapping("/{fieldId}")
-    private Result<FieldVO> getFieldValue(@PathVariable("fieldId") Long fieldId) {
+    public Result<FieldVO> getFieldValue(@PathVariable("fieldId") Long fieldId) {
         return fieldService.getFieldValue(fieldId);
     }
 
     @PostMapping(RequestPathConstant.SAVE)
-    private Result<FieldDO> save(@RequestBody FieldDO field) {
+    public Result<FieldDO> save(@RequestBody FieldDO field) {
         fieldService.insert(field);
         return Result.buildSuccess(field);
     }
