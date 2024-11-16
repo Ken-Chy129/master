@@ -10,4 +10,8 @@ public class BaseQuery {
     private int pageIndex;
 
     private int pageSize;
+
+    public int getStartIndex() {
+        return (pageIndex - 1) * pageSize;
+    }
 }

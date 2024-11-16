@@ -2,9 +2,9 @@ package cn.ken.master.core.model.common;
 
 public class PageRequest {
 
-    private int pageIndex;
+    private int pageIndex = 1;
 
-    private int pageSize;
+    private int pageSize = 10;
 
     public int getPageIndex() {
         return pageIndex;
@@ -15,9 +15,6 @@ public class PageRequest {
     }
 
     public int getPageSize() {
-        if (pageSize <= 0) {
-            return 10;
-        }
         return pageSize;
     }
 

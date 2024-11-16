@@ -50,6 +50,6 @@
                 and modifier = #{modifier}
             </if>
         </where>
-        limit #{pageIndex}, #{pageSize}
+        limit #{startIndex}, #{pageSize}
     </select>
 </mapper>
