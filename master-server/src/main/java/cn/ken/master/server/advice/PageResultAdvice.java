@@ -9,7 +9,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 @Slf4j
@@ -20,8 +19,6 @@ public class PageResultAdvice {
     @Around("permissionPointcut()")
     public Object debug(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = joinPoint.proceed();
-        log.info("result:{}", result);
-        log.info("args:{}", Arrays.toString(joinPoint.getArgs()));
         if (result instanceof PageResult<?> pageResult) {
             Object[] args = joinPoint.getArgs();
             for (Object arg : args) {

@@ -17,12 +17,12 @@ public class NamespaceController {
     private NamespaceService namespaceService;
 
     @GetMapping("/{appId}")
-    private Result<List<NamespaceDO>> queryAppNamespace(@PathVariable("appId") Long appId) {
+    public Result<List<NamespaceDO>> queryAppNamespace(@PathVariable("appId") Long appId) {
         return namespaceService.selectByAppId(appId);
     }
 
     @PostMapping(RequestPathConstant.SAVE)
-    private Result<NamespaceDO> save(@RequestBody NamespaceDO namespaceDO) {
+    public Result<NamespaceDO> save(@RequestBody NamespaceDO namespaceDO) {
         namespaceService.insert(namespaceDO);
         return Result.buildSuccess(namespaceDO);
     }
