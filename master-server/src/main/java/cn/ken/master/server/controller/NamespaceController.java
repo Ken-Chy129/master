@@ -24,6 +24,6 @@ public class NamespaceController {
     @PostMapping(RequestPathConstant.SAVE)
     private Result<NamespaceDO> save(@RequestBody NamespaceDO namespaceDO) {
         namespaceService.insert(namespaceDO);
-        return Result.success(namespaceDO);
+        return Result.buildSuccess(namespaceDO);
     }
 }

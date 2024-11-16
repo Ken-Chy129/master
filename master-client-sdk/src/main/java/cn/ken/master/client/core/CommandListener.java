@@ -52,7 +52,7 @@ public class CommandListener extends Thread {
                     }
                     RequestHandleStrategy requestHandler = RequestHandlerFactory.getRequestHandler(commandRequest.getType());
                     if (Objects.isNull(requestHandler)) {
-                        out.writeObject(Result.error("请求的方法不存在"));
+                        out.writeObject(Result.buildError("请求的方法不存在"));
                         continue;
                     }
                     log.info("来自机器 {} 的请求, 入参为:{}", socket.getRemoteSocketAddress(), JSON.toJSONString(commandRequest));

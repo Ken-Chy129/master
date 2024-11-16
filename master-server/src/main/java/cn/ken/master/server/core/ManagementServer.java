@@ -43,12 +43,12 @@ public class ManagementServer extends Thread {
                         appService.startAppOnMachine(appId, accessKey, ipAddress, port);
                         // 2.解析受管控字段
                         fieldService.registerField(appId, request.getNamespaceList());
-                        out.writeObject(Result.success(getAppHeatBeatInterval()));
+                        out.writeObject(Result.buildSuccess(getAppHeatBeatInterval()));
                     } catch (Exception e) {
                         log.error(e.getMessage(), e);
                         if (out != null) {
                             try {
-                                out.writeObject(Result.error(e.getMessage()));
+                                out.writeObject(Result.buildError(e.getMessage()));
                             } catch (IOException ignored) {}
                         }
                     } finally {

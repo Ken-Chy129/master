@@ -26,6 +26,6 @@ public class NamespaceServiceImpl implements NamespaceService {
         LambdaQueryWrapper<NamespaceDO> nameSpaceQueryWrapper = new LambdaQueryWrapper<>();
         nameSpaceQueryWrapper.eq(NamespaceDO::getAppId, appId);
         List<NamespaceDO> namespaceDOS = namespaceMapper.selectList(nameSpaceQueryWrapper);
-        return Result.success(namespaceDOS);
+        return Result.buildSuccess(namespaceDOS);
     }
 }

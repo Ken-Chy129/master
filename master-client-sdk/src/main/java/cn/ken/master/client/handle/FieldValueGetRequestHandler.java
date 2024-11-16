@@ -22,18 +22,18 @@ public class FieldValueGetRequestHandler implements RequestHandleStrategy {
         String namespace = commandRequest.getNamespace();
         String name = commandRequest.getName();
         if (StringUtil.isBlank(namespace) || StringUtil.isBlank(name)) {
-            return Result.error("缺少参数");
+            return Result.buildError("缺少参数");
         }
         ManageableField manageableField = MasterContainer.getManageableField(namespace, name);
         if (manageableField == null) {
-            return Result.error(String.format("%s-%s不存在", namespace, name));
+            return Result.buildError(String.format("%s-%s不存在", namespace, name));
         }
         Field field = manageableField.getField();
         try {
             String result = JSON.toJSONString(field.get(null));
-            return Result.success(result);
+            return Result.buildSuccess(result);
         } catch (IllegalAccessException e) {
-            return Result.error(e.getMessage());
+            return Result.buildError(e.getMessage());
         }
     }
 }

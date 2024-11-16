@@ -13,6 +13,6 @@ public class CommonController {
 
     @GetMapping("currentUser")
     public Result<Map<String, String>> currentUser() {
-        return Result.success(Map.of("access", "", "name", "ken"));
+        return Result.buildSuccess(Map.of("access", "", "name", "ken"));
     }
 }

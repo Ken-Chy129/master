@@ -21,7 +21,7 @@ public class MachineServiceImpl implements MachineService {
         LambdaQueryWrapper<MachineDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(MachineDO::getAppId, appId);
         List<MachineDO> machineDOS = machineMapper.selectList(queryWrapper);
-        return Result.success(machineDOS);
+        return Result.buildSuccess(machineDOS);
     }
 
     @Override

@@ -30,23 +30,18 @@ public class ManagementLogServiceImpl implements ManagementLogService {
 
     @Override
     public PageResult<List<ManagementLogDO>> selectByCondition(ManagementLogRequest request) {
-        PageResult<List<ManagementLogDO>> result = new PageResult<>();
         if (request.getAppId() == null) {
-            result.setSuccess(false);
-            result.setMessage("appId不能为空");
-            return result;
+            return PageResult.buildError("appId不能为空");
         }
         ManagementLogQuery managementLogQuery = ManagementLogQuery.of(request);
         Set<String> machineSet = StringUtil.split(request.getMachines(), Delimiter.COMMA, Function.identity());
         managementLogQuery.setMachineSet(machineSet);
         Long count = managementLogMapper.count(managementLogQuery);
         if (count == 0) {
-            result.setSuccess(true);
-            return result;
+            return PageResult.buildSuccess();
         }
         List<ManagementLogDO> managementLogDOS = managementLogMapper.selectByCondition(managementLogQuery);
-        result.setSuccess(true);
-        result.setData(managementLogDOS);
+        PageResult<List<ManagementLogDO>> result = PageResult.buildSuccess(managementLogDOS);
         result.setTotal(count);
         return result;
     }

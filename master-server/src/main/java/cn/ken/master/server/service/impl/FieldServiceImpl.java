@@ -54,7 +54,7 @@ public class FieldServiceImpl implements FieldService {
         LambdaQueryWrapper<FieldDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(FieldDO::getNamespaceId, namespaceId);
         List<FieldDO> fieldDOS = fieldMapper.selectList(queryWrapper);
-        return Result.success(fieldDOS);
+        return Result.buildSuccess(fieldDOS);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class FieldServiceImpl implements FieldService {
         LambdaQueryWrapper<FieldDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(FieldDO::getAppId, appId);
         List<FieldDO> fieldDOS = fieldMapper.selectList(queryWrapper);
-        return Result.success(fieldDOS);
+        return Result.buildSuccess(fieldDOS);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class FieldServiceImpl implements FieldService {
             managementLogDO.setModifier("颜洵");
             managementLogMapper.insert(managementLogDO);
         }
-        return Result.success();
+        return Result.buildSuccess();
     }
 
     @Override
@@ -180,6 +180,6 @@ public class FieldServiceImpl implements FieldService {
             machineValueMap.put(ipAddress + ":" + port, value);
         }
         fieldVO.setMachineValueMap(machineValueMap);
-        return Result.success(fieldVO);
+        return Result.buildSuccess(fieldVO);
     }
 }

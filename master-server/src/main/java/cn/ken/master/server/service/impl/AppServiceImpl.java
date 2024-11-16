@@ -34,7 +34,7 @@ public class AppServiceImpl implements AppService {
     @Override
     public Result<List<AppDO>> selectAll() {
         List<AppDO> appDOList = appMapper.selectList(new QueryWrapper<>());
-        return Result.success(appDOList);
+        return Result.buildSuccess(appDOList);
     }
 
     @Override

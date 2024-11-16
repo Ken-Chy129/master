@@ -41,6 +41,6 @@ public class FieldController {
     @PostMapping(RequestPathConstant.SAVE)
     private Result<FieldDO> save(@RequestBody FieldDO field) {
         fieldService.insert(field);
-        return Result.success(field);
+        return Result.buildSuccess(field);
     }
 }
