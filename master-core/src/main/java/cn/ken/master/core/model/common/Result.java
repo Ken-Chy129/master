@@ -62,7 +62,7 @@ public class Result<T> implements Serializable {
         return result;
     }
 
-    public static <T> Result<T> buildError(RuntimeException exception) {
+    public static <T> Result<T> buildError(Exception exception) {
         Result<T> result = buildError(SystemErrorCodeEnum.EXCEPTION_ERROR);
         result.setDebugInfo(Collections.singleton(exception.getMessage()));
         return result;
