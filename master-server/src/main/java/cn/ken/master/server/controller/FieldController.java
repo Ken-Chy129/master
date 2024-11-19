@@ -5,6 +5,7 @@ import cn.ken.master.server.common.RequestPathConstant;
 import cn.ken.master.server.model.entity.FieldDO;
 import cn.ken.master.server.model.management.field.FieldPushReq;
 import cn.ken.master.server.model.management.field.FieldVO;
+import cn.ken.master.server.model.management.field.ManagementFieldDTO;
 import cn.ken.master.server.model.management.field.ManagementFieldRequest;
 import cn.ken.master.server.service.FieldService;
 import jakarta.annotation.Resource;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("field")
+@RequestMapping("management/field")
 public class FieldController {
 
     @Resource
@@ -25,7 +26,7 @@ public class FieldController {
     }
 
     @GetMapping("/selectByCondition")
-    public Result<List<FieldDO>> selectByCondition(ManagementFieldRequest request) {
+    public Result<List<ManagementFieldDTO>> selectByCondition(ManagementFieldRequest request) {
         return fieldService.selectByCondition(request);
     }
 

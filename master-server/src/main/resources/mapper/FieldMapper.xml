@@ -3,28 +3,30 @@
 <mapper namespace="cn.ken.master.server.mapper.FieldMapper">
 
     <select id="count" resultType="java.lang.Long">
-        select count(*) from main.master_field
+        select count(*) as namespace from master_field mf
+        left join main.master_namespace mn on mf.namespace_id = mn.id
         <where>
-            app_id = #{appId}
+            mf.app_id = #{appId}
             <if test="namespaceId != null">
-                and namespaceId = #{namespaceId}
+                and mf.namespace_id = #{namespaceId}
             </if>
             <if test="name != null">
-                and name like #{name}%
+                and mf.name like concat(#{name}, '%')
             </if>
         </where>
     </select>
 
 
-    <select id="selectByCondition" resultType="cn.ken.master.server.model.entity.FieldDO">
-        select * from main.master_field
+    <select id="selectByCondition" resultType="cn.ken.master.server.model.management.field.ManagementFieldDTO">
+        select mf.*, mn.name as namespace from master_field mf
+        left join main.master_namespace mn on mf.namespace_id = mn.id
         <where>
-            app_id = #{appId}
+            mf.app_id = #{appId}
             <if test="namespaceId != null">
-                and namespaceId = #{namespaceId}
+                and mf.namespace_id = #{namespaceId}
             </if>
             <if test="name != null">
-                and name like #{name}%
+                and mf.name like concat(#{name}, '%')
             </if>
         </where>
         limit #{startIndex}, #{pageSize}

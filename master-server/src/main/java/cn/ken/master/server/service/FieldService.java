@@ -5,6 +5,7 @@ import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.model.entity.FieldDO;
 import cn.ken.master.server.model.management.field.FieldPushReq;
 import cn.ken.master.server.model.management.field.FieldVO;
+import cn.ken.master.server.model.management.field.ManagementFieldDTO;
 import cn.ken.master.server.model.management.field.ManagementFieldRequest;
 
 import java.util.List;
@@ -23,5 +24,5 @@ public interface FieldService {
 
     Result<FieldVO> getFieldValue(Long fieldId);
 
-    Result<List<FieldDO>> selectByCondition(ManagementFieldRequest request);
+    Result<List<ManagementFieldDTO>> selectByCondition(ManagementFieldRequest request);
 }
