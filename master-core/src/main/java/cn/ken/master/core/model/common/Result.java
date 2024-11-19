@@ -74,7 +74,7 @@ public class Result<T> implements Serializable {
         return result;
     }
 
-    public Boolean getSuccess() {
+    public Boolean isSuccess() {
         return success;
     }
 

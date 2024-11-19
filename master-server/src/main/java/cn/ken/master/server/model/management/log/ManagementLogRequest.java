@@ -8,8 +8,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class ManagementLogRequest extends PageRequest {
 
-    private String appId;
-
     private String namespace;
 
     private String name;

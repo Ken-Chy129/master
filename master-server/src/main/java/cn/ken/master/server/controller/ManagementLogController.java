@@ -18,7 +18,7 @@ public class ManagementLogController {
     private ManagementLogService managementLogService;
 
     @GetMapping("/selectByCondition")
-    public PageResult<List<ManagementLogDO>> findByFieldId(ManagementLogRequest request) {
+    public PageResult<List<ManagementLogDO>> selectByCondition(ManagementLogRequest request) {
         return managementLogService.selectByCondition(request);
     }
 

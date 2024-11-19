@@ -1,6 +1,6 @@
 package cn.ken.master.core.model.common;
 
-public class PageRequest {
+public class PageRequest extends BaseRequest {
 
     private int pageIndex = 1;
 

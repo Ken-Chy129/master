@@ -3,8 +3,9 @@ package cn.ken.master.server.controller;
 import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.common.RequestPathConstant;
 import cn.ken.master.server.model.entity.FieldDO;
-import cn.ken.master.server.model.field.FieldPushReq;
-import cn.ken.master.server.model.field.FieldVO;
+import cn.ken.master.server.model.management.field.FieldPushReq;
+import cn.ken.master.server.model.management.field.FieldVO;
+import cn.ken.master.server.model.management.field.ManagementFieldRequest;
 import cn.ken.master.server.service.FieldService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,11 @@ public class FieldController {
     @GetMapping("/queryByNamespace")
     public Result<List<FieldDO>> queryByNamespaceId(@RequestParam("namespaceId") Long namespaceId) {
         return fieldService.selectByNamespaceId(namespaceId);
+    }
+
+    @GetMapping("/selectByCondition")
+    public Result<List<FieldDO>> selectByCondition(ManagementFieldRequest request) {
+        return fieldService.selectByCondition(request);
     }
 
     @GetMapping("/list")

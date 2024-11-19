@@ -106,7 +106,7 @@ public class PageResult<T> extends Result<T> {
     @Override
     public String toString() {
         return "PageResult{" +
-                "success=" + getSuccess() +
+                "success=" + isSuccess() +
                 ", errorCode='" + getErrorCode() + '\'' +
                 ", errorMsg='" + getErrorMsg() + '\'' +
                 ", data=" + getData() +

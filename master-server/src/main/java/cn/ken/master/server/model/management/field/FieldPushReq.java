@@ -1,4 +1,4 @@
-package cn.ken.master.server.model.field;
+package cn.ken.master.server.model.management.field;
 
 import lombok.Data;
 

@@ -91,7 +91,7 @@ public class MasterManager {
                 log.info("应用注册成功");
                 return (Integer) result.getData();
             } else {
-                log.error("应用注册失败:{}", result.getMessage());
+                log.error("应用注册失败:{}", result.getErrorMsg());
             }
         } catch (Exception e) {
             log.error("应用注册发生异常:{}", e.getMessage());

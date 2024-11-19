@@ -1,9 +1,12 @@
 package cn.ken.master.server.service.impl;
 
+import cn.ken.master.core.constant.Delimiter;
 import cn.ken.master.core.enums.PushTypeEnum;
 import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.ManagementDTO;
+import cn.ken.master.core.model.common.PageResult;
 import cn.ken.master.core.model.common.Result;
+import cn.ken.master.core.util.StringUtil;
 import cn.ken.master.server.core.ManagementClient;
 import cn.ken.master.server.mapper.MachineMapper;
 import cn.ken.master.server.mapper.NamespaceMapper;
@@ -13,8 +16,11 @@ import cn.ken.master.server.mapper.FieldMapper;
 import cn.ken.master.server.model.entity.MachineDO;
 import cn.ken.master.server.model.entity.NamespaceDO;
 import cn.ken.master.server.model.entity.ManagementLogDO;
-import cn.ken.master.server.model.field.FieldPushReq;
-import cn.ken.master.server.model.field.FieldVO;
+import cn.ken.master.server.model.management.field.FieldPushReq;
+import cn.ken.master.server.model.management.field.FieldVO;
+import cn.ken.master.server.model.management.field.ManagementFieldQuery;
+import cn.ken.master.server.model.management.field.ManagementFieldRequest;
+import cn.ken.master.server.model.management.log.ManagementLogQuery;
 import cn.ken.master.server.service.FieldService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
@@ -23,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -181,5 +188,21 @@ public class FieldServiceImpl implements FieldService {
         }
         fieldVO.setMachineValueMap(machineValueMap);
         return Result.buildSuccess(fieldVO);
+    }
+
+    @Override
+    public Result<List<FieldDO>> selectByCondition(ManagementFieldRequest request) {
+        if (request.getAppId() == null) {
+            return PageResult.buildError("appId不能为空");
+        }
+        ManagementFieldQuery managementFieldQuery = ManagementFieldQuery.of(request);
+        Long count = fieldMapper.count(managementFieldQuery);
+        if (count == 0) {
+            return PageResult.buildSuccess();
+        }
+        List<FieldDO> fieldDOS = fieldMapper.selectByCondition(managementFieldQuery);
+        PageResult<List<FieldDO>> result = PageResult.buildSuccess(fieldDOS);
+        result.setTotal(count);
+        return result;
     }
 }

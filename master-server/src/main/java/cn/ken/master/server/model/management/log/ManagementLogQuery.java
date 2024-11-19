@@ -10,7 +10,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 public class ManagementLogQuery extends BaseQuery {
 
-    private String appId;
+    private Long appId;
 
     private String namespace;
 
