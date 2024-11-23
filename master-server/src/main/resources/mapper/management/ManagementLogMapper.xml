@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ken.master.server.management.mapper.ManagementLogMapper">
+
+
+    <select id="selectByFieldId" resultType="cn.ken.master.server.management.model.entity.ManagementLogDO">
+        select * from master_management_log
+        where field_id = #{fieldId}
+    </select>
+
+    <select id="count" resultType="long">
+        select count(*) from master_management_log
+        <where>
+            app_id = #{appId}
+            <if test="namespace != null">
+                and namespace = #{namespace}
+            </if>
+            <if test="name != null">
+                and field_name = #{name}
+            </if>
+            <if test="machineSet != null and !machineSet.isEmpty()">
+                and machine in
+                <foreach collection="machineSet" item="machine" open="(" close=")" separator=",">
+                    #{machine}
+                </foreach>
+            </if>
+            <if test="modifier != null">
+                and modifier = #{modifier}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByCondition" resultType="cn.ken.master.server.management.model.entity.ManagementLogDO">
+        select * from master_management_log
+        <where>
+            app_id = #{appId}
+            <if test="namespace != null">
+                and namespace = #{namespace}
+            </if>
+            <if test="name != null">
+                and field_name = #{name}
+            </if>
+            <if test="machineSet != null and !machineSet.isEmpty()">
+                and machine in
+                 <foreach collection="machineSet" item="machine" open="(" close=")" separator=",">
+                     #{machine}
+                 </foreach>
+            </if>
+            <if test="modifier != null">
+                and modifier = #{modifier}
+            </if>
+        </where>
+        limit #{startIndex}, #{pageSize}
+    </select>
+</mapper>

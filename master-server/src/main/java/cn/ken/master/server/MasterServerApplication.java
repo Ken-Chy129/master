@@ -10,7 +10,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  * @author Ken-Chy129
  * @date 2024/8/28
  */
-@MapperScan("cn.ken.master.server.mapper")
+@MapperScan("cn.ken.master.server.*.mapper")
 @SpringBootApplication
 public class MasterServerApplication {
 

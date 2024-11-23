@@ -1,6 +1,6 @@
 package cn.ken.master.server.utils;
 
-import cn.ken.master.server.model.entity.MachineDO;
+import cn.ken.master.server.management.model.entity.MachineDO;
 
 public class AppUtil {
 

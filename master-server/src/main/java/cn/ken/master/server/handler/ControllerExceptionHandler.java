@@ -16,21 +16,21 @@ public class ControllerExceptionHandler {
     @ResponseBody
     @ExceptionHandler(BusinessException.class)
     public Result<?> businessExceptionHandle(BusinessException e) {
-        log.error("业务异常:{}", e.getMessage());
+        log.error("业务异常", e);
         return Result.buildError(e.getMessage());
     }
 
     @ResponseBody
     @ExceptionHandler(Exception.class)
     public Result<?> exceptionHandle(Exception e) {
-        log.error("接口出现内部异常:{}", e.getMessage());
-        return Result.buildError(e);
+        log.error("接口出现内部异常", e);
+        return Result.buildError(e.getMessage());
     }
 
     @ResponseBody
     @ExceptionHandler(MissingRequestValueException.class)
     public Result<?> paramExceptionHandle(MissingRequestValueException e) {
-        log.error("参数异常:{}", e.getMessage());
+        log.error("参数异常", e);
         return Result.buildError(SystemErrorCodeEnum.PARAM_ERROR, e.getMessage());
     }
 

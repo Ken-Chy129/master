@@ -2,8 +2,8 @@ package cn.ken.master.server.core;
 
 import cn.ken.master.core.model.RegisterRequest;
 import cn.ken.master.core.model.common.Result;
-import cn.ken.master.server.service.AppService;
-import cn.ken.master.server.service.FieldService;
+import cn.ken.master.server.app.service.AppService;
+import cn.ken.master.server.management.service.FieldService;
 import cn.ken.master.server.utils.ApplicationContextUtil;
 import lombok.extern.slf4j.Slf4j;
 
