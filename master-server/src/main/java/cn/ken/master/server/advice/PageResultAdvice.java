@@ -16,7 +16,7 @@ import java.util.Objects;
 @Component
 public class PageResultAdvice {
 
-    @Around("permissionPointcut()")
+    @Around("pageResultPointcut()")
     public Object debug(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = joinPoint.proceed();
         if (result instanceof PageResult<?> pageResult) {
@@ -36,8 +36,8 @@ public class PageResultAdvice {
         return result;
     }
 
-    @Pointcut("execution(* cn.ken.master.server.controller.*.*(..))")
-    public void permissionPointcut() {}
+    @Pointcut("execution(* cn.ken.master.server.*.controller.*.*(..))")
+    public void pageResultPointcut() {}
 
 }
 

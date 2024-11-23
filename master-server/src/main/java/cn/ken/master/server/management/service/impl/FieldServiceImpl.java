@@ -159,7 +159,13 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public Result<List<ManagementFieldDTO>> selectByCondition(ManagementFieldRequest request) {
+    public Result<List<ManagementFieldDTO>> selectByNamespaceId(String namespaceId) {
+        List<ManagementFieldDTO> managementFieldDTOS = fieldMapper.selectByNamespaceId(namespaceId);
+        return Result.buildSuccess(managementFieldDTOS);
+    }
+
+    @Override
+    public PageResult<List<ManagementFieldDTO>> selectByCondition(ManagementFieldRequest request) {
         if (request.getAppId() == null) {
             return PageResult.buildError("appId不能为空");
         }

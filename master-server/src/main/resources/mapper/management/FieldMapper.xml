@@ -2,6 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.ken.master.server.management.mapper.FieldMapper">
 
+    <select id="selectByNamespaceId" resultType="cn.ken.master.server.management.model.management.field.ManagementFieldDTO">
+        select * from main.master_field
+        where namespace_id = #{namespaceId}
+    </select>
+
     <select id="count" resultType="java.lang.Long">
         select count(*) as namespace from master_field mf
         left join main.master_namespace mn on mf.namespace_id = mn.id

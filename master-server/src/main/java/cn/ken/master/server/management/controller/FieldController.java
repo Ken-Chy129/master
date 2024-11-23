@@ -1,5 +1,6 @@
 package cn.ken.master.server.management.controller;
 
+import cn.ken.master.core.model.common.PageResult;
 import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.management.model.management.field.FieldPushReq;
 import cn.ken.master.server.management.model.management.field.FieldVO;
@@ -18,8 +19,13 @@ public class FieldController {
     @Resource
     private FieldService fieldService;
 
+    @GetMapping("/selectByNamespaceId")
+    public Result<List<ManagementFieldDTO>> selectByNamespaceId(@RequestParam("namespaceId") String namespaceId) {
+        return fieldService.selectByNamespaceId(namespaceId);
+    }
+
     @GetMapping("/selectByCondition")
-    public Result<List<ManagementFieldDTO>> selectByCondition(ManagementFieldRequest request) {
+    public PageResult<List<ManagementFieldDTO>> selectByCondition(ManagementFieldRequest request) {
         return fieldService.selectByCondition(request);
     }
 
