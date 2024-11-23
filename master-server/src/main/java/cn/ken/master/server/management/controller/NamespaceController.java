@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("namespace")
+@RequestMapping("/management/namespace")
 public class NamespaceController {
 
     @Resource
     private NamespaceService namespaceService;
 
-    @GetMapping("/{appId}")
-    public Result<List<NamespaceDO>> queryAppNamespace(@PathVariable("appId") Long appId) {
+    @GetMapping("/selectByAppId")
+    public Result<List<NamespaceDO>> selectByAppId(@RequestParam("appId") Long appId) {
         return namespaceService.selectByAppId(appId);
     }
 
