@@ -34,8 +34,8 @@ public class FieldController {
         return fieldService.pushFieldValue(fieldPushReq);
     }
 
-    @GetMapping("/{fieldId}")
-    public Result<FieldVO> getFieldValue(@PathVariable("fieldId") Long fieldId) {
+    @GetMapping("/get")
+    public Result<FieldVO> getFieldValue(@RequestParam("fieldId") Long fieldId) {
         return fieldService.getFieldValue(fieldId);
     }
 

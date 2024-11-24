@@ -8,7 +8,7 @@
     </select>
 
     <select id="count" resultType="java.lang.Long">
-        select count(*) as namespace from master_field mf
+        select count(*) from master_field mf
         left join main.master_namespace mn on mf.namespace_id = mn.id
         <where>
             mf.app_id = #{appId}
@@ -23,7 +23,7 @@
 
 
     <select id="selectByCondition" resultType="cn.ken.master.server.management.model.management.field.ManagementFieldDTO">
-        select mf.*, mn.name as namespace from master_field mf
+        select mf.*, mn.name as namespace, mn.class_name as className from master_field mf
         left join main.master_namespace mn on mf.namespace_id = mn.id
         <where>
             mf.app_id = #{appId}
