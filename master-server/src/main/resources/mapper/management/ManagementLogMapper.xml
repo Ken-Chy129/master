@@ -50,6 +50,7 @@
                 and modifier = #{modifier}
             </if>
         </where>
+        order by gmt_create desc
         limit #{startIndex}, #{pageSize}
     </select>
 </mapper>
