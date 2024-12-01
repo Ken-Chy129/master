@@ -4,6 +4,7 @@ import cn.ken.master.core.enums.PushTypeEnum;
 import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.ManagementDTO;
 import cn.ken.master.core.model.common.PageResult;
+import cn.ken.master.core.model.common.Pair;
 import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.core.ManagementClient;
 import cn.ken.master.server.management.model.management.field.*;
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -48,19 +48,28 @@ public class FieldServiceImpl implements FieldService {
     public Result<Boolean> pushFieldValue(FieldPushReq fieldPushReq) {
         FieldDO fieldDO = fieldMapper.selectById(fieldPushReq.getFieldId());
         Long appId = fieldDO.getAppId();
-        List<MachineDO> machineDOList = machineMapper.selectByAppId(appId);
+        List<Pair<String, Integer>> machineList;
         String pushType = fieldPushReq.getPushType();
         if (PushTypeEnum.SPECIFIC.name().equalsIgnoreCase(pushType)) {
-            Set<Long> requestMachineIdSet = Arrays.stream(fieldPushReq.getMachineIds().split(",")).map(Long::valueOf).collect(Collectors.toSet());
-            machineDOList.removeIf(machineDO -> !requestMachineIdSet.contains(machineDO.getId()));
+            machineList = Arrays.stream(fieldPushReq.getMachines().split(",")).map(machine -> {
+                String[] split = machine.split(":");
+                return new Pair<>(split[0], Integer.parseInt(split[1]));
+            }).toList();
+        } else {
+            machineList = machineMapper.selectByAppId(appId).stream()
+                    .map(machineDO -> {
+                        String ip = machineDO.getIpAddress();
+                        Integer port = machineDO.getPort();
+                        return new Pair<>(ip, port);
+                    }).toList();
         }
         // todo: 此处socket不应该是保存在map中，即服务端不能一直维持socket连接，而是每次需要发送请求的时候再去建立连接，否则会导致当注册的应用和机器过多时长时间维持着非常多的socket
         // 应用启动时首先向服务端注册应用，并上报变量初始值以及提供的接口的端口号，之后双方建立长连接定期发送心跳包以维持机器状态
         // 服务端在启动时便初始化Socket接收应用注册消息，每次有应用注册的时候便保存到数据库中，之后当控制台发起变更消息时则会找到ip地址和端口号去进行建立连接发送http请求进行修改
         // 应用启动时可以选择是否通过持久化值进行更新当前的变量值
-        for (MachineDO machineDO : machineDOList) {
-            String ipAddress = machineDO.getIpAddress();
-            Integer port = machineDO.getPort();
+        for (Pair<String, Integer> machine : machineList) {
+            String ipAddress = machine.getLeft();
+            Integer port = machine.getRight();
             String oldValue = managementClient.putFieldValue(ipAddress, port, fieldPushReq.getNamespace(), fieldDO.getName(), fieldPushReq.getValue());
             ManagementLogDO managementLogDO = new ManagementLogDO();
             managementLogDO.setAppId(appId);

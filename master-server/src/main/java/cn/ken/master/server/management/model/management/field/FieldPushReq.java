@@ -13,5 +13,5 @@ public class FieldPushReq {
 
     private String pushType;
 
-    private String machineIds;
+    private String machines;
 }
