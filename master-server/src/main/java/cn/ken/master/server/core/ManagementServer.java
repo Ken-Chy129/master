@@ -1,15 +1,20 @@
 package cn.ken.master.server.core;
 
+import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.RegisterRequest;
+import cn.ken.master.core.model.RegisterResponse;
 import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.app.service.AppService;
+import cn.ken.master.server.common.constant.ManagementConstant;
 import cn.ken.master.server.management.service.FieldService;
+import cn.ken.master.server.management.service.TemplateFieldService;
 import cn.ken.master.server.utils.ApplicationContextUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 @Slf4j
 public class ManagementServer extends Thread {
@@ -23,6 +28,7 @@ public class ManagementServer extends Thread {
         try (ServerSocket serverSocket = new ServerSocket(12949)) {
             AppService appService = ApplicationContextUtil.getBean(AppService.class);
             FieldService fieldService = ApplicationContextUtil.getBean(FieldService.class);
+            TemplateFieldService templateFieldService = ApplicationContextUtil.getBean(TemplateFieldService.class);
             Builder.OfVirtual appStartVTB = Thread.ofVirtual().name("AppStart-Thread");
             log.info("ManagementServer启动成功，端口号:{}, ip地址:{}", serverSocket.getLocalPort(), serverSocket.getLocalSocketAddress());
             while (true) {
@@ -42,8 +48,14 @@ public class ManagementServer extends Thread {
                         Integer port = request.getPort();
                         appService.startAppOnMachine(appId, accessKey, ipAddress, port);
                         // 2.解析受管控字段
-                        fieldService.registerField(appId, request.getNamespaceList());
-                        out.writeObject(Result.buildSuccess(getAppHeatBeatInterval()));
+                        fieldService.registerField(appId, request.getManagementDTOList());
+                        RegisterResponse response = new RegisterResponse();
+                        response.setHeartBeatInterval(getAppHeatBeatInterval());
+                        if (request.getUseTemplateValue()) {
+                            List<ManageableFieldDTO> fields =  templateFieldService.getTemplateFields(appId, ManagementConstant.DEFAULT_TEMPLATE_NAME);
+                            response.setFields(fields);
+                        }
+                        out.writeObject(Result.buildSuccess(response));
                     } catch (Exception e) {
                         log.error(e.getMessage(), e);
                         if (out != null) {

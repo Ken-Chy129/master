@@ -42,6 +42,11 @@ public class MasterManager {
     private Long appId;
 
     /**
+     * 使用模板值进行初始化
+     */
+    private Boolean useTemplateValue;
+
+    /**
      * 应用密钥
      */
     private String accessKey;
@@ -66,14 +71,32 @@ public class MasterManager {
         new CommandListener(serverProviderPort).start();
 
         // 应用启动注册
-        Integer heatBeatInterval = register();
-        if (heatBeatInterval > 0) {
-            // 定时发送心跳包
+        Result<RegisterResponse> result = register();
+        if (result.isSuccess()) {
+            log.info("应用注册成功");
+            RegisterResponse response = result.getData();
+            Integer heartBeatInterval = response.getHeartBeatInterval();
+            if (heartBeatInterval > 0) {
+                // 定时发送心跳包
 
+            }
+            if (useTemplateValue) {
+                List<ManageableFieldDTO> fields = response.getFields();
+                initialFieldByTemplate(fields);
+            }
+        } else {
+            log.error("应用注册失败:{}", result.getErrorMsg());
         }
+
     }
 
-    private Integer register() {
+    /**
+     * 使用模板进行字段值的初始化
+     */
+    private void initialFieldByTemplate(List<ManageableFieldDTO> fields) {
+    }
+
+    private Result<RegisterResponse> register() {
         try (
                 Socket socket = new Socket(host, port);
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
@@ -84,20 +107,14 @@ public class MasterManager {
             registerRequest.setAppId(appId);
             registerRequest.setPort(serverProviderPort);
             registerRequest.setAccessKey(accessKey);
-            registerRequest.setNamespaceList(MasterContainer.getAllManageableFields());
+            registerRequest.setUseTemplateValue(useTemplateValue);
+            registerRequest.setManagementDTOList(MasterContainer.getAllManageableFields());
             out.writeObject(registerRequest);
-            Result<?> result = (Result<?>) in.readObject();
-            if (result.isSuccess()) {
-                log.info("应用注册成功");
-                return (Integer) result.getData();
-            } else {
-                log.error("应用注册失败:{}", result.getErrorMsg());
-            }
+            return (Result<RegisterResponse>) in.readObject();
         } catch (Exception e) {
             log.error("应用注册发生异常:{}", e.getMessage());
             throw new MasterException(e.getMessage());
         }
-        return -1;
     }
 
 }

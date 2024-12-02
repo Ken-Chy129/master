@@ -25,6 +25,12 @@ public class RegisterRequest implements Serializable {
     private Integer port;
 
     /**
+     * 是否使用默认模板的值初始化受管控变量的值
+     * todo: 可以使用其他模板，控制台提供控制每台机器的配置文件
+     */
+    private Boolean useTemplateValue;
+
+    /**
      * 命名空间
      */
     private List<ManagementDTO> managementDTOList;
@@ -53,11 +59,19 @@ public class RegisterRequest implements Serializable {
         this.port = port;
     }
 
-    public List<ManagementDTO> getNamespaceList() {
+    public Boolean getUseTemplateValue() {
+        return useTemplateValue;
+    }
+
+    public void setUseTemplateValue(Boolean useTemplateValue) {
+        this.useTemplateValue = useTemplateValue;
+    }
+
+    public List<ManagementDTO> getManagementDTOList() {
         return managementDTOList;
     }
 
-    public void setNamespaceList(List<ManagementDTO> managementDTOList) {
+    public void setManagementDTOList(List<ManagementDTO> managementDTOList) {
         this.managementDTOList = managementDTOList;
     }
 
@@ -67,6 +81,7 @@ public class RegisterRequest implements Serializable {
                 "appId=" + appId +
                 ", accessKey='" + accessKey + '\'' +
                 ", port=" + port +
+                ", useTemplateValue=" + useTemplateValue +
                 ", managementDTOList=" + managementDTOList +
                 '}';
     }

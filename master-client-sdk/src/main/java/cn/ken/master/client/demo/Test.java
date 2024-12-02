@@ -17,6 +17,7 @@ public class Test {
         manager.setPort(12949);
         manager.setAppId(1L);
         manager.setAccessKey("123");
+        manager.setUseTemplateValue(true);
         List<Class<?>> classList = new ArrayList<>();
         classList.add(CommonBizVariables.class);
         manager.init(classList);

@@ -9,11 +9,6 @@ public class ManageableFieldDTO implements Serializable {
     private static final long serialVersionUID = -3556293581160862661L;
 
     /**
-     * 字段所属命名空间
-     */
-    private String clazzName;
-
-    /**
      * 字段名
      */
     private String name;
@@ -27,14 +22,6 @@ public class ManageableFieldDTO implements Serializable {
      * 字段值
      */
     private String value;
-
-    public String getClazzName() {
-        return clazzName;
-    }
-
-    public void setClazzName(String clazzName) {
-        this.clazzName = clazzName;
-    }
 
     public String getName() {
         return name;
@@ -63,7 +50,6 @@ public class ManageableFieldDTO implements Serializable {
     @Override
     public String toString() {
         return "ManageableFieldDTO{" +
-                "clazzName='" + clazzName + '\'' +
                 ", name='" + name + '\'' +
                 ", desc='" + desc + '\'' +
                 ", value='" + value + '\'' +

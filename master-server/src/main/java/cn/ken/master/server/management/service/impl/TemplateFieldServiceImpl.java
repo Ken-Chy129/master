@@ -1,5 +1,6 @@
 package cn.ken.master.server.management.service.impl;
 
+import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.server.management.model.entity.TemplateFieldDO;
 import cn.ken.master.server.management.mapper.TemplateFieldMapper;
 import cn.ken.master.server.management.service.TemplateFieldService;
@@ -24,6 +25,11 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
 
     @Override
     public List<TemplateFieldDO> selectAll() {
+        return List.of();
+    }
+
+    @Override
+    public List<ManageableFieldDTO> getTemplateFields(Long appId, String defaultTemplateName) {
         return List.of();
     }
 }

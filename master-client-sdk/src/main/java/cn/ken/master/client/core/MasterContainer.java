@@ -6,7 +6,6 @@ import cn.ken.master.client.util.MasterUtil;
 import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.ManagementDTO;
 import cn.ken.master.core.util.StringUtil;
-import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
@@ -57,7 +56,7 @@ public class MasterContainer {
         managementDTO.setNamespace(namespace);
         managementDTO.setClassName(clazzName);
         managementDTO.setDesc(desc);
-        managementDTO.setManageableFieldList(fieldMap.values().stream().map(manageableField -> convert(clazzName, manageableField)).toList());
+        managementDTO.setManageableFieldList(fieldMap.values().stream().map(MasterContainer::convert).toList());
         MANAGEMENTS.add(managementDTO);
     }
 
@@ -73,9 +72,8 @@ public class MasterContainer {
         return fieldMap.get(fieldName);
     }
 
-    private static ManageableFieldDTO convert(String clazzName, ManageableField manageableField) {
+    private static ManageableFieldDTO convert(ManageableField manageableField) {
         ManageableFieldDTO manageableFieldDTO = new ManageableFieldDTO();
-        manageableFieldDTO.setClazzName(clazzName);
         manageableFieldDTO.setDesc(manageableField.getDesc());
         manageableFieldDTO.setName(manageableField.getName());
         Field field = manageableField.getField();
