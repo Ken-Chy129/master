@@ -8,11 +8,8 @@ import cn.ken.master.core.model.common.Pair;
 import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.core.ManagementClient;
 import cn.ken.master.server.management.mapper.*;
+import cn.ken.master.server.management.model.entity.*;
 import cn.ken.master.server.management.model.management.field.*;
-import cn.ken.master.server.management.model.entity.FieldDO;
-import cn.ken.master.server.management.model.entity.MachineDO;
-import cn.ken.master.server.management.model.entity.NamespaceDO;
-import cn.ken.master.server.management.model.entity.ManagementLogDO;
 import cn.ken.master.server.management.service.FieldService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
@@ -37,6 +34,9 @@ public class FieldServiceImpl implements FieldService {
 
     @Resource
     private ManagementLogMapper managementLogMapper;
+
+    @Resource
+    private TemplateMapper templateMapper;
 
     @Resource
     private TemplateFieldMapper templateFieldMapper;
@@ -128,7 +128,9 @@ public class FieldServiceImpl implements FieldService {
                         .eq(FieldDO::getNamespaceId, namespaceId)
                         .eq(FieldDO::getName, field.getName());
                 FieldDO fieldDO = fieldMapper.selectOne(fieldQueryWrapper);
+                boolean isInsert = false;
                 if (fieldDO == null) {
+                    isInsert = true;
                     fieldDO = new FieldDO();
                     fieldDO.setAppId(appId);
                     fieldDO.setNamespaceId(namespaceId);
@@ -140,6 +142,21 @@ public class FieldServiceImpl implements FieldService {
                 }
                 fieldDO.setDescription(field.getDesc());
                 fieldMapper.insertOrUpdate(fieldDO);
+
+                if (isInsert) {
+                    // 对于初次创建的字段，将值写到默认模板中
+                    FieldDO newFieldDO = fieldMapper.selectOne(fieldQueryWrapper);
+                    Long fieldId = newFieldDO.getId();
+                    Long templateId = templateMapper.selectAppDefaultTemplateId(appId);
+                    TemplateFieldDO templateFieldDO = new TemplateFieldDO();
+                    templateFieldDO.setFieldId(fieldId);
+                    templateFieldDO.setFieldName(field.getName());
+                    templateFieldDO.setNamespace(managementDTO.getNamespace());
+                    templateFieldDO.setFieldValue(field.getValue());
+                    templateFieldDO.setTemplateId(templateId);
+                    templateFieldMapper.insert(templateFieldDO);
+                }
+
                 fieldQueryWrapper.clear();
             }
         }

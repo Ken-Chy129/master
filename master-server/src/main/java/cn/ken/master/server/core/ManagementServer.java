@@ -34,7 +34,7 @@ public class ManagementServer extends Thread {
                         out = new ObjectOutputStream(socket.getOutputStream());
                         in = new ObjectInputStream(socket.getInputStream());
                         log.info("应用连接|host:{},port:{}", socket.getInetAddress().getHostAddress(), socket.getPort());
-                        //todo:新增事务处理
+                        //todo:新增事务处理，加锁
                         RegisterRequest request = (RegisterRequest) in.readObject();
                         Long appId = request.getAppId();
                         String accessKey = request.getAccessKey();

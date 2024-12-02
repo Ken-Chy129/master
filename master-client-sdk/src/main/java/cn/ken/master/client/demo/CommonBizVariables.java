@@ -15,4 +15,7 @@ public class CommonBizVariables {
 
     @Manageable(desc = "白名单ip地址")
     public static String WHITE_IP_ADDRESS = "127.0.0.1";
+
+    @Manageable(desc = "测试字段")
+    public static String TEST_FIELD = "test";
 }

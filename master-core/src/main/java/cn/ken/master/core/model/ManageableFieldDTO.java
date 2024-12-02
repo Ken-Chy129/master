@@ -23,6 +23,11 @@ public class ManageableFieldDTO implements Serializable {
      */
     private String desc;
 
+    /**
+     * 字段值
+     */
+    private String value;
+
     public String getClazzName() {
         return clazzName;
     }
@@ -47,12 +52,21 @@ public class ManageableFieldDTO implements Serializable {
         this.desc = desc;
     }
 
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     @Override
     public String toString() {
-        return "Field{" +
+        return "ManageableFieldDTO{" +
                 "clazzName='" + clazzName + '\'' +
                 ", name='" + name + '\'' +
                 ", desc='" + desc + '\'' +
+                ", value='" + value + '\'' +
                 '}';
     }
 }

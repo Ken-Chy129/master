@@ -7,5 +7,12 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface TemplateFieldMapper extends BaseMapper<TemplateFieldDO> {
 
-    int updateAppDefaultTemplateField(Long appId, String fieldValue);
+    /**
+     * 更新应用默认模板的字段值
+     * @param appId 应用id
+     * @param fieldValue 字段值
+     */
+    void updateAppDefaultTemplateField(Long appId, String fieldValue);
+
+
 }
