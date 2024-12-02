@@ -1,6 +1,7 @@
 package cn.ken.master.server.core;
 
 import cn.ken.master.core.model.ManageableFieldDTO;
+import cn.ken.master.core.model.ManagementDTO;
 import cn.ken.master.core.model.RegisterRequest;
 import cn.ken.master.core.model.RegisterResponse;
 import cn.ken.master.core.model.common.Result;
@@ -52,7 +53,7 @@ public class ManagementServer extends Thread {
                         RegisterResponse response = new RegisterResponse();
                         response.setHeartBeatInterval(getAppHeatBeatInterval());
                         if (request.getUseTemplateValue()) {
-                            List<ManageableFieldDTO> fields =  templateFieldService.getTemplateFields(appId, ManagementConstant.DEFAULT_TEMPLATE_NAME);
+                            List<ManagementDTO> fields =  templateFieldService.getTemplateFields(appId, ManagementConstant.DEFAULT_TEMPLATE_NAME);
                             response.setFields(fields);
                         }
                         out.writeObject(Result.buildSuccess(response));

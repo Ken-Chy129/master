@@ -12,7 +12,7 @@ public class RegisterResponse {
     /**
      * 用于使用模板进行字段初始化
      */
-    private List<ManageableFieldDTO> fields;
+    private List<ManagementDTO> fields;
 
     public Integer getHeartBeatInterval() {
         return heartBeatInterval;
@@ -22,11 +22,11 @@ public class RegisterResponse {
         this.heartBeatInterval = heartBeatInterval;
     }
 
-    public List<ManageableFieldDTO> getFields() {
+    public List<ManagementDTO> getFields() {
         return fields;
     }
 
-    public void setFields(List<ManageableFieldDTO> fields) {
+    public void setFields(List<ManagementDTO> fields) {
         this.fields = fields;
     }
 }

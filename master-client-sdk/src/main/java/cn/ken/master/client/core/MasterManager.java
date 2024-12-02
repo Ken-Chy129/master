@@ -81,7 +81,7 @@ public class MasterManager {
 
             }
             if (useTemplateValue) {
-                List<ManageableFieldDTO> fields = response.getFields();
+                List<ManagementDTO> fields = response.getFields();
                 initialFieldByTemplate(fields);
             }
         } else {
@@ -93,7 +93,7 @@ public class MasterManager {
     /**
      * 使用模板进行字段值的初始化
      */
-    private void initialFieldByTemplate(List<ManageableFieldDTO> fields) {
+    private void initialFieldByTemplate(List<ManagementDTO> fields) {
     }
 
     private Result<RegisterResponse> register() {
