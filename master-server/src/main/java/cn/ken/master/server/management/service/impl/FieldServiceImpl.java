@@ -7,12 +7,9 @@ import cn.ken.master.core.model.common.PageResult;
 import cn.ken.master.core.model.common.Pair;
 import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.core.ManagementClient;
+import cn.ken.master.server.management.mapper.*;
 import cn.ken.master.server.management.model.management.field.*;
-import cn.ken.master.server.management.mapper.MachineMapper;
-import cn.ken.master.server.management.mapper.NamespaceMapper;
-import cn.ken.master.server.management.mapper.ManagementLogMapper;
 import cn.ken.master.server.management.model.entity.FieldDO;
-import cn.ken.master.server.management.mapper.FieldMapper;
 import cn.ken.master.server.management.model.entity.MachineDO;
 import cn.ken.master.server.management.model.entity.NamespaceDO;
 import cn.ken.master.server.management.model.entity.ManagementLogDO;
@@ -42,6 +39,9 @@ public class FieldServiceImpl implements FieldService {
     private ManagementLogMapper managementLogMapper;
 
     @Resource
+    private TemplateFieldMapper templateFieldMapper;
+
+    @Resource
     private ManagementClient managementClient;
 
     @Override
@@ -63,7 +63,6 @@ public class FieldServiceImpl implements FieldService {
                         return new Pair<>(ip, port);
                     }).toList();
         }
-        // todo: 此处socket不应该是保存在map中，即服务端不能一直维持socket连接，而是每次需要发送请求的时候再去建立连接，否则会导致当注册的应用和机器过多时长时间维持着非常多的socket
         // 应用启动时首先向服务端注册应用，并上报变量初始值以及提供的接口的端口号，之后双方建立长连接定期发送心跳包以维持机器状态
         // 服务端在启动时便初始化Socket接收应用注册消息，每次有应用注册的时候便保存到数据库中，之后当控制台发起变更消息时则会找到ip地址和端口号去进行建立连接发送http请求进行修改
         // 应用启动时可以选择是否通过持久化值进行更新当前的变量值
@@ -83,6 +82,11 @@ public class FieldServiceImpl implements FieldService {
             managementLogDO.setPushType(1);
             managementLogDO.setModifier("颜洵");
             managementLogMapper.insert(managementLogDO);
+        }
+
+        if (fieldPushReq.getIsUpdateTemplate()) {
+            // 更新默认模板的值
+
         }
         return Result.buildSuccess();
     }

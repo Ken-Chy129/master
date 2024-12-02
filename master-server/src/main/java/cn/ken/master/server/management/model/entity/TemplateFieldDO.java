@@ -16,17 +16,22 @@ public class TemplateFieldDO extends BaseDO {
     private Long templateId;
 
     /**
-     * 变量所属命名空间
+     * 字段id
+     */
+    private Long fieldId;
+
+    /**
+     * 字段所属命名空间
      */
     private String namespace;
 
     /**
-     * 变量名称
+     * 字段名称
      */
     private String fieldName;
 
     /**
-     * 变量值
+     * 字段值
      */
     private String fieldValue;
 }

@@ -14,4 +14,6 @@ public class FieldPushReq {
     private String pushType;
 
     private String machines;
+
+    private Boolean isUpdateTemplate;
 }

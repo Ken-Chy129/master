@@ -2,5 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.ken.master.server.management.mapper.TemplateFieldMapper">
 
-
+    <update id="updateAppDefaultTemplateField">
+        update master_template_field
+        set field_value = #{fieldValue}
+        where template_id = (
+            select id from master_template
+            where name = 'default'
+            and app_id = #{appId}
+        )
+    </update>
 </mapper>
