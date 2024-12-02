@@ -7,6 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface TemplateMapper extends BaseMapper<TemplateDO> {
 
-    Long selectAppDefaultTemplateId(Long appId);
+    Long selectTemplateId(Long appId, String name);
 
 }

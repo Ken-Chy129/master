@@ -6,6 +6,7 @@ import cn.ken.master.core.model.ManagementDTO;
 import cn.ken.master.core.model.common.PageResult;
 import cn.ken.master.core.model.common.Pair;
 import cn.ken.master.core.model.common.Result;
+import cn.ken.master.server.common.constant.ManagementConstant;
 import cn.ken.master.server.core.ManagementClient;
 import cn.ken.master.server.management.mapper.*;
 import cn.ken.master.server.management.model.entity.*;
@@ -86,7 +87,7 @@ public class FieldServiceImpl implements FieldService {
 
         if (fieldPushReq.getIsUpdateTemplate()) {
             // 更新默认模板的值
-            templateFieldMapper.updateAppDefaultTemplateField(appId, fieldPushReq.getValue());
+            templateFieldMapper.updateFieldValue(appId, ManagementConstant.DEFAULT_TEMPLATE_NAME, fieldPushReq.getValue());
         }
         return Result.buildSuccess();
     }
@@ -147,7 +148,7 @@ public class FieldServiceImpl implements FieldService {
                     // 对于初次创建的字段，将值写到默认模板中
                     FieldDO newFieldDO = fieldMapper.selectOne(fieldQueryWrapper);
                     Long fieldId = newFieldDO.getId();
-                    Long templateId = templateMapper.selectAppDefaultTemplateId(appId);
+                    Long templateId = templateMapper.selectTemplateId(appId, ManagementConstant.DEFAULT_TEMPLATE_NAME);
                     TemplateFieldDO templateFieldDO = new TemplateFieldDO();
                     templateFieldDO.setFieldId(fieldId);
                     templateFieldDO.setFieldName(field.getName());
