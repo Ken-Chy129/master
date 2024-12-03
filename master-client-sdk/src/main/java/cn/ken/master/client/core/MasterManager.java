@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.net.Socket;
 import java.util.List;
 
@@ -81,7 +82,7 @@ public class MasterManager {
 
             }
             if (useTemplateValue) {
-                List<ManagementDTO> fields = response.getFields();
+                List<ManageableFieldDTO> fields = response.getFields();
                 initialFieldByTemplate(fields);
             }
         } else {
@@ -93,7 +94,23 @@ public class MasterManager {
     /**
      * 使用模板进行字段值的初始化
      */
-    private void initialFieldByTemplate(List<ManagementDTO> fields) {
+    private void initialFieldByTemplate(List<ManageableFieldDTO> manageableFieldDTOList) {
+        for (ManageableFieldDTO manageableFieldDTO : manageableFieldDTOList) {
+            String namespace = manageableFieldDTO.getNamespace();
+            String name = manageableFieldDTO.getName();
+            String value = manageableFieldDTO.getValue();
+            ManageableField manageableField = MasterContainer.getManageableField(namespace, name);
+            if (manageableField == null) {
+                continue;
+            }
+            Field field = manageableField.getField();
+            field.setAccessible(true);
+            try {
+                field.set(null, value);
+            } catch (IllegalAccessException ignored) {
+
+            }
+        }
     }
 
     private Result<RegisterResponse> register() {

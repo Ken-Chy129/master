@@ -9,6 +9,10 @@ public class ManageableFieldDTO implements Serializable {
     private static final long serialVersionUID = -3556293581160862661L;
 
     /**
+     * 命名空间
+     */
+    private String namespace;
+    /**
      * 字段名
      */
     private String name;
@@ -22,6 +26,14 @@ public class ManageableFieldDTO implements Serializable {
      * 字段值
      */
     private String value;
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
 
     public String getName() {
         return name;
@@ -50,6 +62,7 @@ public class ManageableFieldDTO implements Serializable {
     @Override
     public String toString() {
         return "ManageableFieldDTO{" +
+                "namespace='" + namespace + '\'' +
                 ", name='" + name + '\'' +
                 ", desc='" + desc + '\'' +
                 ", value='" + value + '\'' +

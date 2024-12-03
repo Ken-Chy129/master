@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface FieldService {
 
-    Result<List<ManagementFieldDTO>> selectByNamespaceId(String namespaceId);
+    Result<List<ManagementFieldDTO>> selectByNamespaceId(Long namespaceId);
 
     PageResult<List<ManagementFieldDTO>> selectByCondition(ManagementFieldRequest request);
 

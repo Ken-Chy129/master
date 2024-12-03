@@ -20,7 +20,7 @@ public class FieldController {
     private FieldService fieldService;
 
     @GetMapping("/selectByNamespaceId")
-    public Result<List<ManagementFieldDTO>> selectByNamespaceId(@RequestParam("namespaceId") String namespaceId) {
+    public Result<List<ManagementFieldDTO>> selectByNamespaceId(@RequestParam("namespaceId") Long namespaceId) {
         return fieldService.selectByNamespaceId(namespaceId);
     }
 

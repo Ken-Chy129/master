@@ -12,7 +12,9 @@ import java.util.List;
 @Mapper
 public interface FieldMapper extends BaseMapper<FieldDO> {
 
-    List<ManagementFieldDTO> selectByNamespaceId(String namespaceId);
+    List<FieldDO> selectByNamespaceId(Long namespaceId);
+
+    FieldDO selectByNamespaceIdAndName(Long namespaceId, String name);
 
     Long count(ManagementFieldQuery query);
 

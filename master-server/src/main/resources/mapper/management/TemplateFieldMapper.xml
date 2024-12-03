@@ -11,4 +11,18 @@
             and name = #{name}
         )
     </update>
+
+    <delete id="deleteByFieldId">
+        delete from main.master_template_field
+        where field_id = #{fieldId}
+    </delete>
+
+    <select id="selectByTemplateId" resultType="cn.ken.master.server.management.model.entity.TemplateFieldDO">
+        select * from master_template_field
+        where template_id = (
+            select id from master_template
+            where app_id = #{appId}
+              and name = #{name}
+        )
+    </select>
 </mapper>

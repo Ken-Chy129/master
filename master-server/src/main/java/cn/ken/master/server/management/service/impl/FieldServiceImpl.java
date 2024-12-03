@@ -19,6 +19,9 @@ import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -95,7 +98,6 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public void registerField(Long appId, List<ManagementDTO> managementDTOList) {
         LambdaQueryWrapper<NamespaceDO> namespaceQueryWrapper = new LambdaQueryWrapper<>();
-        LambdaQueryWrapper<FieldDO> fieldQueryWrapper = new LambdaQueryWrapper<>();
         for (ManagementDTO managementDTO : managementDTOList) {
             // 1. 找到对应的namespaceId，如果不存在则新增
             namespaceQueryWrapper.eq(NamespaceDO::getAppId, appId)
@@ -123,12 +125,13 @@ public class FieldServiceImpl implements FieldService {
             }
             namespaceQueryWrapper.clear();
             // 2. 插入或更新命名空间下的变量
+            Map<String, FieldDO> fieldNameToFieldDOMap = Optional.ofNullable(fieldMapper.selectByNamespaceId(namespaceId))
+                    .orElseGet(Collections::emptyList)
+                    .stream()
+                    .collect(Collectors.toMap(FieldDO::getName, Function.identity()));
             List<ManageableFieldDTO> manageableFieldList = managementDTO.getManageableFieldList();
             for (ManageableFieldDTO field : manageableFieldList) {
-                fieldQueryWrapper.eq(FieldDO::getAppId, appId)
-                        .eq(FieldDO::getNamespaceId, namespaceId)
-                        .eq(FieldDO::getName, field.getName());
-                FieldDO fieldDO = fieldMapper.selectOne(fieldQueryWrapper);
+                FieldDO fieldDO = fieldNameToFieldDOMap.get(field.getName());
                 boolean isInsert = false;
                 if (fieldDO == null) {
                     isInsert = true;
@@ -146,7 +149,7 @@ public class FieldServiceImpl implements FieldService {
 
                 if (isInsert) {
                     // 对于初次创建的字段，将值写到默认模板中
-                    FieldDO newFieldDO = fieldMapper.selectOne(fieldQueryWrapper);
+                    FieldDO newFieldDO = fieldMapper.selectByNamespaceIdAndName(namespaceId, field.getName());
                     Long fieldId = newFieldDO.getId();
                     Long templateId = templateMapper.selectTemplateId(appId, ManagementConstant.DEFAULT_TEMPLATE_NAME);
                     TemplateFieldDO templateFieldDO = new TemplateFieldDO();
@@ -158,8 +161,12 @@ public class FieldServiceImpl implements FieldService {
                     templateFieldMapper.insert(templateFieldDO);
                 }
 
-                fieldQueryWrapper.clear();
+                fieldNameToFieldDOMap.remove(field.getName());
             }
+
+            // 剩下的说明已经被删除
+            fieldMapper.deleteByIds(fieldNameToFieldDOMap.values().stream().map(FieldDO::getId).toList());
+            fieldNameToFieldDOMap.values().stream().map(FieldDO::getId).forEach(fieldId -> templateFieldMapper.deleteByFieldId(fieldId));
         }
     }
 
@@ -190,8 +197,18 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public Result<List<ManagementFieldDTO>> selectByNamespaceId(String namespaceId) {
-        List<ManagementFieldDTO> managementFieldDTOS = fieldMapper.selectByNamespaceId(namespaceId);
+    public Result<List<ManagementFieldDTO>> selectByNamespaceId(Long namespaceId) {
+        List<FieldDO> fieldDOList = fieldMapper.selectByNamespaceId(namespaceId);
+        List<ManagementFieldDTO> managementFieldDTOS = fieldDOList.stream()
+                .map(fieldDO -> {
+                    ManagementFieldDTO managementFieldDTO = new ManagementFieldDTO();
+                    managementFieldDTO.setId(fieldDO.getId());
+                    managementFieldDTO.setNamespaceId(fieldDO.getNamespaceId());
+                    managementFieldDTO.setName(fieldDO.getName());
+                    managementFieldDTO.setDescription(fieldDO.getDescription());
+                    return managementFieldDTO;
+                })
+                .toList();
         return Result.buildSuccess(managementFieldDTOS);
     }
 

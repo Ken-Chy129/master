@@ -13,7 +13,7 @@ public class ManagementDTO implements Serializable {
     private static final long serialVersionUID = 6261016102135107042L;
 
     /**
-     * 别名
+     * 命名空间
      */
     private String namespace;
 
