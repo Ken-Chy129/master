@@ -1,8 +1,13 @@
 package cn.ken.master.core.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
-public class RegisterResponse {
+public class RegisterResponse implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 528525082392233671L;
 
     /**
      * 心跳间隔

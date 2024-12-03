@@ -1,7 +1,6 @@
 package cn.ken.master.server.core;
 
 import cn.ken.master.core.model.ManageableFieldDTO;
-import cn.ken.master.core.model.ManagementDTO;
 import cn.ken.master.core.model.RegisterRequest;
 import cn.ken.master.core.model.RegisterResponse;
 import cn.ken.master.core.model.common.Result;

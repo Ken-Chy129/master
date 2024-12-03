@@ -6,6 +6,7 @@ import cn.ken.master.client.util.MasterUtil;
 import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.ManagementDTO;
 import cn.ken.master.core.util.StringUtil;
+import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
@@ -78,7 +79,7 @@ public class MasterContainer {
         manageableFieldDTO.setName(manageableField.getName());
         Field field = manageableField.getField();
         try {
-            manageableFieldDTO.setValue((String) field.get(null));
+            manageableFieldDTO.setValue(JSON.toJSONString(field.get(null)));
         } catch (IllegalAccessException ignored) {
 
         }

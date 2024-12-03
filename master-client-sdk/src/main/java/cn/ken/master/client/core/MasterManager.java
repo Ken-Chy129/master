@@ -5,6 +5,7 @@ import cn.ken.master.client.exception.MasterException;
 import cn.ken.master.client.util.MasterUtil;
 import cn.ken.master.core.model.*;
 import cn.ken.master.core.model.common.Result;
+import com.alibaba.fastjson2.JSON;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -106,7 +107,7 @@ public class MasterManager {
             Field field = manageableField.getField();
             field.setAccessible(true);
             try {
-                field.set(null, value);
+                field.set(null, JSON.parseObject(value, field.getType()));
             } catch (IllegalAccessException ignored) {
 
             }
