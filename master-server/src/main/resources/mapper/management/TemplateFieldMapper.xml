@@ -17,12 +17,17 @@
         where field_id = #{fieldId}
     </delete>
 
-    <select id="selectByTemplateId" resultType="cn.ken.master.server.management.model.entity.TemplateFieldDO">
+    <select id="selectByTemplateName" resultType="cn.ken.master.server.management.model.entity.TemplateFieldDO">
         select * from master_template_field
         where template_id = (
             select id from master_template
             where app_id = #{appId}
-              and name = #{name}
+            and name = #{name}
         )
+    </select>
+
+    <select id="selectByTemplateId" resultType="cn.ken.master.server.management.model.entity.TemplateFieldDO">
+        select * from master_template_field
+        where template_id = #{templateId}
     </select>
 </mapper>

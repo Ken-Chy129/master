@@ -12,7 +12,10 @@ public interface TemplateFieldMapper extends BaseMapper<TemplateFieldDO> {
 
     void updateFieldValue(Long appId, String name, String fieldValue);
 
-    List<TemplateFieldDO> selectByTemplateId(@Param("appId") Long appId, @Param("name") String name);
+    List<TemplateFieldDO> selectByTemplateName(@Param("appId") Long appId, @Param("name") String name);
+
+    List<TemplateFieldDO> selectByTemplateId(@Param("templateId") Long templateId);
 
     void deleteByFieldId(Long fieldId);
+
 }

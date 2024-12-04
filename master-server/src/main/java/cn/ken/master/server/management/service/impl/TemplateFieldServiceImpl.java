@@ -1,6 +1,8 @@
 package cn.ken.master.server.management.service.impl;
 
 import cn.ken.master.core.model.ManageableFieldDTO;
+import cn.ken.master.core.model.common.Result;
+import cn.ken.master.server.management.model.entity.TemplateDO;
 import cn.ken.master.server.management.model.entity.TemplateFieldDO;
 import cn.ken.master.server.management.mapper.TemplateFieldMapper;
 import cn.ken.master.server.management.service.TemplateFieldService;
@@ -32,7 +34,7 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
 
     @Override
     public List<ManageableFieldDTO> getTemplateFields(Long appId, String templateName) {
-        List<TemplateFieldDO> templateFieldDOList = templateFieldMapper.selectByTemplateId(appId, templateName);
+        List<TemplateFieldDO> templateFieldDOList = templateFieldMapper.selectByTemplateName(appId, templateName);
         if (CollectionUtils.isEmpty(templateFieldDOList)) {
             return Collections.emptyList();
         }
@@ -45,5 +47,11 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
                     return manageableFieldDTO;
                 })
                 .toList();
+    }
+
+    @Override
+    public Result<List<TemplateFieldDO>> selectFieldsByTemplateId(Long templateId) {
+        List<TemplateFieldDO> templateFieldDOS = templateFieldMapper.selectByTemplateId(templateId);
+        return Result.buildSuccess(templateFieldDOS);
     }
 }

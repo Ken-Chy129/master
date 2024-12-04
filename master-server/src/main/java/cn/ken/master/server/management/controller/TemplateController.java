@@ -3,6 +3,8 @@ package cn.ken.master.server.management.controller;
 import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.common.RequestPathConstant;
 import cn.ken.master.server.management.model.entity.TemplateDO;
+import cn.ken.master.server.management.model.entity.TemplateFieldDO;
+import cn.ken.master.server.management.service.TemplateFieldService;
 import cn.ken.master.server.management.service.TemplateService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,9 @@ public class TemplateController {
     @Resource
     private TemplateService templateService;
 
+    @Resource
+    private TemplateFieldService templateFieldService;
+
     @PostMapping(RequestPathConstant.SAVE)
     public int save(@RequestBody TemplateDO templateDO) {
         return templateService.insert(templateDO);
@@ -26,4 +31,8 @@ public class TemplateController {
         return templateService.selectByAppId(appId);
     }
 
+    @GetMapping("selectFieldsByTemplateId")
+    public Result<List<TemplateFieldDO>> selectFieldsByTemplateId(@RequestParam("templateId") Long templateId) {
+        return templateFieldService.selectFieldsByTemplateId(templateId);
+    }
 }
