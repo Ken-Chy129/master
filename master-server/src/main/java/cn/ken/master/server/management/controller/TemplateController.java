@@ -1,9 +1,11 @@
 package cn.ken.master.server.management.controller;
 
+import cn.ken.master.core.model.common.PageResult;
 import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.common.RequestPathConstant;
 import cn.ken.master.server.management.model.entity.TemplateDO;
 import cn.ken.master.server.management.model.entity.TemplateFieldDO;
+import cn.ken.master.server.management.model.management.template.TemplateFieldRequest;
 import cn.ken.master.server.management.service.TemplateFieldService;
 import cn.ken.master.server.management.service.TemplateService;
 import jakarta.annotation.Resource;
@@ -31,8 +33,8 @@ public class TemplateController {
         return templateService.selectByAppId(appId);
     }
 
-    @GetMapping("selectFieldsByTemplateId")
-    public Result<List<TemplateFieldDO>> selectFieldsByTemplateId(@RequestParam("templateId") Long templateId) {
-        return templateFieldService.selectFieldsByTemplateId(templateId);
+    @GetMapping("selectFieldPageByCondition")
+    public PageResult<List<TemplateFieldDO>> selectFieldPageByCondition(TemplateFieldRequest request) {
+        return templateFieldService.selectFieldByCondition(request);
     }
 }

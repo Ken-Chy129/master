@@ -26,8 +26,39 @@
         )
     </select>
 
-    <select id="selectByTemplateId" resultType="cn.ken.master.server.management.model.entity.TemplateFieldDO">
-        select * from master_template_field
-        where template_id = #{templateId}
+
+    <select id="selectByCondition" resultType="cn.ken.master.server.management.model.entity.TemplateFieldDO">
+        select * from main.master_template_field
+        <where>
+            <if test="templateId != null">
+                and template_id = #{templateId}
+            </if>
+            <if test="namespace != null">
+                and namespace = #{namespace}
+            </if>
+            <if test="fieldName != null">
+                and field_name = #{fieldName}
+            </if>
+        </where>
+        order by gmt_create desc
+        limit #{startIndex}, #{pageSize}
     </select>
+
+
+    <select id="count" resultType="long">
+        select count(*) from main.master_template_field
+        <where>
+            <if test="templateId != null">
+                and template_id = #{templateId}
+            </if>
+            <if test="namespace != null">
+                and namespace = #{namespace}
+            </if>
+            <if test="fieldName != null">
+                and field_name = #{fieldName}
+            </if>
+        </where>
+    </select>
+
+
 </mapper>

@@ -1,10 +1,11 @@
 package cn.ken.master.server.management.service.impl;
 
 import cn.ken.master.core.model.ManageableFieldDTO;
-import cn.ken.master.core.model.common.Result;
-import cn.ken.master.server.management.model.entity.TemplateDO;
+import cn.ken.master.core.model.common.PageResult;
 import cn.ken.master.server.management.model.entity.TemplateFieldDO;
 import cn.ken.master.server.management.mapper.TemplateFieldMapper;
+import cn.ken.master.server.management.model.management.template.TemplateFieldQuery;
+import cn.ken.master.server.management.model.management.template.TemplateFieldRequest;
 import cn.ken.master.server.management.service.TemplateFieldService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -50,8 +51,15 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
     }
 
     @Override
-    public Result<List<TemplateFieldDO>> selectFieldsByTemplateId(Long templateId) {
-        List<TemplateFieldDO> templateFieldDOS = templateFieldMapper.selectByTemplateId(templateId);
-        return Result.buildSuccess(templateFieldDOS);
+    public PageResult<List<TemplateFieldDO>> selectFieldByCondition(TemplateFieldRequest request) {
+        TemplateFieldQuery templateFieldQuery = TemplateFieldQuery.of(request);
+        Long count = templateFieldMapper.count(templateFieldQuery);
+        if (count == 0) {
+            return PageResult.buildSuccess();
+        }
+        List<TemplateFieldDO> templateFieldDOS = templateFieldMapper.selectByCondition(templateFieldQuery);
+        PageResult<List<TemplateFieldDO>> result = PageResult.buildSuccess(templateFieldDOS);
+        result.setPageCount(count);
+        return result;
     }
 }
