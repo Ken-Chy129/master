@@ -8,4 +8,10 @@
         where app_id = #{appId}
         and name = #{name}
     </select>
+
+    <select id="selectTemplateListByAppId"
+            resultType="cn.ken.master.server.management.model.entity.TemplateDO">
+        select * from main.master_template
+        where app_id = #{appId}
+    </select>
 </mapper>

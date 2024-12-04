@@ -1,16 +1,16 @@
 package cn.ken.master.server.management.controller;
 
+import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.common.RequestPathConstant;
 import cn.ken.master.server.management.model.entity.TemplateDO;
 import cn.ken.master.server.management.service.TemplateService;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("template")
+@RequestMapping("/management/template")
 public class TemplateController {
 
     @Resource
@@ -20,4 +20,10 @@ public class TemplateController {
     public int save(@RequestBody TemplateDO templateDO) {
         return templateService.insert(templateDO);
     }
+
+    @GetMapping("selectByAppId")
+    public Result<List<TemplateDO>> selectByAppId(@RequestParam("appId") Long appId) {
+        return templateService.selectByAppId(appId);
+    }
+
 }
