@@ -1,5 +1,6 @@
 package cn.ken.master.server.management.service.impl;
 
+import cn.ken.master.core.constant.Delimiter;
 import cn.ken.master.core.enums.PushTypeEnum;
 import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.ManagementDTO;
@@ -16,6 +17,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -48,14 +50,15 @@ public class FieldServiceImpl implements FieldService {
     private ManagementClient managementClient;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Result<Boolean> pushFieldValue(FieldPushReq fieldPushReq) {
         FieldDO fieldDO = fieldMapper.selectById(fieldPushReq.getFieldId());
         Long appId = fieldDO.getAppId();
         List<Pair<String, Integer>> machineList;
         String pushType = fieldPushReq.getPushType();
         if (PushTypeEnum.SPECIFIC.name().equalsIgnoreCase(pushType)) {
-            machineList = Arrays.stream(fieldPushReq.getMachines().split(",")).map(machine -> {
-                String[] split = machine.split(":");
+            machineList = Arrays.stream(fieldPushReq.getMachines().split(Delimiter.COMMA)).map(machine -> {
+                String[] split = machine.split(Delimiter.COLON);
                 return new Pair<>(split[0], Integer.parseInt(split[1]));
             }).toList();
         } else {
@@ -78,7 +81,7 @@ public class FieldServiceImpl implements FieldService {
             managementLogDO.setNamespace(fieldPushReq.getNamespace());
             managementLogDO.setFieldId(fieldDO.getId());
             managementLogDO.setFieldName(fieldDO.getName());
-            managementLogDO.setMachine(MessageFormat.format("{0}:{1}", ipAddress, port));
+            managementLogDO.setMachine(ipAddress + Delimiter.COLON + port);
             managementLogDO.setBeforeValue(oldValue);
             managementLogDO.setAfterValue(fieldPushReq.getValue());
             managementLogDO.setStatus(1);

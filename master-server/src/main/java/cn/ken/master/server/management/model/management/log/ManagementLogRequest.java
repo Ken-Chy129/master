@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class ManagementLogRequest extends PageRequest {
 
-    private String namespace;
+    private String namespaceId;
 
     private String name;
 

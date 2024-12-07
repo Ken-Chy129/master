@@ -23,7 +23,6 @@ public class ManagementLogQuery extends BaseQuery {
     public static ManagementLogQuery of(ManagementLogRequest request) {
         ManagementLogQuery query = new ManagementLogQuery();
         query.setAppId(request.getAppId());
-        query.setNamespace(request.getNamespace());
         query.setName(request.getName());
         query.setModifier(request.getModifier());
         query.setPageIndex(request.getPageIndex());

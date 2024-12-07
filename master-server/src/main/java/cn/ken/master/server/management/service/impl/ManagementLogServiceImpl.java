@@ -3,8 +3,10 @@ package cn.ken.master.server.management.service.impl;
 import cn.ken.master.core.constant.Delimiter;
 import cn.ken.master.core.model.common.PageResult;
 import cn.ken.master.core.util.StringUtil;
+import cn.ken.master.server.management.mapper.NamespaceMapper;
 import cn.ken.master.server.management.model.entity.ManagementLogDO;
 import cn.ken.master.server.management.mapper.ManagementLogMapper;
+import cn.ken.master.server.management.model.entity.NamespaceDO;
 import cn.ken.master.server.management.model.management.log.ManagementLogQuery;
 import cn.ken.master.server.management.model.management.log.ManagementLogRequest;
 import cn.ken.master.server.management.service.ManagementLogService;
@@ -23,6 +25,9 @@ public class ManagementLogServiceImpl implements ManagementLogService {
     @Resource
     private ManagementLogMapper managementLogMapper;
 
+    @Resource
+    private NamespaceMapper namespaceMapper;
+
     @Override
     public int insert(ManagementLogDO managementLogDO) {
         return managementLogMapper.insert(managementLogDO);
@@ -34,6 +39,11 @@ public class ManagementLogServiceImpl implements ManagementLogService {
             return PageResult.buildError("appId不能为空");
         }
         ManagementLogQuery managementLogQuery = ManagementLogQuery.of(request);
+        String namespaceId = request.getNamespaceId();
+        NamespaceDO namespaceDO = namespaceMapper.selectById(namespaceId);
+        if (namespaceDO != null) {
+            managementLogQuery.setNamespace(namespaceDO.getName());
+        }
         Set<String> machineSet = StringUtil.split(request.getMachines(), Delimiter.COMMA, Function.identity());
         managementLogQuery.setMachineSet(machineSet);
         Long count = managementLogMapper.count(managementLogQuery);
