@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface TemplateFieldMapper extends BaseMapper<TemplateFieldDO> {
 
-    void updateFieldValue(Long appId, String name, String fieldValue);
+    void updateFieldValue(@Param("appId") Long appId, @Param("name") String name, @Param("fieldValue") String fieldValue);
 
     List<TemplateFieldDO> selectByTemplateName(@Param("appId") Long appId, @Param("name") String name);
 
