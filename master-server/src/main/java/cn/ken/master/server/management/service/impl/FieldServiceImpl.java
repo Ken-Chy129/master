@@ -92,7 +92,7 @@ public class FieldServiceImpl implements FieldService {
 
         if (fieldPushReq.getIsUpdateTemplate()) {
             // 更新默认模板的值
-            templateFieldMapper.updateFieldValue(appId, ManagementConstant.DEFAULT_TEMPLATE_NAME, fieldPushReq.getValue());
+            templateFieldMapper.updateFieldValueByName(appId, ManagementConstant.DEFAULT_TEMPLATE_NAME, fieldPushReq.getValue());
         }
         return Result.buildSuccess();
     }

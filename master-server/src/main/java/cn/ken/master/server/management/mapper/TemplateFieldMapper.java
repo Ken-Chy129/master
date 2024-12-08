@@ -11,7 +11,9 @@ import java.util.List;
 @Mapper
 public interface TemplateFieldMapper extends BaseMapper<TemplateFieldDO> {
 
-    void updateFieldValue(@Param("appId") Long appId, @Param("name") String name, @Param("fieldValue") String fieldValue);
+    void updateFieldValueByName(@Param("appId") Long appId, @Param("name") String name, @Param("fieldValue") String fieldValue);
+
+    void updateFieldValueById(@Param("id") Long id, @Param("fieldValue") String fieldValue);
 
     List<TemplateFieldDO> selectByTemplateName(@Param("appId") Long appId, @Param("name") String name);
 
@@ -20,5 +22,4 @@ public interface TemplateFieldMapper extends BaseMapper<TemplateFieldDO> {
     List<TemplateFieldDO> selectByCondition(TemplateFieldQuery query);
 
     void deleteByFieldId(Long fieldId);
-
 }

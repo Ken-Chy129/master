@@ -65,6 +65,7 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
 
     @Override
     public int updateField(TemplateFieldRequest request) {
+        templateFieldMapper.updateFieldValueById(request.getId(), request.getFieldValue());
         return 0;
     }
 }

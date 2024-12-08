@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.ken.master.server.management.mapper.TemplateFieldMapper">
 
-    <update id="updateFieldValue">
+    <update id="updateFieldValueByName">
         update master_template_field
         set field_value = #{fieldValue}
         where template_id = (
@@ -10,6 +10,12 @@
             where app_id = #{appId}
             and name = #{name}
         )
+    </update>
+
+    <update id="updateFieldValueById">
+        update master_template_field
+        set field_value = #{fieldValue}
+        where id = #{id}
     </update>
 
     <delete id="deleteByFieldId">
