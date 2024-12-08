@@ -39,7 +39,7 @@ public class TemplateController {
     }
 
     @PostMapping("updateField")
-    public int updateField(@RequestBody TemplateFieldRequest request) {
+    public Result<Boolean> updateField(@RequestBody TemplateFieldRequest request) {
         return templateFieldService.updateField(request);
     }
 }

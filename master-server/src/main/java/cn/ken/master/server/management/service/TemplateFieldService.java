@@ -2,6 +2,7 @@ package cn.ken.master.server.management.service;
 
 import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.common.PageResult;
+import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.management.model.entity.TemplateFieldDO;
 import cn.ken.master.server.management.model.management.template.TemplateFieldRequest;
 
@@ -17,5 +18,5 @@ public interface TemplateFieldService {
 
     PageResult<List<TemplateFieldDO>> selectFieldByCondition(TemplateFieldRequest request);
 
-    int updateField(TemplateFieldRequest request);
+    Result<Boolean> updateField(TemplateFieldRequest request);
 }

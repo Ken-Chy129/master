@@ -2,6 +2,9 @@ package cn.ken.master.server.management.service.impl;
 
 import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.common.PageResult;
+import cn.ken.master.core.model.common.Result;
+import cn.ken.master.server.management.mapper.NamespaceMapper;
+import cn.ken.master.server.management.model.entity.NamespaceDO;
 import cn.ken.master.server.management.model.entity.TemplateFieldDO;
 import cn.ken.master.server.management.mapper.TemplateFieldMapper;
 import cn.ken.master.server.management.model.management.template.TemplateFieldQuery;
@@ -9,6 +12,7 @@ import cn.ken.master.server.management.model.management.template.TemplateFieldRe
 import cn.ken.master.server.management.service.TemplateFieldService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -21,6 +25,8 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
 
     @Resource
     private TemplateFieldMapper templateFieldMapper;
+    @Autowired
+    private NamespaceMapper namespaceMapper;
 
     @Override
     public int insert(TemplateFieldDO templateFieldDO) {
@@ -52,7 +58,13 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
 
     @Override
     public PageResult<List<TemplateFieldDO>> selectFieldByCondition(TemplateFieldRequest request) {
+        System.out.println(request);
         TemplateFieldQuery templateFieldQuery = TemplateFieldQuery.of(request);
+        Long namespaceId = request.getNamespaceId();
+        if (namespaceId != null && request.getNamespace() == null) {
+            NamespaceDO namespaceDO = namespaceMapper.selectById(namespaceId);
+            templateFieldQuery.setNamespace(namespaceDO.getName());
+        }
         Long count = templateFieldMapper.count(templateFieldQuery);
         if (count == 0) {
             return PageResult.buildSuccess();
@@ -64,8 +76,8 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
     }
 
     @Override
-    public int updateField(TemplateFieldRequest request) {
+    public Result<Boolean> updateField(TemplateFieldRequest request) {
         templateFieldMapper.updateFieldValueById(request.getId(), request.getFieldValue());
-        return 0;
+        return Result.buildSuccess(true);
     }
 }
