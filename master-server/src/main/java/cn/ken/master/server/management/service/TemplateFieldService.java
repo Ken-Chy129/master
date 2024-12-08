@@ -16,4 +16,6 @@ public interface TemplateFieldService {
     List<ManageableFieldDTO> getTemplateFields(Long appId, String defaultTemplateName);
 
     PageResult<List<TemplateFieldDO>> selectFieldByCondition(TemplateFieldRequest request);
+
+    int updateField(TemplateFieldRequest request);
 }

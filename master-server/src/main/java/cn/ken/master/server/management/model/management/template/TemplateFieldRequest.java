@@ -8,9 +8,15 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class TemplateFieldRequest extends PageRequest {
 
+    private Long id;
+
     private Long templateId;
+
+    private Long fieldId;
 
     private String namespace;
 
     private String fieldName;
+
+    private String fieldValue;
 }

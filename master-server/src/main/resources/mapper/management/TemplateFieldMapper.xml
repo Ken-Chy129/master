@@ -30,14 +30,23 @@
     <select id="selectByCondition" resultType="cn.ken.master.server.management.model.entity.TemplateFieldDO">
         select * from main.master_template_field
         <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
             <if test="templateId != null">
                 and template_id = #{templateId}
+            </if>
+            <if test="fieldId != null">
+                and field_id = #{fieldId}
             </if>
             <if test="namespace != null">
                 and namespace = #{namespace}
             </if>
             <if test="fieldName != null">
                 and field_name = #{fieldName}
+            </if>
+            <if test="fieldValue != null">
+                and field_value = #{fieldValue}
             </if>
         </where>
         order by gmt_create desc
@@ -48,14 +57,23 @@
     <select id="count" resultType="long">
         select count(*) from main.master_template_field
         <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
             <if test="templateId != null">
                 and template_id = #{templateId}
+            </if>
+            <if test="fieldId != null">
+                and field_id = #{fieldId}
             </if>
             <if test="namespace != null">
                 and namespace = #{namespace}
             </if>
             <if test="fieldName != null">
                 and field_name = #{fieldName}
+            </if>
+            <if test="fieldValue != null">
+                and field_value = #{fieldValue}
             </if>
         </where>
     </select>

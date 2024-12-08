@@ -37,4 +37,9 @@ public class TemplateController {
     public PageResult<List<TemplateFieldDO>> selectFieldPageByCondition(TemplateFieldRequest request) {
         return templateFieldService.selectFieldByCondition(request);
     }
+
+    @PostMapping("updateField")
+    public int updateField(@RequestBody TemplateFieldRequest request) {
+        return templateFieldService.updateField(request);
+    }
 }

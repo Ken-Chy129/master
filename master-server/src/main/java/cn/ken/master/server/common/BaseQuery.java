@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class BaseQuery {
 
-    private long id;
+    private Long id;
 
     private int pageIndex;
 

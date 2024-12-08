@@ -62,4 +62,9 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
         result.setPageCount(count);
         return result;
     }
+
+    @Override
+    public int updateField(TemplateFieldRequest request) {
+        return 0;
+    }
 }
