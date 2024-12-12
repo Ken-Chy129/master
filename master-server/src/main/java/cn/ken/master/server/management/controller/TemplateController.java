@@ -42,4 +42,14 @@ public class TemplateController {
     public Result<Boolean> updateField(@RequestBody TemplateFieldRequest request) {
         return templateFieldService.updateField(request);
     }
+
+    @PostMapping("copyTemplate")
+    public Result<Boolean> copyTemplate(@RequestBody TemplateFieldRequest request) {
+        return templateFieldService.copyTemplate(request);
+    }
+
+    @PostMapping("pushTemplateField")
+    public Result<Boolean> pushTemplateField(@RequestBody TemplateFieldRequest request) {
+        return templateFieldService.updateField(request);
+    }
 }

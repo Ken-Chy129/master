@@ -10,6 +10,16 @@ public class TemplateFieldRequest extends PageRequest {
 
     private Long id;
 
+    /**
+     * 模板名称
+     */
+    private String name;
+
+    /**
+     * 模板描述
+     */
+    private String description;
+
     private Long templateId;
 
     private Long namespaceId;

@@ -4,7 +4,9 @@ import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.common.PageResult;
 import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.management.mapper.NamespaceMapper;
+import cn.ken.master.server.management.mapper.TemplateMapper;
 import cn.ken.master.server.management.model.entity.NamespaceDO;
+import cn.ken.master.server.management.model.entity.TemplateDO;
 import cn.ken.master.server.management.model.entity.TemplateFieldDO;
 import cn.ken.master.server.management.mapper.TemplateFieldMapper;
 import cn.ken.master.server.management.model.management.template.TemplateFieldQuery;
@@ -12,8 +14,8 @@ import cn.ken.master.server.management.model.management.template.TemplateFieldRe
 import cn.ken.master.server.management.service.TemplateFieldService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -24,8 +26,10 @@ import java.util.List;
 public class TemplateFieldServiceImpl implements TemplateFieldService {
 
     @Resource
+    private TemplateMapper templateMapper;
+    @Resource
     private TemplateFieldMapper templateFieldMapper;
-    @Autowired
+    @Resource
     private NamespaceMapper namespaceMapper;
 
     @Override
@@ -79,5 +83,31 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
     public Result<Boolean> updateField(TemplateFieldRequest request) {
         templateFieldMapper.updateFieldValueById(request.getId(), request.getFieldValue());
         return Result.buildSuccess(true);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Result<Boolean> copyTemplate(TemplateFieldRequest request) {
+        TemplateDO templateDO = new TemplateDO();
+        templateDO.setAppId(request.getAppId());
+        templateDO.setName(request.getName());
+        templateDO.setDescription(request.getDescription());
+        templateMapper.insert(templateDO);
+
+        // 复制源
+        Long templateId = request.getTemplateId();
+        if (templateId == null) {
+            return Result.buildSuccess();
+        }
+
+        TemplateFieldQuery query = new TemplateFieldQuery();
+        query.setTemplateId(templateId);
+        List<TemplateFieldDO> templateFieldDOList = templateFieldMapper.selectByCondition(query);
+        for (TemplateFieldDO templateFieldDO : templateFieldDOList) {
+            templateFieldDO.setId(null);
+
+//            templateFieldDO.setTemplateId();
+        }
+        return null;
     }
 }
