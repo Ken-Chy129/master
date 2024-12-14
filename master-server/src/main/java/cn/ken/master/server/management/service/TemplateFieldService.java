@@ -19,6 +19,4 @@ public interface TemplateFieldService {
     PageResult<List<TemplateFieldDO>> selectFieldByCondition(TemplateFieldRequest request);
 
     Result<Boolean> updateField(TemplateFieldRequest request);
-
-    Result<Boolean> copyTemplate(TemplateFieldRequest request);
 }

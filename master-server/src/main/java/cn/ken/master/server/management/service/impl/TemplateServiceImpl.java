@@ -1,8 +1,11 @@
 package cn.ken.master.server.management.service.impl;
 
 import cn.ken.master.core.model.common.Result;
+import cn.ken.master.server.management.mapper.TemplateFieldMapper;
 import cn.ken.master.server.management.model.entity.TemplateDO;
 import cn.ken.master.server.management.mapper.TemplateMapper;
+import cn.ken.master.server.management.model.entity.TemplateFieldDO;
+import cn.ken.master.server.management.model.management.template.TemplateFieldQuery;
 import cn.ken.master.server.management.model.management.template.TemplateFieldRequest;
 import cn.ken.master.server.management.service.TemplateService;
 import jakarta.annotation.Resource;
@@ -20,9 +23,32 @@ public class TemplateServiceImpl implements TemplateService {
     @Resource
     private TemplateMapper templateMapper;
 
+    @Resource
+    private TemplateFieldMapper templateFieldMapper;
+
     @Override
-    public int insert(TemplateDO templateDO) {
-        return templateMapper.insert(templateDO);
+    @Transactional(rollbackFor = Exception.class)
+    public Result<Boolean> insert(TemplateFieldRequest request) {
+        TemplateDO templateDO = new TemplateDO();
+        templateDO.setAppId(request.getAppId());
+        templateDO.setName(request.getName());
+        templateDO.setDescription(request.getDescription());
+        templateMapper.insert(templateDO);
+
+        // 复制源
+        Long fromTemplateId = request.getFromTemplateId();
+        if (fromTemplateId == null) {
+            return Result.buildSuccess();
+        }
+
+        TemplateFieldQuery query = new TemplateFieldQuery();
+        query.setTemplateId(fromTemplateId);
+        List<TemplateFieldDO> templateFieldDOList = templateFieldMapper.selectByCondition(query);
+        for (TemplateFieldDO templateFieldDO : templateFieldDOList) {
+            templateFieldDO.setId(null);
+            templateFieldDO.setTemplateId(templateDO.getId());
+        }
+        return Result.buildSuccess();
     }
 
     @Override

@@ -23,11 +23,6 @@ public class TemplateController {
     @Resource
     private TemplateFieldService templateFieldService;
 
-    @PostMapping(RequestPathConstant.SAVE)
-    public int save(@RequestBody TemplateDO templateDO) {
-        return templateService.insert(templateDO);
-    }
-
     @GetMapping("selectByAppId")
     public Result<List<TemplateDO>> selectByAppId(@RequestParam("appId") Long appId) {
         return templateService.selectByAppId(appId);
@@ -43,9 +38,9 @@ public class TemplateController {
         return templateFieldService.updateField(request);
     }
 
-    @PostMapping("copyTemplate")
-    public Result<Boolean> copyTemplate(@RequestBody TemplateFieldRequest request) {
-        return templateFieldService.copyTemplate(request);
+    @PostMapping("insert")
+    public Result<Boolean> insert(@RequestBody TemplateFieldRequest request) {
+        return templateService.insert(request);
     }
 
     @PostMapping("pushTemplateField")
