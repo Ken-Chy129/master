@@ -4,13 +4,11 @@ package cn.ken.master.server.interceptor;
 import cn.ken.master.core.enums.SystemErrorCodeEnum;
 import cn.ken.master.core.model.common.Result;
 import cn.ken.master.core.util.StringUtil;
+import cn.ken.master.server.core.AuthContext;
 import com.alibaba.fastjson2.JSON;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <pre>
@@ -30,7 +28,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
             return true;
         }
         String appId = request.getParameter("appId");
-        System.out.println(appId);
+        AuthContext.setAppId(Long.parseLong(appId));
         if (StringUtil.isBlank(appId)) {
             response.setContentType("application/json;charset=UTF-8");
             response.getWriter().println(JSON.toJSONString(Result.buildError(SystemErrorCodeEnum.PERMISSION_ERROR)));
@@ -39,5 +37,10 @@ public class PermissionInterceptor implements HandlerInterceptor {
         }
         // todo:权限校验
         return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        AuthContext.removeAppId();
     }
 }

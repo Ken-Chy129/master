@@ -1,6 +1,7 @@
 package cn.ken.master.server.management.service.impl;
 
 import cn.ken.master.core.model.common.Result;
+import cn.ken.master.server.core.AuthContext;
 import cn.ken.master.server.management.mapper.TemplateFieldMapper;
 import cn.ken.master.server.management.model.entity.TemplateDO;
 import cn.ken.master.server.management.mapper.TemplateMapper;
@@ -30,7 +31,7 @@ public class TemplateServiceImpl implements TemplateService {
     @Transactional(rollbackFor = Exception.class)
     public Result<Boolean> insert(TemplateFieldRequest request) {
         TemplateDO templateDO = new TemplateDO();
-        templateDO.setAppId(request.getAppId());
+        templateDO.setAppId(AuthContext.getAppId());
         templateDO.setName(request.getName());
         templateDO.setDescription(request.getDescription());
         templateMapper.insert(templateDO);
