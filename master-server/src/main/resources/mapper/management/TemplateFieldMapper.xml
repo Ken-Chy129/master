@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.ken.master.server.management.mapper.TemplateFieldMapper">
 
+    <insert id="insert">
+        insert into main.master_template_field(template_id, namespace, field_name, field_value, field_id)
+        values (#{templateId}, #{namespace}, #{fieldName}, #{fieldValue}, #{fieldId})
+        <selectKey keyColumn="id" keyProperty="id" order="AFTER">
+            last_insert_rowid()
+        </selectKey>
+    </insert>
+
     <update id="updateFieldValueByName">
         update master_template_field
         set field_value = #{fieldValue}

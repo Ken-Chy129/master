@@ -10,6 +10,8 @@ import java.util.List;
 @Mapper
 public interface ManagementLogMapper extends BaseMapper<ManagementLogDO> {
 
+    int insert(ManagementLogDO record);
+
     List<ManagementLogDO> selectByFieldId(Long fieldId);
 
     Long count(ManagementLogQuery query);

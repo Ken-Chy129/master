@@ -12,6 +12,8 @@ import java.util.List;
 @Mapper
 public interface FieldMapper extends BaseMapper<FieldDO> {
 
+    int insert(FieldDO record);
+
     List<FieldDO> selectByNamespaceId(Long namespaceId);
 
     FieldDO selectByNamespaceIdAndName(Long namespaceId, String name);

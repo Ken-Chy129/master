@@ -10,5 +10,7 @@ import java.util.List;
 @Mapper
 public interface MachineMapper extends BaseMapper<MachineDO> {
 
+    int insert(MachineDO record);
+
     List<MachineDO> selectByAppId(@Param("appId") Long appId);
 }

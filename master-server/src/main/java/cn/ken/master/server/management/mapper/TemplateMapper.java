@@ -9,6 +9,8 @@ import java.util.List;
 @Mapper
 public interface TemplateMapper extends BaseMapper<TemplateDO> {
 
+    int insert(TemplateDO templateDO);
+
     Long selectTemplateId(Long appId, String name);
 
     List<TemplateDO> selectTemplateListByAppId(Long appId);

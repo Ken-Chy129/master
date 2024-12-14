@@ -39,7 +39,6 @@ public class AppServiceImpl implements AppService {
 
     @Override
     public void startAppOnMachine(Long appId, String accessKey, String ipAddress, Integer port) {
-        // todo：分为通用的绑定机器和Management
         // 1.查询应用
         AppDO appDOList = appMapper.selectById(appId);
         if (appDOList == null) {
