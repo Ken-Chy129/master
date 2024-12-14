@@ -29,7 +29,7 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Result<Boolean> insert(TemplateFieldRequest request) {
+    public Result<Long> insert(TemplateFieldRequest request) {
         TemplateDO templateDO = new TemplateDO();
         templateDO.setAppId(AuthContext.getAppId());
         templateDO.setName(request.getName());
@@ -39,7 +39,7 @@ public class TemplateServiceImpl implements TemplateService {
         // 复制源
         Long fromTemplateId = request.getFromTemplateId();
         if (fromTemplateId == null) {
-            return Result.buildSuccess();
+            return Result.buildSuccess(templateDO.getId());
         }
 
         List<TemplateFieldDO> templateFieldDOList = templateFieldMapper.selectByTemplateId(fromTemplateId);
@@ -48,7 +48,7 @@ public class TemplateServiceImpl implements TemplateService {
             templateFieldDO.setTemplateId(templateDO.getId());
         }
         templateFieldMapper.insert(templateFieldDOList);
-        return Result.buildSuccess();
+        return Result.buildSuccess(templateDO.getId());
     }
 
     @Override

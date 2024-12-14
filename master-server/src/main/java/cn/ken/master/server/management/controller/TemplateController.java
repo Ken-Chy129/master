@@ -39,7 +39,7 @@ public class TemplateController {
     }
 
     @PostMapping("insert")
-    public Result<Boolean> insert(@RequestBody TemplateFieldRequest request) {
+    public Result<Long> insert(@RequestBody TemplateFieldRequest request) {
         return templateService.insert(request);
     }
 

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TemplateService {
 
-    Result<Boolean> insert(TemplateFieldRequest request);
+    Result<Long> insert(TemplateFieldRequest request);
 
     List<TemplateDO> selectAll();
 
