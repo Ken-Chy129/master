@@ -5,8 +5,8 @@
     <insert id="insert">
         insert into main.master_namespace(app_id, name, description, class_name)
         values (#{appId}, #{name}, #{description}, #{className})
-        <selectKey keyColumn="id" keyProperty="id" order="AFTER">
-            last_insert_rowid()
+        <selectKey keyColumn="id" keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            select last_insert_rowid()
         </selectKey>
     </insert>
 

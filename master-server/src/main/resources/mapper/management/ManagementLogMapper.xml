@@ -5,8 +5,8 @@
     <insert id="insert">
         insert into main.master_management_log(app_id, machine, namespace, field_name, before_value, after_value, status, push_type, template_id, parent_id, field_id, modifier)
         values (#{appId}, #{machine}, #{namespace}, #{fieldName}, #{beforeValue}, #{afterValue}, #{status}, #{pushType}, #{templateId}, #{parentId}, #{fieldId}, #{modifier})
-        <selectKey keyColumn="id" keyProperty="id" order="AFTER">
-            last_insert_rowid()
+        <selectKey keyColumn="id" keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            select last_insert_rowid()
         </selectKey>
     </insert>
 
