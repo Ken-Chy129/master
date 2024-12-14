@@ -40,6 +40,10 @@
         )
     </select>
 
+    <select id="selectByTemplateId" resultType="cn.ken.master.server.management.model.entity.TemplateFieldDO">
+        select * from master_template_field
+        where template_id = #{templateId}
+    </select>
 
     <select id="selectByCondition" resultType="cn.ken.master.server.management.model.entity.TemplateFieldDO">
         select * from main.master_template_field
@@ -91,6 +95,7 @@
             </if>
         </where>
     </select>
+
 
 
 </mapper>

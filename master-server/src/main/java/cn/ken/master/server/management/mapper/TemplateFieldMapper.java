@@ -19,6 +19,8 @@ public interface TemplateFieldMapper extends BaseMapper<TemplateFieldDO> {
 
     List<TemplateFieldDO> selectByTemplateName(@Param("appId") Long appId, @Param("name") String name);
 
+    List<TemplateFieldDO> selectByTemplateId(@Param("templateId") Long templateId);
+
     Long count(TemplateFieldQuery query);
 
     List<TemplateFieldDO> selectByCondition(TemplateFieldQuery query);

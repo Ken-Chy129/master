@@ -42,13 +42,12 @@ public class TemplateServiceImpl implements TemplateService {
             return Result.buildSuccess();
         }
 
-        TemplateFieldQuery query = new TemplateFieldQuery();
-        query.setTemplateId(fromTemplateId);
-        List<TemplateFieldDO> templateFieldDOList = templateFieldMapper.selectByCondition(query);
+        List<TemplateFieldDO> templateFieldDOList = templateFieldMapper.selectByTemplateId(fromTemplateId);
         for (TemplateFieldDO templateFieldDO : templateFieldDOList) {
             templateFieldDO.setId(null);
             templateFieldDO.setTemplateId(templateDO.getId());
         }
+        templateFieldMapper.insert(templateFieldDOList);
         return Result.buildSuccess();
     }
 
