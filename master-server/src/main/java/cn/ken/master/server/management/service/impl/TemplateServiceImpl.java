@@ -60,4 +60,14 @@ public class TemplateServiceImpl implements TemplateService {
     public Result<List<TemplateDO>> selectByAppId(Long appId) {
         return Result.buildSuccess(templateMapper.selectTemplateListByAppId(appId));
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Result<Boolean> deleteById(Long templateId) {
+        templateMapper.deleteById(templateId);
+        List<TemplateFieldDO> templateFieldDOList = templateFieldMapper.selectByTemplateId(templateId);
+        List<Long> idList = templateFieldDOList.stream().map(TemplateFieldDO::getId).toList();
+        templateFieldMapper.deleteByIds(idList);
+        return Result.buildSuccess(true);
+    }
 }

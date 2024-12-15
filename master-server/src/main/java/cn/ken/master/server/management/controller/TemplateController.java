@@ -28,6 +28,11 @@ public class TemplateController {
         return templateService.selectByAppId(appId);
     }
 
+    @DeleteMapping("deleteById")
+    public Result<Boolean> deleteById(@RequestParam("templateId") Long templateId) {
+        return templateService.deleteById(templateId);
+    }
+
     @GetMapping("selectFieldPageByCondition")
     public PageResult<List<TemplateFieldDO>> selectFieldPageByCondition(TemplateFieldRequest request) {
         return templateFieldService.selectFieldByCondition(request);

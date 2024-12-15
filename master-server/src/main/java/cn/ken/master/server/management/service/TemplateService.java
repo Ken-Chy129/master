@@ -14,4 +14,6 @@ public interface TemplateService {
     List<TemplateDO> selectAll();
 
     Result<List<TemplateDO>> selectByAppId(Long appId);
+
+    Result<Boolean> deleteById(Long templateId);
 }
