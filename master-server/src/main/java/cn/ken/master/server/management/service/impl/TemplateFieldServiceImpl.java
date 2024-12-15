@@ -83,4 +83,10 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
         return Result.buildSuccess(true);
     }
 
+    @Override
+    public Result<Boolean> addField(TemplateFieldRequest request) {
+
+        return Result.buildSuccess(Boolean.TRUE);
+    }
+
 }
