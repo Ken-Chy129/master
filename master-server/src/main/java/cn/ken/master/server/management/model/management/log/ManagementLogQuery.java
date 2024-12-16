@@ -12,9 +12,11 @@ public class ManagementLogQuery extends BaseQuery {
 
     private Long appId;
 
+    private Long fieldId;
+
     private String namespace;
 
-    private String name;
+    private String fieldName;
 
     private Set<String> machineSet;
 
@@ -23,7 +25,8 @@ public class ManagementLogQuery extends BaseQuery {
     public static ManagementLogQuery of(ManagementLogRequest request) {
         ManagementLogQuery query = new ManagementLogQuery();
         query.setAppId(request.getAppId());
-        query.setName(request.getName());
+        query.setFieldId(request.getFieldId());
+        query.setFieldName(request.getFieldName());
         query.setModifier(request.getModifier());
         query.setPageIndex(request.getPageIndex());
         query.setPageSize(request.getPageSize());

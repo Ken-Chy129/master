@@ -10,13 +10,14 @@ public class ManagementFieldQuery extends BaseQuery {
 
     private Long appId;
 
-    private String namespaceId;
+    private Long namespaceId;
 
     private String name;
 
     public static ManagementFieldQuery of(ManagementFieldRequest request) {
         ManagementFieldQuery managementFieldQuery = new ManagementFieldQuery();
         managementFieldQuery.setAppId(request.getAppId());
+        managementFieldQuery.setId(request.getFieldId());
         managementFieldQuery.setNamespaceId(request.getNamespaceId());
         managementFieldQuery.setName(request.getFieldName());
         managementFieldQuery.setPageIndex(request.getPageIndex());

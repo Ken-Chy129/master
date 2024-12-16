@@ -19,6 +19,9 @@
         left join main.master_namespace mn on mf.namespace_id = mn.id
         <where>
             mf.app_id = #{appId}
+            <if test="id != null">
+                and mf.id = #{id}
+            </if>
             <if test="namespaceId != null">
                 and mf.namespace_id = #{namespaceId}
             </if>
@@ -34,6 +37,9 @@
         left join main.master_namespace mn on mf.namespace_id = mn.id
         <where>
             mf.app_id = #{appId}
+            <if test="id != null">
+                and mf.id = #{id}
+            </if>
             <if test="namespaceId != null">
                 and mf.namespace_id = #{namespaceId}
             </if>

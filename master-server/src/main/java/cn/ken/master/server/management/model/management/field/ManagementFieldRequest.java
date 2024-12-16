@@ -8,9 +8,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class ManagementFieldRequest extends PageRequest {
 
-    private String namespaceId;
+    private Long fieldId;
+
+    private Long namespaceId;
 
     private String fieldName;
-
 
 }

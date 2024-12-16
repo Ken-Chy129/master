@@ -22,8 +22,11 @@
             <if test="namespace != null">
                 and namespace = #{namespace}
             </if>
-            <if test="name != null">
-                and field_name = #{name}
+            <if test="fieldId != null">
+                and field_id = #{fieldId}
+            </if>
+            <if test="fieldName != null">
+                and field_name = #{fieldName}
             </if>
             <if test="machineSet != null and !machineSet.isEmpty()">
                 and machine in
@@ -44,8 +47,11 @@
             <if test="namespace != null">
                 and namespace = #{namespace}
             </if>
-            <if test="name != null">
-                and field_name = #{name}
+            <if test="fieldId != null">
+                and field_id = #{fieldId}
+            </if>
+            <if test="fieldName != null">
+                and field_name = #{fieldName}
             </if>
             <if test="machineSet != null and !machineSet.isEmpty()">
                 and machine in

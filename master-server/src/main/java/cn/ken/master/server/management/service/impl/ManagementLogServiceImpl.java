@@ -39,7 +39,7 @@ public class ManagementLogServiceImpl implements ManagementLogService {
             return PageResult.buildError("appId不能为空");
         }
         ManagementLogQuery managementLogQuery = ManagementLogQuery.of(request);
-        String namespaceId = request.getNamespaceId();
+        Long namespaceId = request.getNamespaceId();
         NamespaceDO namespaceDO = namespaceMapper.selectById(namespaceId);
         if (namespaceDO != null) {
             managementLogQuery.setNamespace(namespaceDO.getName());
