@@ -3,8 +3,10 @@ package cn.ken.master.server.management.service.impl;
 import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.common.PageResult;
 import cn.ken.master.core.model.common.Result;
+import cn.ken.master.server.management.mapper.FieldMapper;
 import cn.ken.master.server.management.mapper.NamespaceMapper;
 import cn.ken.master.server.management.mapper.TemplateMapper;
+import cn.ken.master.server.management.model.entity.FieldDO;
 import cn.ken.master.server.management.model.entity.NamespaceDO;
 import cn.ken.master.server.management.model.entity.TemplateFieldDO;
 import cn.ken.master.server.management.mapper.TemplateFieldMapper;
@@ -29,6 +31,8 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
     private TemplateFieldMapper templateFieldMapper;
     @Resource
     private NamespaceMapper namespaceMapper;
+    @Resource
+    private FieldMapper fieldMapper;
 
     @Override
     public int insert(TemplateFieldDO templateFieldDO) {
@@ -85,7 +89,32 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
 
     @Override
     public Result<Boolean> addField(TemplateFieldRequest request) {
+        TemplateFieldQuery templateFieldQuery = new TemplateFieldQuery();
+        templateFieldQuery.setFieldId(request.getFieldId());
+        templateFieldQuery.setTemplateId(request.getTemplateId());
+        Long count = templateFieldMapper.count(templateFieldQuery);
+        if (count > 0) {
+            return Result.buildError("模板中已存在该字段值");
+        }
 
+        FieldDO fieldDO = fieldMapper.selectById(request.getFieldId());
+        if (fieldDO == null) {
+            return Result.buildError("查询不到对应的字段");
+        }
+
+        Long namespaceId = fieldDO.getNamespaceId();
+        NamespaceDO namespaceDO = namespaceMapper.selectById(namespaceId);
+        if (namespaceDO == null) {
+            return Result.buildError("查询不到对应的命名空间");
+        }
+
+        TemplateFieldDO templateFieldDO = new TemplateFieldDO();
+        templateFieldDO.setTemplateId(request.getTemplateId());
+        templateFieldDO.setFieldId(request.getFieldId());
+        templateFieldDO.setNamespace(namespaceDO.getName());
+        templateFieldDO.setFieldName(fieldDO.getName());
+        templateFieldDO.setFieldValue(request.getFieldValue());
+        templateFieldMapper.insert(templateFieldDO);
         return Result.buildSuccess(Boolean.TRUE);
     }
 
