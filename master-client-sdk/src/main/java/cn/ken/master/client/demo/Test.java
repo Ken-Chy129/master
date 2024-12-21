@@ -20,6 +20,7 @@ public class Test {
         manager.setUseTemplateValue(true);
         List<Class<?>> classList = new ArrayList<>();
         classList.add(CommonBizVariables.class);
+        classList.add(TimeSwitch.class);
         manager.init(classList);
         try {
             Thread.sleep(12213123123123L);

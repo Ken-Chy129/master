@@ -16,7 +16,7 @@ public interface FieldMapper extends BaseMapper<FieldDO> {
 
     List<FieldDO> selectByNamespaceId(Long namespaceId);
 
-    FieldDO selectByNamespaceIdAndName(Long namespaceId, String name);
+    FieldDO selectByNamespaceIdAndName(@Param("namespaceId") Long namespaceId, @Param("name") String name);
 
     Long count(ManagementFieldQuery query);
 
