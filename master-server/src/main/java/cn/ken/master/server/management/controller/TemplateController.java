@@ -43,6 +43,11 @@ public class TemplateController {
         return templateFieldService.updateField(request);
     }
 
+    @DeleteMapping("deleteField")
+    public Result<Boolean> deleteField(@RequestParam("templateFieldId") Long templateFieldId) {
+        return templateFieldService.deleteById(templateFieldId);
+    }
+
     @PostMapping("insert")
     public Result<Long> insert(@RequestBody TemplateFieldRequest request) {
         return templateService.insert(request);

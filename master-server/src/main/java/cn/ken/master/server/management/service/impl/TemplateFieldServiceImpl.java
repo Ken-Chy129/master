@@ -96,7 +96,7 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
 
     @Override
     public Result<Boolean> updateField(TemplateFieldRequest request) {
-        templateFieldMapper.updateFieldValueById(request.getId(), request.getFieldValue());
+        templateFieldMapper.updateFieldValueById(request.getTemplateFieldId(), request.getFieldValue());
         return Result.buildSuccess(true);
     }
 
@@ -179,6 +179,12 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
             managementLogMapper.insert(managementLogDO);
         }
 
+        return Result.buildSuccess(true);
+    }
+
+    @Override
+    public Result<Boolean> deleteById(Long templateFieldId) {
+        templateFieldMapper.deleteById(templateFieldId);
         return Result.buildSuccess(true);
     }
 

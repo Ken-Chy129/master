@@ -23,4 +23,6 @@ public interface TemplateFieldService {
     Result<Boolean> addField(TemplateFieldRequest request);
 
     Result<Boolean> pushField(TemplateFieldRequest request);
+
+    Result<Boolean> deleteById(Long templateFieldId);
 }
