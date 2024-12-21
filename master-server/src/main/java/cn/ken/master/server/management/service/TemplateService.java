@@ -16,4 +16,6 @@ public interface TemplateService {
     Result<List<TemplateDO>> selectByAppId(Long appId);
 
     Result<Boolean> deleteById(Long templateId);
+
+    Result<Boolean> push(TemplateFieldRequest request);
 }

@@ -1,7 +1,7 @@
 package cn.ken.master.server.management.service.impl;
 
 import cn.ken.master.core.constant.Delimiter;
-import cn.ken.master.core.enums.PushTypeEnum;
+import cn.ken.master.server.common.enums.MachineTypeEnum;
 import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.ManagementDTO;
 import cn.ken.master.core.model.common.PageResult;
@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -55,8 +54,8 @@ public class FieldServiceImpl implements FieldService {
         FieldDO fieldDO = fieldMapper.selectById(fieldPushReq.getFieldId());
         Long appId = fieldDO.getAppId();
         List<Pair<String, Integer>> machineList;
-        String pushType = fieldPushReq.getPushType();
-        if (PushTypeEnum.SPECIFIC.name().equalsIgnoreCase(pushType)) {
+        String machineType = fieldPushReq.getMachineType();
+        if (MachineTypeEnum.SPECIFIC.name().equalsIgnoreCase(machineType)) {
             machineList = Arrays.stream(fieldPushReq.getMachines().split(Delimiter.COMMA)).map(machine -> {
                 String[] split = machine.split(Delimiter.COLON);
                 return new Pair<>(split[0], Integer.parseInt(split[1]));

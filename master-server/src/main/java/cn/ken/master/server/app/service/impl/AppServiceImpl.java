@@ -2,7 +2,7 @@ package cn.ken.master.server.app.service.impl;
 
 import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.common.AppStartException;
-import cn.ken.master.server.common.enums.MachineStatus;
+import cn.ken.master.server.common.enums.MachineStatusEnum;
 import cn.ken.master.server.management.mapper.MachineMapper;
 import cn.ken.master.server.management.model.entity.AppDO;
 import cn.ken.master.server.app.mapper.AppMapper;
@@ -64,7 +64,7 @@ public class AppServiceImpl implements AppService {
             machineDO = new MachineDO();
             machineDO.setId(id);
         }
-        machineDO.setStatus(MachineStatus.RUNNING.getCode());
+        machineDO.setStatus(MachineStatusEnum.RUNNING.getCode());
         machineMapper.insertOrUpdate(machineDO);
     }
 }

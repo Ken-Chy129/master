@@ -36,4 +36,15 @@ public class TemplateFieldRequest extends PageRequest {
     private String fieldName;
 
     private String fieldValue;
+
+    /**
+     * 推送方式
+     */
+    private String machineType;
+
+    /**
+     * 推送的机器
+     */
+    private String machines;
+
 }

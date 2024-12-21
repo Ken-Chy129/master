@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum MachineStatus {
+public enum PushTypeEnum {
 
-    RUNNING(1),
-
+    FIELD(0),
+    TEMPLATE(1),
     ;
 
     private final int code;

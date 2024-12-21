@@ -57,4 +57,9 @@ public class TemplateController {
     public Result<Boolean> addField(@RequestBody TemplateFieldRequest request) {
         return templateFieldService.addField(request);
     }
+
+    @PostMapping("push")
+    public Result<Boolean> push(@RequestBody TemplateFieldRequest request) {
+        return templateService.push(request);
+    }
 }

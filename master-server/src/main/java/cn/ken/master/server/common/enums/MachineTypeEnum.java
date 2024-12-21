@@ -1,9 +1,7 @@
-package cn.ken.master.core.enums;
+package cn.ken.master.server.common.enums;
 
-/**
- * 推送类型
- */
-public enum PushTypeEnum {
+
+public enum MachineTypeEnum {
 
     /**
      * 所有机器
