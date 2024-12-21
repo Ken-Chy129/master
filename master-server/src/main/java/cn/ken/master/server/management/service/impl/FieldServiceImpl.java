@@ -8,6 +8,8 @@ import cn.ken.master.core.model.common.PageResult;
 import cn.ken.master.core.model.common.Pair;
 import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.common.constant.ManagementConstant;
+import cn.ken.master.server.common.enums.PushStatusEnum;
+import cn.ken.master.server.common.enums.PushTypeEnum;
 import cn.ken.master.server.core.ManagementClient;
 import cn.ken.master.server.management.mapper.*;
 import cn.ken.master.server.management.model.entity.*;
@@ -74,17 +76,22 @@ public class FieldServiceImpl implements FieldService {
         for (Pair<String, Integer> machine : machineList) {
             String ipAddress = machine.getLeft();
             Integer port = machine.getRight();
-            String oldValue = managementClient.putFieldValue(ipAddress, port, fieldPushReq.getNamespace(), fieldDO.getName(), fieldPushReq.getValue());
+            Result<String> result = managementClient.putFieldValue(ipAddress, port, fieldPushReq.getNamespace(), fieldDO.getName(), fieldPushReq.getValue());
             ManagementLogDO managementLogDO = new ManagementLogDO();
+            if (result.isSuccess()) {
+                managementLogDO.setStatus(PushStatusEnum.SUCCESS.getValue());
+                managementLogDO.setBeforeValue(result.getData());
+            } else {
+                managementLogDO.setStatus(PushStatusEnum.FAIL.getValue());
+                managementLogDO.setDetailMsg(result.getData());
+            }
             managementLogDO.setAppId(appId);
             managementLogDO.setNamespace(fieldPushReq.getNamespace());
             managementLogDO.setFieldId(fieldDO.getId());
             managementLogDO.setFieldName(fieldDO.getName());
             managementLogDO.setMachine(ipAddress + Delimiter.COLON + port);
-            managementLogDO.setBeforeValue(oldValue);
             managementLogDO.setAfterValue(fieldPushReq.getValue());
-            managementLogDO.setStatus(1);
-            managementLogDO.setPushType(1);
+            managementLogDO.setPushType(PushTypeEnum.FIELD.getValue());
             managementLogDO.setModifier("颜洵");
             managementLogMapper.insert(managementLogDO);
         }

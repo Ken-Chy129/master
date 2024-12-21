@@ -47,7 +47,7 @@ public class ManagementClient {
         }
     }
 
-    public String putFieldValue(String ipAddress, Integer port, String namespace, String name, String newValue) {
+    public Result<String> putFieldValue(String ipAddress, Integer port, String namespace, String name, String newValue) {
         CompletableFuture<String> future = new CompletableFuture<>();
         managementClientPutVTB.start(() -> {
             try (
@@ -70,9 +70,9 @@ public class ManagementClient {
             }
         });
         try {
-            return future.get();
+            return Result.buildSuccess(future.get());
         } catch (Exception e) {
-            return null;
+            return Result.buildError(e.getMessage());
         }
     }
 }

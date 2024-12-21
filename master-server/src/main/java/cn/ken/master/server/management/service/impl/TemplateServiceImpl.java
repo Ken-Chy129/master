@@ -5,6 +5,7 @@ import cn.ken.master.server.common.enums.MachineTypeEnum;
 import cn.ken.master.core.model.common.Pair;
 import cn.ken.master.core.model.common.Result;
 import cn.ken.master.server.common.constant.ManagementConstant;
+import cn.ken.master.server.common.enums.PushStatusEnum;
 import cn.ken.master.server.common.enums.PushTypeEnum;
 import cn.ken.master.server.core.AuthContext;
 import cn.ken.master.server.core.ManagementClient;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -92,7 +94,7 @@ public class TemplateServiceImpl implements TemplateService {
     public Result<Boolean> push(TemplateFieldRequest request) {
         Long appId = AuthContext.getAppId();
         // 1.查询模板字段值
-        List<TemplateFieldDO> templateFieldDOList = templateFieldMapper.selectByTemplateId(request.getFromTemplateId());
+        List<TemplateFieldDO> templateFieldDOList = templateFieldMapper.selectByTemplateId(request.getTemplateId());
         // 2.查询机器
         List<Pair<String, Integer>> machineList;
         String machineType = request.getMachineType();
@@ -109,22 +111,25 @@ public class TemplateServiceImpl implements TemplateService {
                         return new Pair<>(ip, port);
                     }).toList();
         }
+        log.info("推送的目标机器:{}", machineList.stream().map(pair -> pair.getLeft() + Delimiter.COLON + pair.getRight()).collect(Collectors.toList()));
         // 3.推送
         for (Pair<String, Integer> machine : machineList) {
             String ipAddress = machine.getLeft();
             Integer port = machine.getRight();
+            // todo:批量推送，应用sdk提供批量变更接口，出现失败则回滚。
             for (TemplateFieldDO templateFieldDO : templateFieldDOList) {
                 String fieldName = templateFieldDO.getFieldName();
                 String namespace = templateFieldDO.getNamespace();
                 String fieldValue = templateFieldDO.getFieldValue();
-                managementClient.putFieldValue(ipAddress, port, namespace, fieldName, fieldValue);
+                Result<String> result = managementClient.putFieldValue(ipAddress, port, namespace, fieldName, fieldValue);
+                log.info("推送机器ip:{}, 推送机器端口:{}, 推送结果:{}", ipAddress, port, result);
             }
             ManagementLogDO managementLogDO = new ManagementLogDO();
             managementLogDO.setAppId(appId);
             managementLogDO.setTemplateId(request.getFromTemplateId());
             managementLogDO.setMachine(ipAddress + Delimiter.COLON + port);
-            managementLogDO.setStatus(1);
-            managementLogDO.setPushType(PushTypeEnum.TEMPLATE.getCode());
+            managementLogDO.setStatus(PushStatusEnum.SUCCESS.getValue());
+            managementLogDO.setPushType(PushTypeEnum.TEMPLATE.getValue());
             managementLogDO.setModifier("颜洵");
             managementLogMapper.insert(managementLogDO);
         }

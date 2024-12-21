@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum PushTypeEnum {
+public enum PushStatusEnum {
 
-    FIELD(0),
-    TEMPLATE(1),
+    SUCCESS(0),
+    FAIL(1),
+    PARTIAL_FAIL(2),
     ;
-
     private final int value;
 }

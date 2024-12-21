@@ -69,4 +69,9 @@ public class ManagementLogDO extends BaseDO {
      * 变更人,todo:定义到baseDo，添加和修改时拦截并获取当前操作的用户填入用户名
      */
     private String modifier;
+
+    /**
+     * 详细信息
+     */
+    private String detailMsg;
 }
