@@ -21,4 +21,6 @@ public interface TemplateFieldService {
     Result<Boolean> updateField(TemplateFieldRequest request);
 
     Result<Boolean> addField(TemplateFieldRequest request);
+
+    Result<Boolean> pushField(TemplateFieldRequest request);
 }

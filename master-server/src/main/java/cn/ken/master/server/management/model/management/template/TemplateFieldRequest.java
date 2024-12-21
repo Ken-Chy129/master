@@ -27,6 +27,8 @@ public class TemplateFieldRequest extends PageRequest {
 
     private Long templateId;
 
+    private Long templateFieldId;
+
     private Long namespaceId;
 
     private Long fieldId;

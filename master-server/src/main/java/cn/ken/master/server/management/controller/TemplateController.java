@@ -48,9 +48,9 @@ public class TemplateController {
         return templateService.insert(request);
     }
 
-    @PostMapping("pushTemplateField")
-    public Result<Boolean> pushTemplateField(@RequestBody TemplateFieldRequest request) {
-        return templateFieldService.updateField(request);
+    @PostMapping("pushField")
+    public Result<Boolean> pushField(@RequestBody TemplateFieldRequest request) {
+        return templateFieldService.pushField(request);
     }
 
     @PostMapping("addField")

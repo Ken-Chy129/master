@@ -1,15 +1,20 @@
 package cn.ken.master.server.management.service.impl;
 
+import cn.ken.master.core.constant.Delimiter;
 import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.common.PageResult;
+import cn.ken.master.core.model.common.Pair;
 import cn.ken.master.core.model.common.Result;
-import cn.ken.master.server.management.mapper.FieldMapper;
-import cn.ken.master.server.management.mapper.NamespaceMapper;
-import cn.ken.master.server.management.mapper.TemplateMapper;
+import cn.ken.master.server.common.enums.MachineTypeEnum;
+import cn.ken.master.server.common.enums.PushStatusEnum;
+import cn.ken.master.server.common.enums.PushTypeEnum;
+import cn.ken.master.server.core.AuthContext;
+import cn.ken.master.server.core.ManagementClient;
+import cn.ken.master.server.management.mapper.*;
 import cn.ken.master.server.management.model.entity.FieldDO;
+import cn.ken.master.server.management.model.entity.ManagementLogDO;
 import cn.ken.master.server.management.model.entity.NamespaceDO;
 import cn.ken.master.server.management.model.entity.TemplateFieldDO;
-import cn.ken.master.server.management.mapper.TemplateFieldMapper;
 import cn.ken.master.server.management.model.management.template.TemplateFieldQuery;
 import cn.ken.master.server.management.model.management.template.TemplateFieldRequest;
 import cn.ken.master.server.management.service.TemplateFieldService;
@@ -18,8 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,6 +40,12 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
     private NamespaceMapper namespaceMapper;
     @Resource
     private FieldMapper fieldMapper;
+    @Resource
+    private ManagementClient managementClient;
+    @Resource
+    private ManagementLogMapper managementLogMapper;
+    @Resource
+    private MachineMapper machineMapper;
 
     @Override
     public int insert(TemplateFieldDO templateFieldDO) {
@@ -116,6 +129,57 @@ public class TemplateFieldServiceImpl implements TemplateFieldService {
         templateFieldDO.setFieldValue(request.getFieldValue());
         templateFieldMapper.insert(templateFieldDO);
         return Result.buildSuccess(Boolean.TRUE);
+    }
+
+    @Override
+    public Result<Boolean> pushField(TemplateFieldRequest request) {
+        // 1.查询模板字段值
+        Long appId = AuthContext.getAppId();
+        Long templateFieldId = request.getTemplateFieldId();
+        TemplateFieldDO templateFieldDO = templateFieldMapper.selectById(templateFieldId);
+        // 2.查询机器
+        List<Pair<String, Integer>> machineList;
+        String machineType = request.getMachineType();
+        if (MachineTypeEnum.SPECIFIC.name().equalsIgnoreCase(machineType)) {
+            machineList = Arrays.stream(request.getMachines().split(Delimiter.COMMA)).map(machine -> {
+                String[] split = machine.split(Delimiter.COLON);
+                return new Pair<>(split[0], Integer.parseInt(split[1]));
+            }).toList();
+        } else {
+            machineList = machineMapper.selectByAppId(appId).stream()
+                    .map(machineDO -> {
+                        String ip = machineDO.getIpAddress();
+                        Integer port = machineDO.getPort();
+                        return new Pair<>(ip, port);
+                    }).toList();
+        }
+        log.info("推送的目标机器:{}", machineList.stream().map(pair -> pair.getLeft() + Delimiter.COLON + pair.getRight()).collect(Collectors.toList()));
+        // 3.推送
+        for (Pair<String, Integer> machine : machineList) {
+            String ipAddress = machine.getLeft();
+            Integer port = machine.getRight();
+            Result<String> result = managementClient.putFieldValue(ipAddress, port, templateFieldDO.getNamespace(), templateFieldDO.getFieldName(), templateFieldDO.getFieldValue());
+            ManagementLogDO managementLogDO = new ManagementLogDO();
+            if (result.isSuccess()) {
+                managementLogDO.setStatus(PushStatusEnum.SUCCESS.getValue());
+                managementLogDO.setBeforeValue(result.getData());
+            } else {
+                managementLogDO.setStatus(PushStatusEnum.FAIL.getValue());
+                managementLogDO.setDetailMsg(result.getData());
+            }
+            managementLogDO.setAppId(appId);
+            managementLogDO.setNamespace(templateFieldDO.getNamespace());
+            managementLogDO.setFieldId(templateFieldDO.getFieldId());
+            managementLogDO.setFieldName(templateFieldDO.getFieldName());
+            managementLogDO.setMachine(ipAddress + Delimiter.COLON + port);
+            managementLogDO.setAfterValue(templateFieldDO.getFieldValue());
+            managementLogDO.setTemplateId(templateFieldDO.getTemplateId());
+            managementLogDO.setPushType(PushTypeEnum.FIELD.getValue());
+            managementLogDO.setModifier("颜洵");
+            managementLogMapper.insert(managementLogDO);
+        }
+
+        return Result.buildSuccess(true);
     }
 
 }
