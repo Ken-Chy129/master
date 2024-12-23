@@ -5,10 +5,10 @@ import cn.ken.master.client.annotations.Manageable;
 import cn.ken.master.client.annotations.Management;
 
 /**
- * 通用变量管控类
+ * 通用业务字段
  */
 @Management
-public class CommonBizVariables {
+public class CommonBizField {
 
     @Manageable(desc = "是否开启xxxx缓存啊")
     public static Boolean OPEN_XXX_CACHE = Boolean.TRUE;

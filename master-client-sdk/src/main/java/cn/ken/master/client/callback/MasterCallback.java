@@ -14,12 +14,4 @@ public interface MasterCallback {
      * @param value 变量值
      */
     void handleValueChange(String namespace, String name, Object value);
-
-    private static void get() {
-
-    }
-
-    class AA {
-
-    }
 }

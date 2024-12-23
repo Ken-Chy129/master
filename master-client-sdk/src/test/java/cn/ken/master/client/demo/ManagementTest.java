@@ -9,7 +9,7 @@ import java.util.List;
  * @author Ken-Chy129
  * @date 2024/8/11
  */
-public class Test {
+public class ManagementTest {
 
     public static void main(String[] args) {
         MasterManager manager = new MasterManager();
@@ -19,8 +19,8 @@ public class Test {
         manager.setAccessKey("123");
         manager.setUseTemplateValue(true);
         List<Class<?>> classList = new ArrayList<>();
-        classList.add(CommonBizVariables.class);
-        classList.add(TimeSwitch.class);
+        classList.add(CommonBizField.class);
+        classList.add(TimeField.class);
         manager.init(classList);
         try {
             Thread.sleep(12213123123123L);

@@ -24,8 +24,6 @@ public class CommandListener extends Thread {
 
     private final Integer serverProviderPort;
 
-    private ExecutorService executorService;
-
     private int state;
 
     // todo:状态枚举
