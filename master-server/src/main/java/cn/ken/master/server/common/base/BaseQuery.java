@@ -1,4 +1,4 @@
-package cn.ken.master.server.common;
+package cn.ken.master.server.common.base;
 
 import lombok.Data;
 

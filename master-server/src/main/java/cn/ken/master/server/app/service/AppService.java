@@ -1,7 +1,7 @@
 package cn.ken.master.server.app.service;
 
 import cn.ken.master.core.model.common.Result;
-import cn.ken.master.server.management.model.entity.AppDO;
+import cn.ken.master.server.app.model.entity.AppDO;
 
 import java.util.List;
 

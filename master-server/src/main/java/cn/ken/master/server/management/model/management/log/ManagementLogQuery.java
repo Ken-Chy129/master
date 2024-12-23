@@ -1,6 +1,6 @@
 package cn.ken.master.server.management.model.management.log;
 
-import cn.ken.master.server.common.BaseQuery;
+import cn.ken.master.server.common.base.BaseQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

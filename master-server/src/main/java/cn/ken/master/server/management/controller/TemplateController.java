@@ -2,7 +2,6 @@ package cn.ken.master.server.management.controller;
 
 import cn.ken.master.core.model.common.PageResult;
 import cn.ken.master.core.model.common.Result;
-import cn.ken.master.server.common.RequestPathConstant;
 import cn.ken.master.server.management.model.entity.TemplateDO;
 import cn.ken.master.server.management.model.entity.TemplateFieldDO;
 import cn.ken.master.server.management.model.management.template.TemplateFieldRequest;

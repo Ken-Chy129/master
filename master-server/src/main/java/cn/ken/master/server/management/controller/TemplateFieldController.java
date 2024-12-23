@@ -1,6 +1,6 @@
 package cn.ken.master.server.management.controller;
 
-import cn.ken.master.server.common.RequestPathConstant;
+import cn.ken.master.server.common.constant.RequestPathConstant;
 import cn.ken.master.server.management.model.entity.TemplateFieldDO;
 import cn.ken.master.server.management.service.TemplateFieldService;
 import jakarta.annotation.Resource;

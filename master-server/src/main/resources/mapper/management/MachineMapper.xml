@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.ken.master.server.management.mapper.MachineMapper">
+<mapper namespace="cn.ken.master.server.app.mapper.MachineMapper">
 
     <insert id="insert">
         insert into main.master_machine(app_id, ip_address, port, status)
@@ -10,7 +10,7 @@
         </selectKey>
     </insert>
 
-    <select id="selectByAppId" resultType="cn.ken.master.server.management.model.entity.MachineDO">
+    <select id="selectByAppId" resultType="cn.ken.master.server.app.model.entity.MachineDO">
         select * from master_machine
         where app_id = #{appId}
     </select>

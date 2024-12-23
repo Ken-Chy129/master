@@ -24,7 +24,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestPath = request.getServletPath();
         // todo:不需要校验appId的接口
-        if (requestPath.startsWith("/app")) {
+        if (requestPath.startsWith("/app") || requestPath.startsWith("/user")) {
             return true;
         }
         String appId = request.getParameter("appId");

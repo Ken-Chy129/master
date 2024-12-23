@@ -1,6 +1,6 @@
 package cn.ken.master.server.app.model.category;
 
-import cn.ken.master.server.common.BaseDO;
+import cn.ken.master.server.common.base.BaseDO;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

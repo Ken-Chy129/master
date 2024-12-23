@@ -1,6 +1,8 @@
 package cn.ken.master.server.management.service.impl;
 
 import cn.ken.master.core.constant.Delimiter;
+import cn.ken.master.server.app.mapper.MachineMapper;
+import cn.ken.master.server.app.model.entity.MachineDO;
 import cn.ken.master.server.common.enums.MachineTypeEnum;
 import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.ManagementDTO;

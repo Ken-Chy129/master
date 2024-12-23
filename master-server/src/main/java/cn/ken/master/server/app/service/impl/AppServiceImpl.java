@@ -1,12 +1,12 @@
 package cn.ken.master.server.app.service.impl;
 
 import cn.ken.master.core.model.common.Result;
-import cn.ken.master.server.common.AppStartException;
+import cn.ken.master.server.common.exception.AppStartException;
 import cn.ken.master.server.common.enums.MachineStatusEnum;
-import cn.ken.master.server.management.mapper.MachineMapper;
-import cn.ken.master.server.management.model.entity.AppDO;
+import cn.ken.master.server.app.mapper.MachineMapper;
+import cn.ken.master.server.app.model.entity.AppDO;
 import cn.ken.master.server.app.mapper.AppMapper;
-import cn.ken.master.server.management.model.entity.MachineDO;
+import cn.ken.master.server.app.model.entity.MachineDO;
 import cn.ken.master.server.app.service.AppService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;

@@ -1,7 +1,7 @@
 package cn.ken.master.server.management.controller;
 
 import cn.ken.master.core.model.common.Result;
-import cn.ken.master.server.common.RequestPathConstant;
+import cn.ken.master.server.common.constant.RequestPathConstant;
 import cn.ken.master.server.management.model.entity.NamespaceDO;
 import cn.ken.master.server.management.service.NamespaceService;
 import jakarta.annotation.Resource;

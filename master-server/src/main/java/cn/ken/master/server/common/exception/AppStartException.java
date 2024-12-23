@@ -1,4 +1,4 @@
-package cn.ken.master.server.common;
+package cn.ken.master.server.common.exception;
 
 public class AppStartException extends RuntimeException {
 

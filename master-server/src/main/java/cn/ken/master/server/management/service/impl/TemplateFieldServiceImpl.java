@@ -5,6 +5,7 @@ import cn.ken.master.core.model.ManageableFieldDTO;
 import cn.ken.master.core.model.common.PageResult;
 import cn.ken.master.core.model.common.Pair;
 import cn.ken.master.core.model.common.Result;
+import cn.ken.master.server.app.mapper.MachineMapper;
 import cn.ken.master.server.common.enums.MachineTypeEnum;
 import cn.ken.master.server.common.enums.PushStatusEnum;
 import cn.ken.master.server.common.enums.PushTypeEnum;
